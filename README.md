@@ -591,33 +591,32 @@ ctags --list-kinds=c++
 >x  external and forward variable declarations [off]  
 
 其中，标为 off 的局部对象、函数声明、外部对象等类型默认不会生成标签，所以我显式加上所有类型。运行完后，example/ 下多了个文件 tags，内容大致如下：
->
-!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/ 
-!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/ 
-!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/ 
-!_TAG_PROGRAM_NAME	Exuberant Ctags	// 
-!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/ 
-!_TAG_PROGRAM_VERSION	5.8	// 
-MyClass	lib/my_class.h	/^class MyClass $/;"	c 
-MyClass::printMsg	lib/my_class.cpp	/^MyClass::printMsg (void) $/;"	f	class:MyClass	signature:(void) 
-MyClass::printMsg	lib/my_class.h	/^		void printMsg(void);$/;"	p	class:MyClass	access:public	signature:(void) 
-endl	lib/my_class.cpp	/^	std::cout << "I'M MyClass!" << std::endl;$/;"	m	class:std	file: 
-endl	lib/my_class.cpp	/^	std::cout << i << std::endl;$/;"	m	class:std	file: 
-endl	main.cpp	/^	cout << g_num << name << endl;$/;"	l 
-endl	main.cpp	/^	std::cout << ch << std::endl;$/;"	m	class:std	file: 
-g_num	main.cpp	/^int g_num = 128;$/;"	v 
-main	main.cpp	/^main (void) $/;"	f	signature:(void) 
-name	main.cpp	/^	const string	name = "yangyang.gnu";$/;"	l 
-one	main.cpp	/^	MyClass	one;$/;"	l 
-printMsg	lib/my_class.cpp	/^MyClass::printMsg (void) $/;"	f	class:MyClass	signature:(void) 
-printMsg	lib/my_class.cpp	/^printMsg (int i) $/;"	f	file:	signature:(int i) 
-printMsg	lib/my_class.h	/^		void printMsg(void);$/;"	p	class:MyClass	access:public	signature:(void) 
-printMsg	main.cpp	/^	one.printMsg();$/;"	p	file:	signature:() 
-printMsg	main.cpp	/^printMsg (char ch) $/;"	f	file:	signature:(char ch) 
-std::endl	lib/my_class.cpp	/^	std::cout << "I'M MyClass!" << std::endl;$/;"	m	class:std	file: 
-std::endl	lib/my_class.cpp	/^	std::cout << i << std::endl;$/;"	m	class:std	file: 
-std::endl	main.cpp	/^	std::cout << ch << std::endl;$/;"	m	class:std	file:
->
+
+>!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/  
+>!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/  
+>!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/  
+>!_TAG_PROGRAM_NAME	Exuberant Ctags	//  
+>!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/  
+>!_TAG_PROGRAM_VERSION	5.8	//  
+>MyClass	lib/my_class.h	/^class MyClass $/;"	c  
+>MyClass::printMsg	lib/my_class.cpp	/^MyClass::printMsg (void) $/;"	f	class:MyClass	signature:(void)  
+>MyClass::printMsg	lib/my_class.h	/^		void printMsg(void);$/;"	p	class:MyClass	access:public	signature:(void)  
+>endl	lib/my_class.cpp	/^	std::cout << "I'M MyClass!" << std::endl;$/;"	m	class:std	file:  
+>endl	lib/my_class.cpp	/^	std::cout << i << std::endl;$/;"	m	class:std	file:  
+>endl	main.cpp	/^	cout << g_num << name << endl;$/;"	l  
+>endl	main.cpp	/^	std::cout << ch << std::endl;$/;"	m	class:std	file:  
+>g_num	main.cpp	/^int g_num = 128;$/;"	v  
+>main	main.cpp	/^main (void) $/;"	f	signature:(void)  
+>name	main.cpp	/^	const string	name = "yangyang.gnu";$/;"	l  
+>one	main.cpp	/^	MyClass	one;$/;"	l  
+>printMsg	lib/my_class.cpp	/^MyClass::printMsg (void) $/;"	f	class:MyClass	signature:(void)  
+>printMsg	lib/my_class.cpp	/^printMsg (int i) $/;"	f	file:	signature:(int i)  
+>printMsg	lib/my_class.h	/^		void printMsg(void);$/;"	p	class:MyClass	access:public	signature:(void)  
+>printMsg	main.cpp	/^	one.printMsg();$/;"	p	file:	signature:()  
+>printMsg	main.cpp	/^printMsg (char ch) $/;"	f	file:	signature:(char ch)  
+>std::endl	lib/my_class.cpp	/^	std::cout << "I'M MyClass!" << std::endl;$/;"	m	class:std	file:  
+>std::endl	lib/my_class.cpp	/^	std::cout << i << std::endl;$/;"	m	class:std	file:  
+>std::endl	main.cpp	/^	std::cout << ch << std::endl;$/;"	m	class:std	file:  
 
 其中，! 开头的几行是 ctags 生成的软件信息忽略之，下面的就是我们需要的标签，每个标签项至少有如下字段（命令行参数不同标签项的字段数不同）：标签名、标签所在的文件名（也是文件路径）、标签项所在行的内容、标签类型（如，l 表示局部对象），另外，如果是函数，则有函数签名字段，如果是成员函数，则有访问性字段等等。
 
