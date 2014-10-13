@@ -621,7 +621,10 @@ ctags --list-kinds=c++
 其中，! 开头的几行是 ctags 生成的软件信息忽略之，下面的就是我们需要的标签，每个标签项至少有如下字段（命令行参数不同标签项的字段数不同）：标签名、标签所在的文件名（也是文件路径）、标签项所在行的内容、标签类型（如，l 表示局部对象），另外，如果是函数，则有函数签名字段，如果是成员函数，则有访问性字段等等。
 
 第三步，引入标签文件。就是让 vim 知晓标签文件的路径。在 /data/workplace/example/ 目录下用 vim 打开 main.cpp，在 vim 中执行如下目录引入标签文件 tags：
+
+```
 :set tags+=/data/workplace/example/tags
+```
 既然 vim 有个专门的命令来引入标签，说明 vim 能识别标签。虽然标签文件中并无行号，但已经有标签所在文件，以及标签所在行的完整内容，vim 只需切换至对应文件，再在文件内作内容查找即可找到对应行。换言之，只要有对应的标签文件，vim 就能根据标签跳转至标签定义处。
 
 这时，你可以体验下初级的代码导航功能。把光标移到 main.cpp 的 one.printMsg() 那行的 printMsg 上，键入快捷键 g]，vim 将罗列出名为 printMsg 的所有标签候选列表，按需选择键入编号即可导航进入。如下图：
@@ -630,30 +633,36 @@ ctags --list-kinds=c++
 目前为止，离我预期还有差距。
 
 第一，选择候选列表影响思维连续性。首先得明白为何会出现待选列表。前面说过，vim 做的事情很简单，就是把光标所在单词放到标签文件中查找，如果只有一个，当前你可以直接导航过去，大部分时候会找到多项匹配标签，比如，函数声明、函数定义、函数调用、函数重载等等都会导致同个函数名出现在多个标签中，vim 无法知道你要查看哪项，只能让你自己选择。其实，因为标签文件中已经包含了函数签名属性，vim 的查找机制如果不是基于关键字，而是基于语义的话，那也可以直接命中，期待后续 vim 有此功能吧。既然无法直接解决，换个思路，我不想选择列表，但可以接受遍历匹配标签。就是说，我不想输入数字选择第几项，但可以接受键入正向快捷键后遍历第一个匹配标签，再次键入快捷键遍历第二个，直到最后一个，键入反向快捷键逆序遍历。这下事情简单了，命令 :tnext 和 :tprevious 分别先后和向前遍历匹配标签，定义两个快捷键搞定：
+
+```
 " 正向遍历同名标签
 nmap <Leader>tn :tnext<CR>
 " 反向遍历同名标签
 nmap <Leader>tp :tprevious<CR>
+```
 等等，这还不行，vim 中有个叫标签栈（tags stack）的机制，:tnext、:tprevious 只能遍历已经压入标签栈内的标签，所以，你在遍历前需要通过快捷键 ctrl-] 将光标所在单词匹配的所有标签压入标签栈中，然后才能遍历。不说复杂了，以后你只需先键入 ctrl-]，若没导航至需要的标签，再键入 <leader>tn 往后或者 <leader>tp 往前遍历即可。如下图所示：
 （代码导航）
 
 第二，如何返回先前位置。当分析完函数实现后，我需要返回先前调用处，可以键入 vim 快捷键 ctrl-t 返回，如果想再次进入，可以用前面介绍的方式，或者键入 ctrl-i。另外，注意，ctrl-o 以是一种返回快捷键，但与 ctrl-t 的返回不同，前者是返回上次光标停留行、后者返回上个标签。
 
 第三，如何自动生成标签并引入。开发时代码不停在变更，每次还要手动执行 ctags 命令生成新的标签文件，太麻烦了，得想个法周期性针对这个工程自动生成标签文件，并通知 vim 引人该标签文件，嘿，还真有这样的插件 —— indexer（http://www.vim.org/scripts/script.php?script_id=3221 ）。indexer 依赖 DfrankUtil（http://www.vim.org/scripts/script.php?script_id=3884 ）、vimprj（http://www.vim.org/scripts/script.php?script_id=3872 ）两个插件，请一并安装。请在 .vimrc 中增加：
+
+```
 " 设置插件 indexer 调用 ctags 的参数
 " 默认 --c++-kinds=+p+l，重新设置为 --c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v
 " 默认 --fields=+iaS 不满足 YCM 要求，需改为 --fields=+iaSl
 let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
+```
 另外，indexer 还有个自己的配置文件，用于设定各个工程的根目录路径，配置文件位于 ~/.indexer_files，内容可以设定为：
---------------- ~/.indexer_files --------------- 
-[multiple_source_proj] 
-/data/workplace/multiple_source_proj/ 
-[single_source_proj] 
-/data/workplace/single_source_proj/ 
-[example] 
-/data/workplace/example/ 
-[biabiamiamia] 
-/data/computer/practice/biabiamiamia/
+
+>--------------- ~/.indexer_files ---------------  
+>[multiple_source_proj]  
+>/data/workplace/multiple_source_proj/  
+>[single_source_proj]  
+>/data/workplace/single_source_proj/  
+>[example]  
+>/data/workplace/example/  
+
 上例设定了四个工程的根目录，方括号内是对应工程名，后续有新工程，直接添至该文件中即可。这样，从以上目录打开任何代码文件时，indexer 便对整个目录创建标签文件，若代码文件有更新，那么在文件保存时，indexer 将自动调用 ctags 更新标签文件，并自动引入进 vim 中。（indexer 生成的标签文件以工程名命名，位于 ~/.indexer_files_tags/）
 
 好了，解决了这三个问题后，vim 的代码导航已经达到我的预期。
@@ -661,6 +670,8 @@ let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v 
 <h3 name="0">4.7 标签列表</h3>
 
 借助代码导航我能跟着执行流分析代码，但我要分析指定函数实现细节怎么办？先找到该函数，再导航过去？我希望有个插件能把从当前代码文件中提取出的所有标签单独放在一个子窗口中，最好还能按标签类型给我分门别类，唔...唔，只有 tagbar （https://github.com/majutsushi/tagbar ） 能满足，它自动周期性调用 ctags 获取结果。先自行安装 tagbar，然后在 .vimrc 中增加如下信息：
+
+```
 " 设置 tagbar 子窗口的位置出现在主编辑区的左边 
 let tagbar_left=1 
 " 设置显示／隐藏标签列表子窗口的快捷键。速记：tag list 
@@ -702,7 +713,8 @@ let g:tagbar_type_cpp = {
          \ 'union'     : 'u'
      \ }
 \ }
-说 external 和 local，前面提过，ctags 默认并不会提取局部对象、函数声明、外部对象等类型的标签，我必须让 tagbar 告诉 ctags 改变默认参数 —— 这就是 tagbar_type_cpp 变量存在的意义，所以才在前面的配置信息中将外部对象和局部对象显式将其加进 tagbar_type_cpp 中。
+```
+说下 external 和 local，前面提过，ctags 默认并不会提取局部对象、函数声明、外部对象等类型的标签，我必须让 tagbar 告诉 ctags 改变默认参数 —— 这就是 tagbar_type_cpp 变量存在的意义，所以才在前面的配置信息中将外部对象和局部对象显式将其加进 tagbar_type_cpp 中。
 
 重启 vim 后，打开一个 C/C++ 源码文件，键入 <leader>tl，将在左侧的 tagbar 窗口中将可看到标签列表：
 （标签列表）
@@ -746,28 +758,39 @@ let g:tagbar_type_cpp = {
 <h3 name="0">5.2 模板补全</h3>
 
 开发时，我经常要输入相同的代码片断，比如 if-else、switch 语句，如果每个字符全由手工键入，我可吃不了这个苦，我想要简单的键入就能自动帮我完成代码模板的输入，并且光标停留在需要我编辑的位置，比如键入 if，vim 自动完成
+
+```
 if (/* condition */) {
     TODO
 }
+```
 而且帮我选中 /* condition */ 部分，不会影响编码连续性 —— UltiSnips（https://github.com/SirVer/ultisnips ），我的选择。
 
 UltiSnips 预定义了几十种语言常用的代码模板，位于 ~/.vim/bundle/UltiSnips/UltiSnips/，UltiSnips 有一套自己的代码模板语法规则，比如：
+
+```
 snippet if "if statement" i
 if (${1:/* condition */}) { 
     ${2:TODO} 
 } 
 endsnippet
+```
 其中，snippet 和 endsnippet 用于表示模板的开始和结束；if 是模板名；"if statement" 是模板描述，你可以把多个模板的模板名定义成一样（如，if () {} 和 if () {} else {} 两模板都定义成相同模板名 if），在模板描述中加以区分（如，分别对应 "if statement" 和 "if-else statement"），这样，在 YCM（重量级智能补全插件） 的补全列表中可以根据模板描述区分选项不同模板；i 是模板控制参数，用于控制模板补全行为，具体参见“快速输入结对符”一节；${1}、${2} 是 <tab> 跳转的先后顺序。
 
 在进行模板补全时，你是先键入模板名（如，if），接着键入补全快捷键（默认<tab>），然后 UltiSnips 根据你键入的模板名在代码模板文件中搜索匹配的“模板名-模板”，找到对应模板后，将模板在光标当前位置展开。
 
 默认情况下，UltiSnips 模板补全快捷键是 <tab>，与后面介绍的 YCM 快捷键有冲突，所有须在 .vimrc 中重新设定：
+
+```
 " UltiSnips 的 tab 键与 YCM 冲突，重新设定
 let g:UltiSnipsExpandTrigger="<leader><tab>"
 let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
 let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
+```
 
 UltiSnips 预定义了几十种语言常用的代码模板，我关注 C/C++ 的两个文件：~/.vim/bundle/UltiSnips/UltiSnips/c.snippets 和 ~/.vim/bundle/UltiSnips/UltiSnips/cpp.snippets，显然，前者是 C 程序的代码模板，后者是 C++ 程序的代码模板。我现在几乎不写纯 C 代码了，所以为了以后代码模板维护方便，我把 c.snippets 清空了，按自己习惯重写了cpp.snippets，完整 cpp.snippets 内容如下：
+
+```
 #================================= 
 #预处理 
 #================================= 
@@ -945,6 +968,7 @@ endsnippet
 snippet s "scope" i 
 ::${1} 
 endsnippet
+```
 
 很简单，根据个人偏好按需调整。效果如下：
 （模板补全）
@@ -954,13 +978,19 @@ endsnippet
 平时，最让我头痛的字符莫过于 {}、""、[] 等这类结对符，输入它们之所以麻烦，主要因为A）盲打很难找准它们位置，B）还得同时按住shift键。两者再一叠加，非常影响我的思维。要高效输入结对符，应该是输入少量几个字母（对，字母，不是字符）后 vim 自动为你输入完整结对符，而非是我输入一半 vim 输入另一半（不用 delimitMate 的原因）。刚好，这在 UltiSnips 能力范围内，只要定义好模板，可完美地解决这类问题，具体模板见上例中最后的结对符部分。
 
 在定义结对符模板时，你应该考虑加上模板控制参数 i。默认情况下，UltiSnips 只会当模板名前是空白字符或行首时才进行模板补全，比如，定义 () 的模板如下：
+
+```
 snippet b "bracket"
 (${1})${2} 
 endsnippet
+```
 我要调用函数 printf()，在输入完 printf 后应该接着输入括号模板名 b，然后输入模板展开快捷键 <leader><tab>，你会发现 UltiSnips 无法帮你补全模板，因为它看到的不是 b 而是 printfb，这在模板文件中根本未定义。有一种间接解决方式是在 printf 后加个空格，再输入 b<leader><tab> 进行补全，这就成了 printf ()，不喜欢这种编码风格。其实，UltiSnips 的作者也注意到这个问题了，他让你可以通过前面提过的模板控制参数 i 进行解决。重新定义 () 的模板如下：
+
+```
 snippet b "bracket" i
 (${1})${2} 
 endsnippet
+```
 这样，UltiSnips 只管光标前 1 个字符是否是 b，若是则补全 ()，不论 b 前是否有其他字符。类似，其他结对符模板都按此加上 i 控制参数。结对符模板完整定义参见上一节 cpp.snippets 示例。如下是几个快速输入结对符的演示：
 （快速输入结对符）
 
@@ -981,40 +1011,64 @@ endsnippet
 第一步，生成标签文件。在工程目录的根目录执行 ctags，该目录下会多出个 tags 文件；
 
 第二步，引入标签文件。在 vim 中引入标签文件，在 vim 中执行命令
+
+```
 :set tags+=/home/your_proj/tags
+```
 
 后续，在编码时，键入标签的前几个字符后依次键入 ctrl-x ctrl-o 将罗列匹配标签列表、若依次键入 ctrl-x ctrl-i 则文件名补全、ctrl-x ctrl-f 则路径补全。
 
 举个例子，演示如何智能补全 C++ 标准库。与前面介绍的一般步骤一样，先调用 ctags 生成标准库的标签文件，再在 vim 中引入即可，最后编码时由相应插件实时搜索标签文件中的类或模板，显示匹配项：
 
 首先，获取 C++ 标准库源码文件。安装的 GNU C++ 标准库源码文件，openSUSE 可用如下命令：
+
+```
 zypper install libstdc++48-devel
+```
 安装成功后，在 /usr/include/c++/4.8/ 可见到所有源码文件；
 
 接着，执行 ctags 生成标准库的标签文件：
+
+```
 cd /usr/include/c++/4.8
 ctags -R --c++-kinds=+l+x+p --fields=+iaSl --extra=+q --language-force=c++ -f stdcpp.tags
+```
 
 然后，让 OmniCppComplete 成功识别标签文件中的标准库接口。C++ 标准库源码文件中使用了 _GLIBCXX_STD 名字空间（GNU C++ 标准库的实现是这样，如果你使用其他版本的标准库，需要自行查找对应的名字空间名称），标签文件里面的各个标签都嵌套在该名字空间下，所以，要让 OmniCppComplete 正确识别这些标签，必须显式告知 OmniCppComplete 相应的名字空间名称。在.vimrc中增加如下内容：
+
+```
 let OmniCpp_DefaultNamespaces = ["_GLIBCXX_STD"]
+```
 
 最后，在 vim 中引入该标签文件。在 .vimrc 中增加如下内容：
+
+```
 set tags+=/usr/include/c++/4.8/stdcpp.tags
+```
 后续你就可以进行 C++ 标准库的代码补全，比如，在某个 string 对象名输入 . 时，vim 自动显示成员列表。如下图所示：
 （基于标签的 C++ 标准库补全）
 
 没明白？ -。-# 咱再来个例子，看看如何补全 linux 系统 API。与前面的标准库补全类似，唯一需要注意，linux 系统 API 头文件中使用了 GCC 编译器扩展语法，必须告诉 ctags 在生成标签时忽略之，否则将生产错误的标签索引。
 
 首先，获取 linux 系统 API 头文件。openSUSE 可用如下命令：
+
+```
 zypper install linux-glibc-devel
+```
 安装成功后，在 /usr/include/ 中可见相关头文件；
 
 接着，执行 ctags 生成系统 API 的标签文件。linux 内核采用 GCC 编译，为提高内核运行效率，linux 源码文件中大量采用 GCC 扩展语法，这影响 ctags 生成正确的标签，必须借由 ctags 的 -I 命令参数告之忽略某些标签，若有多个忽略字符串之间用逗号分割。比如，在文件 unistd.h 中几乎每个API声明中都会出现 __THROW、__nonnull 关键字，前者目的是告诉 GCC 这些函数不会抛异常，尽量多、尽量深地优化这些函数，后者目的告诉 GCC 凡是发现调用这些函数时第一个实参为 nullptr 指针则将其视为语法错误，的确，使用这些扩展语法方便了我们编码，但却影响了 ctags 正常解析，这时可用 -I __THROW,__nonnull 命令行参数让 ctags 忽略这些语法扩展关键字：
+
+```
 cd /usr/include/
 ctags -R --c-kinds=+l+x+p --fields=+lS -I __THROW,__nonnull -f sys.tags
+```
 
 最后，在 vim 中引入该标签文件。在 .vimrc 中增加如下内容：
+
+```
 set tags+=/usr/include/sys.tags
+```
 
 从以上两个例子来看，不论是 C++ 标准库、boost、ACE这些重量级开发库，还是 linux 系统 API 均可遵循“下载源码（至少包括头文件）-执行 ctags 生产标签文件-引入标签文件”的流程实现基于标签的智能补全，若有异常，唯有如下两种可能：一是源码中使用了名字空间，借助 OmniCppComplete 插件的 OmniCpp_DefaultNamespaces 配置项解决；一是源码中使用了编译器扩展语法，借助 ctags 的 -I 参数解决（上例仅列举了少量 GCC 扩展语法，此外还有 \__attribute_malloc__、__wur 等等大量扩展语法，具体请参见 GCC 手册。以后，如果发现某个系统函数无法自动补全，十有八九是头文件中使用使用了扩展语法，先找到该函数完整声明，再将其使用的扩展语法加入 -I 列表中，最后运行 ctags 重新生产新标签文件即可）。
 
@@ -1038,8 +1092,11 @@ set tags+=/usr/include/sys.tags
 * 支持跨平台。clang_complete 支持所有平台，而 GCCSense 支持 UNIX-like，不支持 windows。（好啦，这点是我凑数的，我又不用 windows <_<）
 
 clang_complete 使用简单，在 vim 输入模式下，依次键入要补全的字符，需要弹出补全列表时，手工输入 <leader>tab。比如有如下代码片断：
+
+```
 string name_yang = "yangyang.gnu";
 string name_wang = "wangwang";
+```
 我要补全这两个对象，可以先键入 n <leader>tab，这时 clang_complete 将罗列出所有以 n 开头的待选项，接着输入 ame_ 后剩下 name_yang 和 name_wang 两项，按需选择即可。
 
 到这个节目眼上，我应该先给出 clang_complete 的下载地址，再告诉你如何配置 .vimrc，然后给个截图收工，但是、但是，你知道我是个纠结症+完美症重度患者，虽然 clang_complete 相较 ctags+new-omni-completion 的模式有了质的飞跃，仍有雕琢余地：    
@@ -1058,25 +1115,33 @@ string name_wang = "wangwang";
 现在安装 YCM：
 
 第一步，下载 YCM 源码包及相关依赖：
+
+```
 cd ~/.vim/bundle/ 
 git clone https://github.com/Valloric/YouCompleteMe.git 
 cd YouCompleteMe/ 
 # 获取 YCM 的依赖包
 git submodule update --init --recursive
+```
 
 第二步，下载 libclang。你系统中可能已有现成的 libclang（自行源码编译或者发行套件中预案装的），最好别用，YCM 作者强烈建议你下载 LLVM 官网提供预编译二进制文件，以避免各种妖人问题。在 http://llvm.org/releases/download.html 找到最新版 LLVM，在其 Pre-built Binaries 下选择适合你发行套件的最新版预编译二进制文件，下载并解压至 ~/downloads/clang+llvm-3.4.2；
 
 第三步，编译 YCM 共享库：
+
+```
 cd ~/downloads/ 
 mkdir ycm_build 
 cd ycm_build 
 cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/downloads/clang+llvm-3.4.2/ . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
 make ycm_support_libs
+```
 在 ~/.vim/bundle/YouCompleteMe/third_party/ycmd 中将生成 ycm_client_support.so、ycm_core.so、libclang.so 等三个共享库文件；
 
 按照惯例，我该介绍 YCM 的设置。
 
 设置一，YCM 后端调用 libclang 进行语义分析，而 libclang 有很多参数选项（如，是否支持 C++11 的 -std=c++11、是否把警告视为错误的 -Werror），必须有个渠道让 YCM 能告知 libclang，这可以在 .vimrc 中增加一个全局配置，但我有多个工程，每个工程使用的 libclang 参数选项不同岂不是每次都要调整 .vimrc？！YCM 采用更具弹性的方式，每个工程有一个名为 .ycm_extra_conf.py 的私有配置文件，在此文件中写入工程的编译参数选项。下面是个完整的例子：
+
+```
 import os 
 import ycm_core 
 flags = [ 
@@ -1162,9 +1227,12 @@ def FlagsForFile( filename, \*\*kwargs ):
     'flags': final_flags, 
     'do_cache': True 
   }
+```
 基本上，根据你工程情况只需调整 .ycm_extra_conf.py 的 flags 部分，前面说过， flags 用于 YCM 调用 libclang 时指定的参数，通常应与构建脚本保持一致（如，CMakeLists.txt）。flags 会产生两方面影响，一是影响 YCM 的补全内容、一是影响代码静态分析插件 syntastic 的显示结果（详见后文“静态分析器集成”）。另外你得注意，该配置文件其实就是个 python 脚本，python 把缩进视为语法，如果你是直接拷贝文中的 .ycm_extra_conf.py 小心缩进部分。另外，/usr/include/c++/4.8/ 需要替换成你系统中 C++ 标准库头文件所在路径； 
 
 设置二，在 .vimrc 中增加如下配置信息：
+
+```
 " YCM 补全菜单配色
 " 菜单
 highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
@@ -1188,6 +1256,7 @@ let g:ycm_min_num_of_chars_for_completion=1
 let g:ycm_cache_omnifunc=0
 " 语法关键字补全			
 let g:ycm_seed_identifiers_with_syntax=1
+```
 其中大部分内容从注释就能了解，粗体配置项见下文。
 
 YCM 集成了多种补全引擎：语义补全引擎、标签补全引擎、OmniCppComplete 补全引擎、其他补全引擎。
@@ -1197,15 +1266,21 @@ YCM 的语义补全。YCM 不会在每次键入事件上触发语义补全，YCM
 上图中，我先尝试补全类 MyClass 失败，接着我把 MyClass 所在的文件 MyClass.h 打开后切回 main.cpp 再次补全类 MyClass 成功，然后在对象 mc 后键入 . 进行成员补全；
 
 YCM 的标签补全。语义补全的确强大，但受限挺多，如果我要补全 STL 中的泛型算法 count_if() 岂不是还要先打开库头文件 algorithm？不用，YCM 也支持标签补全。要使用标签补全，你需要做两件事：一是让 YCM 启用标签补全引擎、二是引入 tag 文件，具体设置如下：
+
+```
 " 开启 YCM 标签引擎
 let g:ycm_collect_identifiers_from_tags_files=1
 " 引入 C++ 标准库tags
 set tags+=/data/misc/software/misc./vim/stdcpp.tags
+```
 其中，工程自身代码的标签可借助 indexer 插件自动生成自动引入，但由于 YCM 要求 tag 文件中必须含有 language:<X> 字段（ctags 的命令行参数 --fields 必须含有 l 选项），所有必须通过 indexer_ctagsCommandLineOptions 告知 indexer 调用 ctags 时注意生成该字段，具体设置参见“代码导航”章节；前面章节介绍过如何生成、引入 C++ 标准库的 tag 文件，设置成正确路径即可。另外，由于引入过多 tag 文件会导致 vim 变得非常缓慢，我的经验是，只引入工程自身（indexer 自动引入）和 C++ 标准库的标签（上面配置的最后一行）。如下图所示：
 （YCM 的标签补全）
 
 YCM 的 OmniCppComplete 补全引擎。我要进行 linux 系统开发，打开系统函数头文件觉得麻烦（也就无法使用 YCM 的语义补全），引入系统函数 tag 文件又影响 vim 速度（也就无法使用 YCM 的标签补全），这种情况又如何让 YCM 补全呢？WOW，别担心，YCM 还有 OmniCppComplete 补全引擎，只要你在当前代码文件中 #include 了该标识符所在头文件即可。通过 OmniCppComplete 补全无法使用 YCM 的随键而全的特性，你需要手工告知 YCM 需要补全，OmniCppComplete 的默认补全快捷键为 <C-x><C-o>，不太方便，我重新设定为 <leader>;，如前面配置所示：
+
+```
 inoremap <leader>; <C-x><C-o>
+```
 比如，我要补全 fork()，该函数所在头文件为 unistd.h，正确添加 #include <unistd.h> 后即可补全。如下图所示：
 （YCM 的 OmniCppComplete 补全引擎）
 其实，只要你正确插入头文件，YCM 的 OmniCppComplete 补全引擎可以替代语义引擎和标签引擎，比如，上面的 MyClass 在不打开 MyClass.h 情况下也可由OmniCppComplete（键入 <leader>;）补全：
@@ -1230,13 +1305,18 @@ YCM 的其他补全。YCM 还集成了其他辅助补全引擎，可以补全路
 <h3 name="0">5.5 由接口快速生成实现框架</h3>
 
 在 \*.h 中写成员函数的声明，在 \*.cpp 中写成员函数的定义，很麻烦，我希望能根据函数声明自动生成函数定义的框架 —— protodef（http://www.vim.org/scripts/script.php?script_id=2624 ）。protodef 依赖 FSwitch（http://www.vim.org/scripts/script.php?script_id=2590 ），请一并安装。请增加如下设置信息：
+
+```
 " 设置 pullproto.pl 脚本路径
 let g:protodefprotogetter='~/.vim/bundle/protodef/pullproto.pl'
 " 成员函数的实现顺序与声明顺序一致
 let g:disable_protodef_sorting=1
 pullproto.pl 是 protodef 自带的 perl 脚本，默认位于 ~/.vim 目录，由于改用  pathogen 管理插件，所以路径需重新设置。
+```
 
 protodef 根据文件名进行关联，比如，MyClass.h 与 MyClass.cpp 是一对接口和实现文件，MyClass.h 中接口为：
+
+```
 class MyClass 
 {
     public:
@@ -1247,11 +1327,13 @@ class MyClass
     private:
         int num_;
 };
+```
 在 MyClass.cpp 中生成成员函数的实现框架，如下图所示：
 （接口生成实现）
 MyClass.cpp 中我键入 protodef 定义的快捷键 <leader>PP，自动生成了函数框架。
 
 上图既突显了 protodef 的优点：
+
 * 优点一，virtual、默认参数等应在函数声明而不应在函数定义中出现的关键字，protodef 已为你过滤；
 * 优点二：doNothing() 这类纯虚函数不应有实现的自动被 protodef 忽略；
 
@@ -1263,13 +1345,25 @@ MyClass.cpp 中我键入 protodef 定义的快捷键 <leader>PP，自动生成�
 关于两个缺点，先前我计划优化下 protodef 源码再发给原作者，后来想想，protodef 借助 ctags 代码分析实现的，本来就存在某些缺陷，好吧，后续我找个时间写个与 protodef 相同功能但对 C++ 支持更完善的插件，内部当然借助 libclang 啦。
 
 另外，每个人都有自己的代码风格，比如，return 语句我喜欢
+
+```
 return(TODO);
+```
 所以，调整了 protodef.vim 源码，把 242 行改为
+
+```
 call add(full, "    return(TODO);") 
+```
 比如，函数名与形参列表间习惯添加个空格 
+
+```
 void MyClass::getSize (void);
+```
 所以，把 213 行改为
+
+```
 let proto = substitute(proto, '(\_.\*$', " (" . params . Tail, '')    
+```
 
 <h3 name="0">5.6 库信息参考</h3>
 
