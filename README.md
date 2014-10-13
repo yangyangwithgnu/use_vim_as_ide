@@ -119,12 +119,12 @@ yangyang.gnu@gmail.com
 
 关于 vim 的优点，你在网上能查到 128+ 项，对我而言，只有两项：0）所想即所得，让手输入的速度跟上大脑思考的速度，1）所需即所获，只有你想不到的功能、没有实现不了的插件。希望获得前者的能力，你需要两本教程深入学习，《Practical Vim: Edit Text at the Speed of Thought》和《vim user manual》；要想拥有后者的能力，通读本文 -。-#。对于 vim 的喜爱，献上湿哥哥以表景仰之情：
 <div align="center">
-vi 之大道如我心之禅，  
-  vi 之漫路即为禅修，  
-  vi 之命令禅印于心，  
- 未得此道者视之怪诞，  
- 与之为伴者洞其真谛，  
- 长修此道者巨变人生。 
+vi 之大道如我心之禅，<br />  
+  vi 之漫路即为禅修，<br /> 
+  vi 之命令禅印于心，<br />
+ 未得此道者视之怪诞，<br />
+ 与之为伴者洞其真谛，<br />
+ 长修此道者巨变人生。<br />
 </div>
 <div align="right">
 作：reddy@lion.austin.com  
