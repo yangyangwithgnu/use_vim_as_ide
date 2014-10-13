@@ -434,12 +434,12 @@ let g:indent_guides_guide_size=1
 :nmap <silent> <Leader>i <Plug>IndentGuidesToggle
 ```
 
+重启 vim 效果如下：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%8D%E8%BF%9E%E7%BB%AD%E7%9A%84%E7%BC%A9%E8%BF%9B%E5%8F%AF%E8%A7%86%E5%8C%96.png" alt=""/><br />
 （不连续的缩进可视化）
 </div>
-重启 vim 效果如下：
-(*__*)？断节？Indent Guides 通过识别制表符来绘制缩进连接线，断节处是空行，没有制表符，自然绘制不出来，算是个小 bug，但瑕不掩瑜，有个小技巧可以解决，换行-空格-退格：
+断节？Indent Guides 通过识别制表符来绘制缩进连接线，断节处是空行，没有制表符，自然绘制不出来，算是个小 bug，但瑕不掩瑜，有个小技巧可以解决，换行-空格-退格：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%AE%8C%E7%BE%8E%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BC%A9%E8%BF%9B.png" alt=""/><br />
 （完美可视化缩进）
@@ -2054,3 +2054,4 @@ vim-instant-markdown（https://github.com/suan/vim-instant-markdown ） 的安�
 * 怎样的 IDE 才算好？对于初入开发的人员而言，Code::Blocks 是最易上手的选择；对于我这类喜欢折腾、追求效率、愿意用脑力换体力的人来说，vim 搭配各类插件是好的 IDE；对于 Donald Knuth 这等宗师，他们站在整个系统的层面，bash 加上几个命令行工具也是某种意义上的 IDE。所以，只要你能得心应手地完成软件开发任务，又察觉不到工具的存在，那这就是最适合你的 IDE。
 
 末了，我不清楚这篇文章能帮到哪些人、帮到什么程度，但我自己受益匪浅！写作的过程，是知识体系完整重构的过程，理清了思路、加深了记忆。如果它再能引发你的一点思绪，或许，这就是价值！
+断节？Indent Guides 通过识别制表符来绘制缩进连接线，断节处是空行，没有制表符，自然绘制不出来，算是个小 bug，但瑕不掩瑜，有个小技巧可以解决，换行-空格-退格：
