@@ -185,7 +185,7 @@ vim someplugin.vba
 
 发行套件的软件源中预编译的 vim 要么不是最新版本，要么功能有阉割，有必要升级成全功能的最新版，当然，源码安装必须滴。
 
-卸载老版、下载新版（ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2），解压至 ~/downloads/vim74/，源码安装：
+卸载老版、下载新版（ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2 ），解压至 ~/downloads/vim74/，源码安装：
 
 ```
 cd ~/downloads/vim74/
@@ -1369,21 +1369,27 @@ let proto = substitute(proto, '(\_.\*$', " (" . params . Tail, '')
 
 有过 win32 SDK 开发经验的朋友对 MSDN 或多或少有些迷恋吧，对于多达 7、8 个参数的 API，如果没有一套函数功能描述、参数讲解、返回值说明的文档，那么软件开发将是人间炼狱。别急，vim 也能做到。
 
-要使用该功能，系统中必须先安装对应 man。安装 linux 系统函数 man，先下载（https://www.kernel.org/doc/man-pages/download.html ），解压后将 man1/ 至 man8/ 拷贝至 /usr/share/man/，运行 man fork 确认是否安装成功。安装 C++ 标准库 man，先下载（ftp://GCC.gnu.org/pub/GCC/libstdc++/doxygen/），选择最新 libstdc++-api-X.X.X.man.tar.bz2，解压后将 man3/ 拷贝至 /usr/share/man/，运行 man std::vector 确认是否安装成功；
+要使用该功能，系统中必须先安装对应 man。安装 linux 系统函数 man，先下载（https://www.kernel.org/doc/man-pages/download.html ），解压后将 man1/ 至 man8/ 拷贝至 /usr/share/man/，运行 man fork 确认是否安装成功。安装 C++ 标准库 man，先下载（ftp://GCC.gnu.org/pub/GCC/libstdc++/doxygen/ ），选择最新 libstdc++-api-X.X.X.man.tar.bz2，解压后将 man3/ 拷贝至 /usr/share/man/，运行 man std::vector 确认是否安装成功；
 
 vim 内置的 man.vim 插件可以查看已安装的 man，需在 .vimrc 中配置启动时自动加载该插件：
+
+```
 " 启用:Man命令查看各类man信息
 source $VIMRUNTIME/ftplugin/man.vim
 " 定义:Man命令查看各类man信息的快捷键
 nmap <Leader>man :Man 3 <cword><CR>
+```
 需要查看时，在 vim 中键入输入 :Man fork 或者 :Man std::vector （注意大小写）即可在新建分割子窗口中查看到函数参考信息，为了方便，我设定了快捷键 <Leader>man，这样，光标所在单词将被传递给 :Man 命令，不用再手工键入，如下图所示：
 （库信息参考）
 
 另外，我们编码时通常都是先声明使用 std 名字空间，在使用某个标准库中的类时前不会添加 std:: 前缀，所以 vim 取到的当前光标所在单词中也不会含有 std:: 前缀，而，C++ 标准库所有 man 文件名均有 std:: 前缀，所以必须将所有文件的 std:: 前缀去掉才能让 :Man 找到正确的 man 文件。在 libstdc++-api-X.X.X.man/man3/ 执行批量重命名以取消所有 man文件的 std:: 前缀： 
+
+```
 rename "std::" "" std::\* 
+```
 顺便说下，很多人以为 rename 命令只是 mv 命令的简单封装，非也，在重命名方面，rename 太专业了，远非 mv 可触及滴，就拿上例来说，mv 必须结合 sed 才能达到这样的效果。
 
-我认为，好的库信息参考手册不仅有对参数、返回值的描述，还应有使用范例，上面介绍的 linux 系统函数 man 做到了，C++ 标准库 man 还未达到我要求。所以，若有网络条件，我更愿意选择查看在线参考，C++ 推荐：http://www.cplusplus.com/reference/ 、http://en.cppreference.com/w/Cppreference:Archives ，前者范例多、后者更新勤；UNIX 推荐：http://pubs.opengroup.org/onlinepubs/9699919799/functions/contents.html 、http://man7.org/linux/man-pages/dir_all_alphabetic.html ，前者基于最新 SUS（Single UNIX Specification，单一 UNIX 规范）、后者偏重 linux 扩展。
+我认为，好的库信息参考手册不仅有对参数、返回值的描述，还应有使用范例，上面介绍的 linux 系统函数 man 做到了，C++ 标准库 man 还未达到我要求。所以，若有网络条件，我更愿意选择查看在线参考，C++ 推荐 http://www.cplusplus.com/reference/ 、http://en.cppreference.com/w/Cppreference:Archives ，前者范例多、后者更新勤；UNIX 推荐 http://pubs.opengroup.org/onlinepubs/9699919799/functions/contents.html 、http://man7.org/linux/man-pages/dir_all_alphabetic.html ，前者基于最新 SUS（Single UNIX Specification，单一 UNIX 规范）、后者偏重 linux 扩展。
 
 <h2 name="0">6 工程管理</h2>
 
@@ -1394,6 +1400,8 @@ rename "std::" "" std::\*
 我通常将工程相关的文档放在同个目录下，通过 NERDtree （https://github.com/scrooloose/nerdtree ）插件可以查看文件列表，要打开哪个文件，光标选中后回车即可在新 buffer 中打开。
 
 安装好 NERDtree 后，请将如下信息加入.vimrc中：
+
+```
 " 使用 NERDTree 插件查看工程文件。设置快捷键，速记：file list
 nmap <Leader>fl :NERDTreeToggle<CR>
 " 设置NERDTree子窗口宽度
@@ -1406,6 +1414,7 @@ let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
 " 删除文件时自动删除文件对应 buffer
 let NERDTreeAutoDeleteBuffer=1
+```
 
 常用操作：回车，打开选中文件；r，刷新工程目录文件列表；I（大写），显示/隐藏隐藏文件；m，出现创建/删除/剪切/拷贝操作列表。键入 <leader>fl 后，右边子窗口为工程项目文件列表，如下图所示：
 （工程文件浏览）
@@ -1417,15 +1426,19 @@ vim 的多文档编辑涉及三个概念：buffer、window、tab，这三个事�
 vim 中每打开一个文件，vim 就对应创建一个 buffer，多个文件就有多个 buffer，但默认你只看得到最后 buffer 对应的 window，通过插件 MiniBufExplorer（https://github.com/fholgado/minibufexpl.vim ，原始版本已停止更新且问题较多，该版本是其他人 fork 的新项目）可以把所有 buffer 罗列出来，并且可以显示多个 buffer 对应的 window。如下图所示：
 （buffer 列表）
 我在 vim 中打开了 main.cpp、CMakeLists.txt、MyClass.cpp、MyClass.h 这四个文件，最上面子窗口（buffer 列表）罗列出的 [1:main.cpp][4:CMakeLists.txt][5:MyClass.cpp][6:MyClass.h] 就是对应的四个 buffer。当前显示了 main.cpp 和 MyClass.h 的两个 buffer，分别对应绿色区域和橙色区域的 window，这下对 buffer 和 window 有概念了吧。图中关于 buffer 列表再说明两点：
-0）\* 表示当前有 window 的 buffer，换言之，有 * 的 buffer 是可见的；! 表示当前正在编辑的 window；
-1）你注意到 buffer 序号 1 和 4 不连续的现象么？只要 vim 打开一个 buffer，序号自动增一，中间不连续有几个可能：可能一，打开了 1、2、3、4 后，用户删除了 2、3 两个 buffer，剩下 1、4；可能二，先打开了其他插件的窗口（如，tagbar）后再打开代码文件；
+
+* \* 表示当前有 window 的 buffer，换言之，有 * 的 buffer 是可见的；! 表示当前正在编辑的 window；
+* 你注意到 buffer 序号 1 和 4 不连续的现象么？只要 vim 打开一个 buffer，序号自动增一，中间不连续有几个可能：可能一，打开了 1、2、3、4 后，用户删除了 2、3 两个 buffer，剩下 1、4；可能二，先打开了其他插件的窗口（如，tagbar）后再打开代码文件；
 
 配置：将如下信息加入 .vimrc 中：
+
+```
 " 显示/隐藏 MiniBufExplorer 窗口
 map <Leader>bl :MBEToggle<cr>
 " buffer 切换快捷键
 map <C-Tab> :MBEbn<cr>
 map <C-S-Tab> :MBEbp<cr>
+```
 
 操作：一般通过 NERDtree 查看工程文件列表，选择打开多个代码文件后，MiniBufExplorer 在顶部自动创建 buffer 列表子窗口。通过前面配置，ctrl-tab 正向遍历 buffer，ctrl-shift-tab 逆向遍历（光标必须在 buffer 列表子窗口外）；在某个 buffer 上键入 d 删除光标所在的 buffer（光标必须在 buffer 列表子窗口内）：
 （多文档编辑）
@@ -1437,29 +1450,48 @@ map <C-S-Tab> :MBEbp<cr>
 <h3 name="0">6.3 环境恢复\*</h3>
 
 vim 的编辑环境保存与恢复是我一直想要的功能，我希望恢复：已打开文件、光标位置、undo/redo、书签、子窗口、窗口大小、窗口位置、命令历史、buffer 列表、代码折叠。vim 文档说借助 viminfo（恢复书签） 和 session（恢复除书签外的其他项）特性很可以实现这个功能。请确保你的 vim 支持 +mksession 和 +viminfo 特性：
+
+```
 vim --version | grep session
 vim --version | grep viminfo
+```
 如果编译 vim 时添加了 --with-features=huge 选项那就没问题。
 
-一般说来，保存/恢复环境步骤如下：
+一般说来，保存/恢复环境步骤如下。
+
 第一步，保存所有文档：
+
+```
 :wa
+```
 第二步，借助 viminfo 和 session 保存当前环境：
+
+```
 :mksession! my.vim
 :wviminfo! my.viminfo
+```
 第三步，退出 vim：
+
+```
 :qa
+```
 第四步，恢复环境，进入 vim 后执行：
+
+```
 :source my.vim
 :rviminfo my.viminfo
+```
 
 具体能保存哪些项，可由 sessionoptions 指定，另外，前面几步可以设定快捷键，在 .vimrc 中增加：
+
+```
 " 设置环境保存项
 set sessionoptions="blank,buffers,globals,localoptions,tabpages,sesdir,folds,help,options,resize,winpos,winsize"
 " 保存快捷键
 map <leader>ss :mksession! my.vim<cr> :wviminfo! my.viminfo<cr>
 " 恢复快捷键
 map <leader>rs :source my.vim<cr> :rviminfo my.viminfo<cr>
+```
 这样，简化第二步、第四步操作。
 
 按此操作，并不能像 vim 文档中描述的那样能保存所有环境，比如，书签、代码折叠、命令历史都无法恢复。这和我预期存在较大差距，暂且用用吧，找个时间在深入研究！
@@ -1507,6 +1539,8 @@ LLVM 出自伊利诺伊大学研究项目，由 google 和苹果公司赞助。L
 在源码安装 clang 前，你需先自行安装 GCC，两个目的，一是你得有个编译器来编译编译器 clang （呵呵，绕了吧），二是其他人的项目可能会用到 GCC。
 
 下载 LLVM、clang 及辅助库源码：
+
+```
 cd ~/downloads 
 svn co http://llvm.org/svn/llvm-project/llvm/trunk llvm 
 cd llvm/tools 
@@ -1518,44 +1552,75 @@ cd ../../../..
 cd llvm/projects 
 svn co http://llvm.org/svn/llvm-project/compiler-rt/trunk compiler-rt 
 cd ..
+```
 先关掉其他应用，尽量多的系统资源留给 GCC 进行编译 clang 源码：
+
+```
 mkdir build
 cd build
 ../configure --enable-optimized CC=/usr/bin/GCC CXX=/usr/bin/g++ 
+```
 接下来，你先洗个澡，再约个会，回来应该编译好了（thinkpad T410I，CPU 奔腾双核 P6000，MEM 4G DDRIII，耗时 2 小时）。确认下：
+
+```
 clang --version 
+```
 
 玩 C/C++ 你肯定要用到标准库。概念上，GCC 配套的标准库涉及 libstdc++ 和 libsupc++ 两个子库，前者是接口层（即，上层的封装），后者是实现层（即，底层的具体实现），对应实物文件，你得需要两个子库的头文件和动态链接库（\*.so）。openSUSE 的安装源中有，直接安装头文件
+
+```
 zypper in libstdc++47-devel
+```
 位于 /usr/include/c++/4.7/，接着安装链接库
+
+```
 zypper in libstdc++6
+```
 位于 /usr/lib/libstdc++.so.6。呃，是滴，libstdc++、libsupc++ 两个子库的相关文件是合并一起安装的。
 
 对应到 clang 的标准库，libc++（接口层）和 libc++abi（实现层）也需要安装头文件和动态链接库（\*.so）。openSUSE 的安装源中并无 libc++，头文件和动态链接库只能源码安装： 
+
+```
 cd ~/downloads/ 
 svn co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx 
 cd libcxx/lib 
 ./buildit 
+```
 头文件已经生成到 ~/downloads/libcxx/include/，要让 clang 找到必须复制到 /usr/include/c++/v1/
+
+```
 cp -r ~/downloads/libcxx/include/ /usr/include/c++/v1/
-*.so 文件已生成 ~/downloads/libcxx/lib/libc++.so.1.0，要让 clang 访问必须复制到 /usr/lib/，并创建软链接
+```
+\*.so 文件已生成 ~/downloads/libcxx/lib/libc++.so.1.0，要让 clang 访问必须复制到 /usr/lib/，并创建软链接
+
+```
 ln -s ~/downloads/libcxx/lib/libc++.so.1.0 ~/downloads/libcxx/lib/libc++.so.1
 ln -s ~/downloads/libcxx/lib/libc++.so.1.0 ~/downloads/libcxx/lib/libc++.so
 cp ~/downloads/libcxx/lib/libc++.so* /usr/lib/
+```
 类似，源码安装 libc++abi 的头文件和动态链接库：
+
+```
 cd ~/downloads/ 
 svn co http://llvm.org/svn/llvm-project/libcxxabi/trunk libcxxabi 
 cd libcxxabi/lib 
 ./buildit 
+```
 头文件已经生成到 ~/downloads/libcxxabi/include/，要让 clang 找到必须复制到 /usr/include/c++/v1/
+
+```
 cp -r ~/downloads/libcxxabi/include/ /usr/include/c++/v1/
 \*.so 文件已生成 ~/downloads/libcxx/lib/libc++abi.so.1.0，要让 clang 访问必须复制到 /usr/lib/，并创建软链接
 ln -s ~/downloads/libcxxabi/lib/libc++abi.so.1.0 ~/downloads/libcxxabi/lib/libc++abi.so.1
 ln -s ~/downloads/libcxxabi/lib/libc++abi.so.1.0 ~/downloads/libcxxabi/lib/libc++abi.so
 cp ~/downloads/libcxxabi/lib/libc++abi.so\* /usr/lib/
+```
 
 后续可以通过如下选项进行代码编译：
+
+```
 clang++ -std=c++11 -stdlib=libc++ -Werror -Weverything -Wno-disabled-macro-expansion -Wno-float-equal -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-global-constructors -Wno-exit-time-destructors -Wno-missing-prototypes -Wno-padded -lc++ -lc++abi main.cpp
+```
 这一大波编译选项很崩溃么 @\_@！我来简单说说：
 
 * -std=c++11：使用 C++11 新特性；
@@ -1583,6 +1648,8 @@ linux 有两类工程构建工具 —— Makefile系 和非 Makefile 系，Makef
 举例来说，你工程包含 main.cpp 文件，要构建它，你需要执行如下步骤。
 
 第一步，编写 CMakeLists.txt，内容如下：
+
+```
 PROJECT(main) 
 SET(SRC_LIST main.cpp) 
 SET(CMAKE_CXX_COMPILER "clang++") 
@@ -1590,6 +1657,7 @@ SET(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++ -Werror -Weverything -Wno-depreca
 SET(CMAKE_EXE_LINKER_FLAGS "-lc++ -lc++abi") 
 SET(CMAKE_BUILD_TYPE Debug) 
 ADD_EXECUTABLE(main ${SRC_LIST})
+```
 其中，PROJECT 指定工程名、SET 是 cmake 变量赋值命令、ADD_EXECUTABLE 指定生成可执行程序的名字。括号内的大写字符串是 cmake 内部预定义变量，这是 CMakeLists.txt 脚本的重点，下面详细讲述：
 
 * SRC_LIST 指定参与编译的源码文件列表，如果有多个文件请用空格隔开，如，你工程有 main.cpp、lib/MyClass.cpp、lib/MyClass.h 三个文件，那么可以指定为：
@@ -1600,6 +1668,8 @@ ADD_EXECUTABLE(main ${SRC_LIST})
 * CMAKE_BUILD_TYPE 设定生成的可执行程序中是否包含调试信息。
 
 另外，对于编译选项，我的原则是严己宽人。也就是说，在我本机上使用最严格的编译选项以发现尽量多 bug，发布给其他人的源码包使用最宽松的编译选项以减少环境差异导致编译失败的可能。前面罗列出来的就是严格版的 CMakeLists.txt，宽松版我会考虑：编译器改用 GCC（很多人没装 clang）、忽略所有编译警告、让编译器进行代码优化、去掉调试信息、添加安装路径等要素，具体如下：
+
+```
 PROJECT(main) 
 SET(SRC_LIST main.cpp) 
 SET(CMAKE_CXX_COMPILER "g++") 
@@ -1607,13 +1677,20 @@ SET(CMAKE_CXX_FLAGS "-std=c++11 -O3")
 SET(CMAKE_BUILD_TYPE Release) 
 ADD_EXECUTABLE(porgram_name ${SRC_LIST})
 INSTALL(PROGRAMS porgram_name DESTINATION /usr/bin/)
+```
 
 第二步，基于 CMakeLists.txt 生成 Makefile。在 CMakeLists.txt 所在目录执行：
+
+```
 cmake CMakeLists.txt
+```
 执行成功的话，你将在该目录下看到 Makefile 文件；
 
 第三步，基于 Makefile 生成可执行程序。相同目录下执行：
+
+```
 make
+```
 这一步，就是在调用编译器进行编译，如果存在代码问题，修正错误后重新执行这一步即可，不用再次执行第一、二步。
 
 基本上，你的新工程，可以在基于上面的 CMakeLists.txt 进行修改，执行一次第二步后，每次代码调整只需执行第三步即可。
@@ -1623,7 +1700,10 @@ make
 工程项目的构建过程游离于 vim 之外终究不那么方便，前面章节介绍的构建过程是在 shell 中执行的，全在 vim 中执行又是如何操作。第一步的创建 CMakeLists.txt 没问题，vim 这么优秀的编辑器编辑个普通文本文件易如反掌；第二步的生成 Makefile 也没问题，在 vim 内部通过 ! 前缀可以执行 shell 命令，:!cmake CMakeLists.txt 即可；第三步的编译过程更没问题，因为 vim 自身支持 make 命令，直接在 vim 中输入 :make 命令它会调用外部 make 程序读取当前目录中的 Makefile 文件，完成编译、链接操作。当然，一次性编译通过的可能性很小，难免有些语法错误（语义错误只能靠调试器了），vim 将编译器抛出的错误和警告信息输出到 quickfix 中，执行 :cw 命令即可显示 quickfix。说了这么多，概要之，先通过构建工具（CMake 可通过 CMakeLists.txt 文件，autotools 可通过 configure 文件）生成整个工程的 Makefile，再在 vim 中执行 :make，最后显示 quickfix。
 
 要实现一键编译，无非是把这几步映射为 vim 的快捷键，即：
+
+```
 nmap <Leader>m :wa<CR>:make<CR><CR>:cw<CR>
+```
 分解说明下，m 为设定的一键编译快捷键，:wa<CR> 保存所有调整文档内容，:make<CR> 调用 make 命令，后面的 <CR> 消除执行完 make 命令屏幕上“Press ENTER or type command to continue”的输入等待提示，:cw<CR> 显示 quickfix（仅当有编译错误或警告时）。如下图所示：
 （一键编译）
 我新建了一个工程，编辑好 CMakeLists.txt，执行 :!cmake CMakeLists.txt，接着 <leader>m 一键编译，quickfix 窗口显示了编译错误，光标自动定位到需要你解决的第一个编译错误，回车后光标自动调整到该错误对应的代码位置，修正后重新 <leader>r，编译通过并运行生成的程序。
@@ -1639,7 +1719,10 @@ nmap <Leader>m :!rm -rf main<CR>:wa<CR>:make<CR><CR>:cw<CR>
 我选方式二。
 
 到此，已实现一键编译，要实现一键编译及运行无非就在刚才的快捷键中追加绑定运行程序的外部命令即可。新快捷键设定为 <leader>g，假定生成的可执行程序名为 main，将如下配置信息加入 .vimrc 中：
+
+```
 nmap <Leader>g :!rm -rf main<CR>:wa<CR>:make<CR>:cw<CR><CR>:!./main<CR>
+```
 
 最后，再次强调实现一键编译及运行的几个前提：vim 的当前目录必须为工程目录、事前准备好 Makefile 文件且放于工程目录的根目录、生成的程序必须在工程目录的根目录。
 
@@ -1652,8 +1735,11 @@ one take，中意“一次成型”，最早指歌手录歌时一次性通过录
 第一步，发现错误。YCM 内部调用 libclang 分析语法错误，通过管道传递给 syntastic 呈现。当你保存代码或者安静 2 秒，错误检查后台任务将自动启动，若有错误，syntastic 将接收到。
 
 第二步，呈现错误。syntastic 并不非立马显示 YCM 发过来的错误信息，除非你触发下次击键事件，否则你看不到错误信息，换言之，干等是没结果的，你必须有次击键动作（没办法，vim 内部机制所限，后台任务无法直接更新 GUI，所以才采用变通的击键方式）。对于存在语法错误的代码，在行首有个红色的 >> 高亮显示，如果你觉得 >> 不够醒目，你可以参照如下方式重新设置：
+
+```
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
+```
 
 第三步，查看错误。好了，现在已经知道哪行代码有问题，具体问题描述如何查看？两种方式：一种是将光标移至问题行，vim 将在其底部显示简要错误描述；一种是将光标移至问题行，键入 <leader>d 后，vim 将在其底部显示详细错误描述。 
 
@@ -1669,10 +1755,13 @@ let g:syntastic_warning_symbol = '⚠'
 vim 支持正则表达式，那么已经具有强劲的查供能力，在当前文件内查找，vim 的 / 和 ? 查找命令非常好用，但工程内查找，自带的查找用户体验还无法达到我的预期。我希望查找时直接根据光标位置确定查找关键字，查询结果通过列表形式罗列处理，选择某项光标就能跳转到对应位置，另外，可以在工程范围内查找，或者在打开文件内查找。有个叫 grep.vim（https://github.com/yegappan/grep ）的插件满足我的需求。
 
 grep.vim 实际上提供了在 vim 内部方便使用 grep、fgrep、egrep、agrep、find、xargs等工具的接口。如果要在工程内进行查找，可以在 vim 命令行中执行 :Grep，grep.vim 插件会依次提示输入待查找关键字、待查找的文件类型，回车即可执行查找，结果将罗列在 quickfix 中（注，vim与很多外部命令、插件的交互信息都将在 quickfix 中呈现，这里说到的搜索结果是一个例子，另外一个前面“一键编译”章节提到的编译结果也将输出至此，可用 :cw 命令打开/关闭 quickfix 窗口）。若是要忽然大小写则执行 :Grep -i，若是要递归搜索子目录则执行 :Grep -r；另外，如果光标在某个字符串上，那么 grep.vim 插件将自动提取该字符串作为查找关键字。如果要在当前打开文件内查找，可以执行 :GrepBffer 命令，参数同上。为高效执行搜索操作，可以设定快捷键：
+
+```
 " 使用 Grep.vim 插件在工程内全局查找，设置快捷键。快捷键速记法：search in project
 nnoremap <Leader>sp :Grep -ir<CR><CR><CR>
 " 使用 Grep.vim 插件在工程内全局查找，设置快捷键。快捷键速记法：search in buffer
 nnoremap <Leader>sb :GrepBuffer -ir<CR><CR>
+```
 :Grep 默认需要手工确认搜索关键字、搜索文件类型，方便起见，我在映射命令后加了几个连续 <CR>，这样就不用手工回车确认了。
 
 举个例子，光标移到 MyClassABC 下，键入 <leader>sp 后，grep.vim 自动提取 MyClassABC 为搜索关键字，执行工程中内查找，找到到 4 个匹配项并显示在 quickfix 中；接着键入 <leader>sb 后，执行打开文件内查找，找到 1 个匹配项。如下图所示：
@@ -1681,16 +1770,26 @@ nnoremap <Leader>sb :GrepBuffer -ir<CR><CR>
 <h3 name="0">8.2 内容替换</h3>
 
 有个名为 iFoo 的全局变量，被工程中 16 个文件引用过，由于你岳母觉得匈牙利命名法严重、异常、绝对以及十分万恶，为讨岳母欢心，不得不将该变量更名为 foo，怎么办？依次打开每个文件，逐一查找后替换？vim 有强大的内容替换命令：
+
+```
 :[range]s/{pattern}/{string}/[flags]
+```
 
 在进行内容替换操作时，我关注几个因素：如何指定替换文件范围、是否整词匹配、是否逐一确认后再替换。
 
 如何指定替换文件范围？
+
 * 如果在当前文件内替换，[range] 不用指定，默认就在当前文件内；
 * 如果在当前选中区域，[range] 也不用指定，在你键入替换命令时，vim 自动将生成如下命令：
+
+```
 :'<,'>s/{pattern}/{string}/[flags]
+```
 * 你也可以指定行范围，如，第三行到第五行：
+
+```
 :3,5s/{pattern}/{string}/[flags]
+```
 * 如果对打开文件进行替换，你需要先通过 :bufdo 命令显式告知 vim 范围，再执行替换；
 * 如果对工程内所有文件进行替换，先 :args \*\*/*.cpp **/*.h 告知 vim 范围，再执行替换；
 
@@ -1699,6 +1798,8 @@ nnoremap <Leader>sb :GrepBuffer -ir<CR><CR>
 是否逐一确认后再替换？[flags] 可用于指定是否需要确认。若无须确认，该字段设定为 ge 即可；有时不见得所有匹配的字符串都需替换，若在每次替换前进行确认，该字段设定为 gec 即可。
 
 是否整词匹配和是否确认两个条件叠加就有 4 种组合：非整词且不确认、非整词且确认、整词且不确认、整词且确认，每次手工输入这些命令真是麻烦；我把这些组合封装到一个函数中，如下 Replace() 所示：
+
+```
 " 替换函数。参数说明：
 " confirm：是否替换前逐一确认
 " wholeword：是否整词匹配
@@ -1720,7 +1821,10 @@ function! Replace(confirm, wholeword, replace)
     let replace = escape(a:replace, '/\&~')
     execute 'argdo %s/' . search . '/' . replace . '/' . flag . '| update'
 endfunction
+```
 为最大程度减少手工输入，Replace() 还能自动提取待替换字符串（只要把光标移至待替换字符串上），同时，替换完成后自动为你保存更改的文件。现在要做的就是赋予 confirm、wholeword 不同实参实现 4 种组合，再绑定 4 个快捷键即可。如下：
+
+```
 " 不确认、非整词
 nnoremap <Leader>R :call Replace(0, 0, input('Replace '.expand('<cword>').' with: '))<CR>
 " 不确认、整词
@@ -1730,9 +1834,12 @@ nnoremap <Leader>rc :call Replace(1, 0, input('Replace '.expand('<cword>').' wit
 " 确认、整词
 nnoremap <Leader>rcw :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
 nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
+```
 我平时用的最多的无须确认但整词匹配的替换模式，即 <leader>rw。
 
 请将完整配置信息添加进 .vimrc 中：
+
+```
 " 替换函数。参数说明：
 " confirm：是否替换前逐一确认
 " wholeword：是否整词匹配
@@ -1763,6 +1870,7 @@ nnoremap <Leader>rc :call Replace(1, 0, input('Replace '.expand('<cword>').' wit
 " 确认、整词
 nnoremap <Leader>rcw :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
 nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
+```
 
 比如，我将工程的所有 *.cpp 和 *.h 中的关键字 MyClassA 按不确认且整词匹配模式替换成 MyClass，所以注释中的关键字不会被替换掉。如下所示：
 （不确认且整词匹配模式的替换）
@@ -1774,7 +1882,9 @@ nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' wi
 vim 有两类快速移动光标的方式：一类是以单词为单位的移动，比如，w 正向移动到相邻单词的首字符、b 逆向移动到相邻单词的首字符、e 正向移动到相邻单词的尾字符、 ge 逆向移动到相邻单词的尾字符；一类是配合查找字符的方式移动，比如，fa 正向移动到第一个字符 a 处、Fa 逆向移动到第一个字符 a 处。你要在非相邻的单词或字符间移动，你可以配合数字参数，比如，正向移动到相隔八个单词的首字符执行 8w、逆向移动到第四个 a 字符处执行 4Fa。
 
 有如下文本：
-backpage kcal liam jack facebook target luach ajax
+
+>backpage kcal liam jack facebook target luach ajax
+
 假定光标在行首，需要移动到 facebook 的字符 a 处，先来数下前面有 1、2 ... 5 个 a，然后用前面所说的 5fa，唔，怎么在 jack 上呢？等等，好像数错了，再数次 1、2 ... 6，对滴，应该是 6fa，这下对了。我的个天，不能让哥太累，得找个插件帮忙 —— easymotion（https://github.com/Lokaltog/vim-easymotion ）。
 
 easymotion 只做一件事：把满足条件的位置用 [A~Za~z] 间的标签字符标出来，找到你想去的位置再键入对应标签字符即可快速到达。比如，上面的例子，假设光标在行首，我只需键入 <leader><leader>fa （为避免与其他快捷键冲突，easymotion 采用两次 <leader> 作为前缀键），所有的字符 a 都被重新标记成 a、b、c、d、e、f 等等标签（原始内容不会改变），f 标签为希望移动去的位置，随即键入 f 即可到达。如下图所示：
@@ -1795,6 +1905,7 @@ easymotion 只做一件事：把满足条件的位置用 [A~Za~z] 间的标签�
 vim-instant-markdown（https://github.com/suan/vim-instant-markdown ） 的安装相比其他插件较为特殊，它由 ruby 开发，所以你的 vim 必须集成 ruby 解释器（见“1 源码安装编辑器 vim”），并且安装 pygments.rb、redcarpet、instant-markdown-d 三个依赖库（npm 命令可通过 zypper install nodejs 安装）。
 
 对于重内容、轻设计的我这类人来说，markdown 简洁的文书语法太贴心了。推荐三个网站：
+
 * markdown 语法 http://daringfireball.net/projects/markdown/syntax
 * github.com 扩展 https://guides.github.com/features/mastering-markdown/
 * emoji 符号表情 http://www.emoji-cheat-sheet.com/
