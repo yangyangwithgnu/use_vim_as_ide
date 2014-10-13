@@ -198,7 +198,7 @@ ake VIMRUNTIMEDIR=/usr/share/vim/vim74 && make install
 ```
 :echo has('python')
 ```
-若输出 1 则表示构建出的 vim 已支持 python，反之，0 则支持。
+若输出 1 则表示构建出的 vim 已支持 python，反之，0 则不支持。
 
 <h2 name="0">2 插件管理</h2>
 
@@ -223,16 +223,16 @@ execute pathogen#infect()
 ```
 
 使用：比如要安装新插件 plugin_name，先在 ~/.vim/bundle/ 下创建目录  plugin_name/，然后到 vim 官网下载 plugin_name 压缩包并解压至 ~/.vim/bundle/plugin_name/ 即可，注意不要重复包含多次 plugin_name/ 目录，如，~/.vim/bundle/plugin_name/plugin_name/。要卸载插件，直接删除 plugin_name/ 插件目录即可。另外，通过 pathogen 管理插件后，相较以前有几点变化：
-0）切勿通过发行套件自带的软件管理工具安装任何插件，不然 .vim/ 又要混乱了；
-1）pathogen 无法安装配色主题风格，只能将主题插件手工放置于 ~/.vim/colors/；
-2）安装 \*.vba 类型插件：
+* 切勿通过发行套件自带的软件管理工具安装任何插件，不然 .vim/ 又要混乱了；
+* pathogen 无法安装配色主题风格，只能将主题插件手工放置于 ~/.vim/colors/；
+* 安装 \*.vba 类型插件：
 
 ```
 :e plugin_name.vba 
 :!mkdir -p ~/.vim/bundle/plugin_name 
 :UseVimball ~/.vim/bundle/plugin_name 
 ```
-3）生成帮助文档：
+* 生成帮助文档：
 
 ```
 :Helptags 
