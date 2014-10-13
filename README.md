@@ -5,7 +5,7 @@ yangyang.gnu@gmail.com
 
 ##【公告】
 ----
-* <font color="red"><b>**捐赠：如果觉得本文还不错，捐点碎银，支付宝 yangyang.gnu@gmail.com，给多了我跟你急 $\_$**</b></font>
+* <font color="red">**捐赠：如果觉得本文还不错，捐点碎银，支付宝 yangyang.gnu@gmail.com，给多了我跟你急 $\_$**</font>
 * **讨论**：任何意见建议移步 http://www.v2ex.com/t/137202
 
 
@@ -67,6 +67,8 @@ yangyang.gnu@gmail.com
 ........[7.8 有待提升](#7.8)  
 [8 完结](#8)  
 
+
+
 0 vim 必知会 
 	0.1 .vimrc 文件 
 	0.2 .vim/ 目录 
@@ -108,21 +110,27 @@ yangyang.gnu@gmail.com
 	8.1 内容查找 
 	8.2 内容替换 
 	8.3 快速移动 
+	8.4 markdown 即时预览 
 9 尾声
 
 ##【正文】
 ----
-
 开始前，我假设你：0）具备基本的 vim 操作能力，清楚如何打开/编辑/保存文档、命令与插入模式间切换；1）希望将 vim 打造成 C/C++ 语言的 IDE，而非其他语言。
+
 关于 vim 的优点，你在网上能查到 128+ 项，对我而言，只有两项：0）所想即所得，让手输入的速度跟上大脑思考的速度，1）所需即所获，只有你想不到的功能、没有实现不了的插件。希望获得前者的能力，你需要两本教程深入学习，《Practical Vim: Edit Text at the Speed of Thought》和《vim user manual》；要想拥有后者的能力，通读本文 -。-#。对于 vim 的喜爱，献上湿哥哥以表景仰之情：
-vi 之大道如我心之禅，
-  vi 之漫路即为禅修，  
-  vi 之命令禅印于心，  
- 未得此道者视之怪诞， 
- 与之为伴者洞其真谛， 
- 长修此道者巨变人生。
-作： reddy@lion.austin.com
-译：yangyang.gnu@gmail.com
+<div align="center">
+> vi 之大道如我心之禅，  
+>   vi 之漫路即为禅修，  
+>   vi 之命令禅印于心，  
+>  未得此道者视之怪诞，  
+>  与之为伴者洞其真谛，  
+>  长修此道者巨变人生。 
+</div>
+<div align="right">
+> 作：reddy@lion.austin.com  
+> 译：yangyang.gnu@gmail.com
+</div>
+
 言归正传，说说 vim 用于代码编写提供了哪些直接和间接功能支撑。vim 用户手册中，50％ 的例子都是在讲 vim 如何高效编写代码，由此可见，vim 是一款面向于程序员的编辑器，即使某些功能 vim 无法直接完成，借助其丰富的插件资源，必定可以达成目标，这就是所需即所获。
 我是个目标驱动的信奉者，本文内容，我会先给出优秀 C/C++ IDE 应具备哪些功能，再去探索如何通过 vim 的操作或插件来达到目标。最终至少要像这个样子：
 （图形环境下 IDE 总揽）
@@ -266,7 +274,7 @@ endf
 map <silent> <F11> :call ToggleFullscreen()<CR>
 " 启动 vim 时自动全屏
 autocmd VimEnter * call ToggleFullscreen()
-上面是一段简单的 vimscript 脚本，外部命令 wmctrl 及其命令行参数控制将指定窗口 windowid（即，vim）全屏，绑定快捷键 F11 实现全屏/窗口模式切换（LINUX 下各 GUI 软件约定使用 F11 全屏，最好遵守约定），最后配置启动时自动全屏。
+上面是一段简单的 vimscript 脚本，外部命令 wmctrl 及其命令行参数控制将指定窗口 windowid（即，vim）全屏，绑定快捷键 F11 实现全屏/窗口模式切换（linux 下各 GUI 软件约定使用 F11 全屏，最好遵守约定），最后配置启动时自动全屏。
 
 3.3 添加辅助信息
     去除了冗余元素让 vim 界面清爽多了，为那些实用辅助信息腾出了空间。光标当前位置、显示行号、高亮当前行/列等等都很有用：
@@ -328,7 +336,7 @@ set shiftwidth=4
 set softtabstop=4
 其中，注意下 expandtab、tabstop 与 shiftwidth、softtabstop、retab：
 expandtab，把制表符转换为多个空格，具体空格数量参考 tabstop 和 shiftwidth 变量；
-tabstop 与 shiftwidth 是有区别的。tabstop 指定我们在插入模式下输入一个制表符占据的空格数量，LINUX 内核编码规范建议是 8，看个人需要；shiftwidth 指定在进行缩进格式化源码时制表符占据的空格数。所谓缩进格式化，指的是通过 vim 命令由 vim 自动对源码进行缩进处理，比如其他人的代码不满足你的缩进要求，你就可以对其进行缩进格式化。缩进格式化，需要先选中指定行，要么键入 = 让 vim 对该行进行智能缩进格式化，要么按需键入多次 < 或 > 手工缩进格式化；
+tabstop 与 shiftwidth 是有区别的。tabstop 指定我们在插入模式下输入一个制表符占据的空格数量，linux 内核编码规范建议是 8，看个人需要；shiftwidth 指定在进行缩进格式化源码时制表符占据的空格数。所谓缩进格式化，指的是通过 vim 命令由 vim 自动对源码进行缩进处理，比如其他人的代码不满足你的缩进要求，你就可以对其进行缩进格式化。缩进格式化，需要先选中指定行，要么键入 = 让 vim 对该行进行智能缩进格式化，要么按需键入多次 < 或 > 手工缩进格式化；
 softtabstop，如何处理连续多个空格。因为 expandtab 已经把制表符转换为空格，当你要删除制表符时你得连续删除多个空格，该就是告诉 vim 把连续数量的空格视为一个制表符，即，只删一个字符即可。通常应将这tabstop、shiftwidth、softtabstop 三个变量设置为相同值；
 另外，你总会阅读其他人的代码吧，他们对制表符定义规则与你不同，这时你可以手工执行 vim 的 retab 命令，让 vim 按上述规则重新处理制表符与空格关系。
     很多编码规范建议缩进（代码嵌套类似）最多不能超过 4 层，但难免有更多层的情况，缩进一多，我那个晕啊：
@@ -371,7 +379,7 @@ nmap <Leader>sch :AS<CR>
 
 4.5 代码收藏
     源码分析过程中，常常需要在不同代码间来回跳转，我需要“收藏”分散在不同处的代码行，以便需要查看时能快速跳转过去，这时，vim 的书签（mark）功能派上大用途了。
-    vim 书签的使用很简单，在你需要收藏的代码行键入 mm，这样就收藏好了，你试试，没反应？不会吧，难道你 LINUX 内核编译参数有问题，或者，vim 的编译参数没给全，让我想想，别急，喔，对了，你是指看不到书签？对对对，书签本来就看不到吖。这可不行，小二，来个让书签可视化的插件，亲，来了，visual mark （https://github.com/vim-scripts/Visual-Mark），记得好评。
+    vim 书签的使用很简单，在你需要收藏的代码行键入 mm，这样就收藏好了，你试试，没反应？不会吧，难道你 linux 内核编译参数有问题，或者，vim 的编译参数没给全，让我想想，别急，喔，对了，你是指看不到书签？对对对，书签本来就看不到吖。这可不行，小二，来个让书签可视化的插件，亲，来了，visual mark （https://github.com/vim-scripts/Visual-Mark），记得好评。
     visual mark 使用快捷键 mm 创建/删除书签，F2 正向遍历书签，Shift + F2 逆向遍历，不太方便，得改；另外，书签颜色不好看，得调。看看帮助如何配置，昏，没帮助，得，直接改它的源码吧。找到 ~/.vim/bundle/Visual-Mark/plugin/visualmark.vim，将
 map <unique> <F2> <Plug>Vm_goto_next_sign
 map <unique> <s-F2> <Plug>Vm_goto_prev_sign
@@ -402,6 +410,8 @@ endif
 ctags --list-languages
     学习知识最好方式就是动手实践。我们以 main.cpp、my_class.h、my_class.cpp 三个文件为例：
     第一步，准备代码文件。创建演示目录 /data/workplace/example/、库子目录 /data/workplace/example/lib/，创建如下内容的 main.cpp：
+
+```
 #include <iostring> 
 #include <string> 
 #include "lib/my_class.h" 
@@ -411,29 +421,31 @@ int g_num = 128;
 static void 
 printMsg (char ch) 
 { 
-	std::cout << ch << std::endl; 
+    std::cout << ch << std::endl; 
 } 
 int 
 main (void) 
 { 
-	// 局部对象
-	const string	name = "yangyang.gnu"; 
-	// 类 
-	MyClass	one; 
-	// 成员函数 
-	one.printMsg(); 
-	// 使用局部对象 
-	cout << g_num << name << endl; 
-	return	(EXIT_SUCCESS); 
+    // 局部对象
+    const string	name = "yangyang.gnu"; 
+    // 类 
+    MyClass	one; 
+    // 成员函数 
+    one.printMsg(); 
+    // 使用局部对象 
+    cout << g_num << name << endl; 
+    return	(EXIT_SUCCESS); 
 } 
+```
+
 创建如下内容的 my_class.h：
 #pragma once 
 class MyClass 
 { 
-	public: 
-		void printMsg(void); 	 
-	private: 
-		; 
+    public: 
+        void printMsg(void); 	 
+    private: 
+        ; 
 };
 创建如下内容的 my_class.cpp：
 #include "my_class.h" 
@@ -441,12 +453,12 @@ class MyClass
 static void 
 printMsg (int i) 
 { 
-	std::cout << i << std::endl; 
+    std::cout << i << std::endl; 
 } 
 void 
 MyClass::printMsg (void) 
 { 
-	std::cout << "I'M MyClass!" << std::endl; 
+    std::cout << "I'M MyClass!" << std::endl; 
 }
     第二步，生成标签文件。现在运行 ctags 生成标签文件：
 cd /data/workplace/example/
@@ -607,7 +619,7 @@ if (/* condition */) {
     UltiSnips 预定义了几十种语言常用的代码模板，位于 ~/.vim/bundle/UltiSnips/UltiSnips/，UltiSnips 有一套自己的代码模板语法规则，比如：
 snippet if "if statement" i
 if (${1:/* condition */}) { 
-	${2:TODO} 
+    ${2:TODO} 
 } 
 endsnippet
 其中，snippet 和 endsnippet 用于表示模板的开始和结束；if 是模板名；"if statement" 是模板描述，你可以把多个模板的模板名定义成一样（如，if () {} 和 if () {} else {} 两模板都定义成相同模板名 if），在模板描述中加以区分（如，分别对应 "if statement" 和 "if-else statement"），这样，在 YCM（重量级智能补全插件） 的补全列表中可以根据模板描述区分选项不同模板；i 是模板控制参数，用于控制模板补全行为，具体参见“快速输入结对符”一节；${1}、${2} 是 <tab> 跳转的先后顺序。
@@ -635,19 +647,19 @@ endsnippet
 # if 
 snippet if 
 if (${1:/* condition */}) { 
-	${2:TODO} 
+    ${2:TODO} 
 } 
 endsnippet 
 # else if 
 snippet ei 
 else if (${1:/* condition */}) { 
-	${2:TODO} 
+    ${2:TODO} 
 } 
 endsnippet 
 # else 
 snippet el 
 else { 
-	${1:TODO} 
+    ${1:TODO} 
 } 
 endsnippet 
 # return 
@@ -657,43 +669,43 @@ endsnippet
 # Do While Loop 
 snippet do 
 do { 
-	${2:TODO} 
+    ${2:TODO} 
 } while (${1:/* condition */}); 
 endsnippet 
 # While Loop 
 snippet wh 
 while (${1:/* condition */}) { 
-	${2:TODO} 
+    ${2:TODO} 
 } 
 endsnippet 
 # switch 
 snippet sw 
 switch (${1:/* condition */}) { 
-	case ${2:c}: { 
-	} 
-	break; 
+    case ${2:c}: { 
+    } 
+    break; 
 
-	default: { 
-	} 
-	break; 
+    default: { 
+    } 
+    break; 
 } 
 endsnippet 
 # 通过迭代器遍历容器（可读写） 
 snippet for 
 for (auto ${2:iter} = ${1:c}.begin(); ${3:$2} != $1.end(); ${4:++iter}) {
-	${5:TODO} 
+    ${5:TODO} 
 } 
 endsnippet 
 # 通过迭代器遍历容器（只读） 
 snippet cfor 
 for (auto ${2:citer} = ${1:c}.cbegin(); ${3:$2} != $1.cend(); ${4:++citer}) { 
-	${5:TODO} 
+    ${5:TODO} 
 } 
 endsnippet 
 # 通过下标遍历容器 
 snippet For 
 for (auto ${2:i} = 0; $2 != ${1}.size(); ${3:++}$2) { 
-	${4:TODO} 
+    ${4:TODO} 
 } 
 endsnippet 
 # C++11风格for循环遍历（可读写） 
@@ -709,7 +721,7 @@ endsnippet
 # For Loop 
 snippet FOR 
 for (unsigned ${2:i} = 0; $2 < ${1:count}; ${3:++}$2) { 
-	${4:TODO} 
+    ${4:TODO} 
 } 
 endsnippet 
 # try-catch 
@@ -751,11 +763,11 @@ endsnippet
 snippet cl 
 class ${1:`Filename('$1_t', 'name')`} 
 { 
-	public: 
-		$1 (); 
-		virtual ~$1 (); 
-		 
-	private: 
+    public: 
+        $1 (); 
+        virtual ~$1 (); 
+         
+    private: 
 }; 
 endsnippet 
 #================================= 
@@ -772,7 +784,7 @@ endsnippet
 # 大括号 brace 
 snippet br "brace" i 
 { 
-	${1} 
+    ${1} 
 }${2} 
 endsnippet 
 # 单引号 single quote，设定为 se 而非 sq，避免与 q 冲突
@@ -837,16 +849,16 @@ let OmniCpp_DefaultNamespaces = ["_GLIBCXX_STD"]
 set tags+=/usr/include/c++/4.8/stdcpp.tags
 后续你就可以进行 C++ 标准库的代码补全，比如，在某个 string 对象名输入 . 时，vim 自动显示成员列表。如下图所示：
 （基于标签的 C++ 标准库补全）
-    没明白？ -。-# 咱再来个例子，看看如何补全 LINUX 系统 API。与前面的标准库补全类似，唯一需要注意，LINUX 系统 API 头文件中使用了 GCC 编译器扩展语法，必须告诉 ctags 在生成标签时忽略之，否则将生产错误的标签索引。
-    首先，获取 LINUX 系统 API 头文件。openSUSE 可用如下命令：
+    没明白？ -。-# 咱再来个例子，看看如何补全 linux 系统 API。与前面的标准库补全类似，唯一需要注意，linux 系统 API 头文件中使用了 GCC 编译器扩展语法，必须告诉 ctags 在生成标签时忽略之，否则将生产错误的标签索引。
+    首先，获取 linux 系统 API 头文件。openSUSE 可用如下命令：
 zypper install linux-glibc-devel
 安装成功后，在 /usr/include/ 中可见相关头文件；
-    接着，执行 ctags 生成系统 API 的标签文件。LINUX 内核采用 GCC 编译，为提高内核运行效率，LINUX 源码文件中大量采用 GCC 扩展语法，这影响 ctags 生成正确的标签，必须借由 ctags 的 -I 命令参数告之忽略某些标签，若有多个忽略字符串之间用逗号分割。比如，在文件 unistd.h 中几乎每个API声明中都会出现 __THROW、__nonnull 关键字，前者目的是告诉 GCC 这些函数不会抛异常，尽量多、尽量深地优化这些函数，后者目的告诉 GCC 凡是发现调用这些函数时第一个实参为 nullptr 指针则将其视为语法错误，的确，使用这些扩展语法方便了我们编码，但却影响了 ctags 正常解析，这时可用 -I __THROW,__nonnull 命令行参数让 ctags 忽略这些语法扩展关键字：
+    接着，执行 ctags 生成系统 API 的标签文件。linux 内核采用 GCC 编译，为提高内核运行效率，linux 源码文件中大量采用 GCC 扩展语法，这影响 ctags 生成正确的标签，必须借由 ctags 的 -I 命令参数告之忽略某些标签，若有多个忽略字符串之间用逗号分割。比如，在文件 unistd.h 中几乎每个API声明中都会出现 __THROW、__nonnull 关键字，前者目的是告诉 GCC 这些函数不会抛异常，尽量多、尽量深地优化这些函数，后者目的告诉 GCC 凡是发现调用这些函数时第一个实参为 nullptr 指针则将其视为语法错误，的确，使用这些扩展语法方便了我们编码，但却影响了 ctags 正常解析，这时可用 -I __THROW,__nonnull 命令行参数让 ctags 忽略这些语法扩展关键字：
 cd /usr/include/
 ctags -R --c-kinds=+l+x+p --fields=+lS -I __THROW,__nonnull -f sys.tags
     最后，在 vim 中引入该标签文件。在 .vimrc 中增加如下内容：
 set tags+=/usr/include/sys.tags
-    从以上两个例子来看，不论是 C++ 标准库、boost、ACE这些重量级开发库，还是 LINUX 系统 API 均可遵循“下载源码（至少包括头文件）-执行 ctags 生产标签文件-引入标签文件”的流程实现基于标签的智能补全，若有异常，唯有如下两种可能：一是源码中使用了名字空间，借助 OmniCppComplete 插件的 OmniCpp_DefaultNamespaces 配置项解决；一是源码中使用了编译器扩展语法，借助 ctags 的 -I 参数解决（上例仅列举了少量 GCC 扩展语法，此外还有 __attribute_malloc__、__wur 等等大量扩展语法，具体请参见 GCC 手册。以后，如果发现某个系统函数无法自动补全，十有八九是头文件中使用使用了扩展语法，先找到该函数完整声明，再将其使用的扩展语法加入 -I 列表中，最后运行 ctags 重新生产新标签文件即可）。
+    从以上两个例子来看，不论是 C++ 标准库、boost、ACE这些重量级开发库，还是 linux 系统 API 均可遵循“下载源码（至少包括头文件）-执行 ctags 生产标签文件-引入标签文件”的流程实现基于标签的智能补全，若有异常，唯有如下两种可能：一是源码中使用了名字空间，借助 OmniCppComplete 插件的 OmniCpp_DefaultNamespaces 配置项解决；一是源码中使用了编译器扩展语法，借助 ctags 的 -I 参数解决（上例仅列举了少量 GCC 扩展语法，此外还有 __attribute_malloc__、__wur 等等大量扩展语法，具体请参见 GCC 手册。以后，如果发现某个系统函数无法自动补全，十有八九是头文件中使用使用了扩展语法，先找到该函数完整声明，再将其使用的扩展语法加入 -I 列表中，最后运行 ctags 重新生产新标签文件即可）。
 
 基于语义的智能补全
     对于智能补全只有轻度需求的用户来说，基于标签的补全能够很好地满足需求，但对于我这类重度需求用户来说，但凡涉及标签，就存在以下几个问题：
@@ -855,7 +867,7 @@ set tags+=/usr/include/sys.tags
     我需要更优的补全机制 —— 基于语义的智能补全。语义补全，实时探测你是否有补全需求，无须你定期生成标签，可解决问题一；语义补全，是借助编译器进行代码分析，只要编译器对 C++ 规范支持度高，不论标准库、类型推导，还是 boost 库中的智能指针都能补全。什么是语义分析补全？看下图：
 （语义分析补全）
 代码中定义的 TCandyBar 类型只包括 3 个成员，但 clang_complete 能补全编译器根据 C++ 规范自动添加的两个重载操作符、一个默认构造函数、一个析构函数，这就是基于语义分析的智能补全。
-    要进行语义分析，编译器必不可少。LINUX 上有两大主流 C++ 编译器 GCC 和 clang，基于不同编译器，开源社区分别创造出 GCCSense 和 clang_complete 两个语义补全插件，又得纠结选哪个 -。- ... <穿越> 请跳转至“源码安装编译器 clang”部分做两件事，一是按介绍安装好最新版 clang 及其标准库，二是看明白 clang 相较 GCC 的优势 </穿越> ...
+    要进行语义分析，编译器必不可少。linux 上有两大主流 C++ 编译器 GCC 和 clang，基于不同编译器，开源社区分别创造出 GCCSense 和 clang_complete 两个语义补全插件，又得纠结选哪个 -。- ... <穿越> 请跳转至“源码安装编译器 clang”部分做两件事，一是按介绍安装好最新版 clang 及其标准库，二是看明白 clang 相较 GCC 的优势 </穿越> ...
     我选 clang_complete，原因如下：
     0）使用难度低。clang 采用低耦合设计，语义分析结果（也就是 AST）能以接口形式供外围程序使用，无须任何调整，clang_complete 便能能轻松拿到 clang 输出的语义分析结果；而 GCC 采用高耦合设计，你必须结合补丁重新源码编译 GCC，才能让 GCCSense 接收到它的语义分析结果；
     1）维护时间长。clang_complete 最新更新为 13 年上，而 GCCSense 则是 09 年下；
@@ -1011,7 +1023,7 @@ let g:ycm_collect_identifiers_from_tags_files=1
 set tags+=/data/misc/software/misc./vim/stdcpp.tags
 其中，工程自身代码的标签可借助 indexer 插件自动生成自动引入，但由于 YCM 要求 tag 文件中必须含有 language:<X> 字段（ctags 的命令行参数 --fields 必须含有 l 选项），所有必须通过 indexer_ctagsCommandLineOptions 告知 indexer 调用 ctags 时注意生成该字段，具体设置参见“代码导航”章节；前面章节介绍过如何生成、引入 C++ 标准库的 tag 文件，设置成正确路径即可。另外，由于引入过多 tag 文件会导致 vim 变得非常缓慢，我的经验是，只引入工程自身（indexer 自动引入）和 C++ 标准库的标签（上面配置的最后一行）。如下图所示：
 （YCM 的标签补全）
-    YCM 的 OmniCppComplete 补全引擎。我要进行 LINUX 系统开发，打开系统函数头文件觉得麻烦（也就无法使用 YCM 的语义补全），引入系统函数 tag 文件又影响 vim 速度（也就无法使用 YCM 的标签补全），这种情况又如何让 YCM 补全呢？WOW，别担心，YCM 还有 OmniCppComplete 补全引擎，只要你在当前代码文件中 #include 了该标识符所在头文件即可。通过 OmniCppComplete 补全无法使用 YCM 的随键而全的特性，你需要手工告知 YCM 需要补全，OmniCppComplete 的默认补全快捷键为 <C-x><C-o>，不太方便，我重新设定为 <leader>;，如前面配置所示：
+    YCM 的 OmniCppComplete 补全引擎。我要进行 linux 系统开发，打开系统函数头文件觉得麻烦（也就无法使用 YCM 的语义补全），引入系统函数 tag 文件又影响 vim 速度（也就无法使用 YCM 的标签补全），这种情况又如何让 YCM 补全呢？WOW，别担心，YCM 还有 OmniCppComplete 补全引擎，只要你在当前代码文件中 #include 了该标识符所在头文件即可。通过 OmniCppComplete 补全无法使用 YCM 的随键而全的特性，你需要手工告知 YCM 需要补全，OmniCppComplete 的默认补全快捷键为 <C-x><C-o>，不太方便，我重新设定为 <leader>;，如前面配置所示：
 inoremap <leader>; <C-x><C-o>
 比如，我要补全 fork()，该函数所在头文件为 unistd.h，正确添加 #include <unistd.h> 后即可补全。如下图所示：
 （YCM 的 OmniCppComplete 补全引擎）
@@ -1068,7 +1080,7 @@ let proto = substitute(proto, '(\_.*$', " (" . params . Tail, '')
 
 5.6 库信息参考
     有过 Win32 SDK 开发经验的朋友对 MSDN 或多或少有些迷恋吧，对于多达 7、8 个参数的 API，如果没有一套函数功能描述、参数讲解、返回值说明的文档，那么软件开发将是人间炼狱。别急，vim 也能做到。
-    要使用该功能，系统中必须先安装对应 man。安装 LINUX 系统函数 man，先下载（https://www.kernel.org/doc/man-pages/download.html），解压后将 man1/ 至 man8/ 拷贝至 /usr/share/man/，运行 man fork 确认是否安装成功。安装 C++ 标准库 man，先下载（ftp://GCC.gnu.org/pub/GCC/libstdc++/doxygen/），选择最新 libstdc++-api-X.X.X.man.tar.bz2，解压后将 man3/ 拷贝至 /usr/share/man/，运行 man std::vector 确认是否安装成功；
+    要使用该功能，系统中必须先安装对应 man。安装 linux 系统函数 man，先下载（https://www.kernel.org/doc/man-pages/download.html），解压后将 man1/ 至 man8/ 拷贝至 /usr/share/man/，运行 man fork 确认是否安装成功。安装 C++ 标准库 man，先下载（ftp://GCC.gnu.org/pub/GCC/libstdc++/doxygen/），选择最新 libstdc++-api-X.X.X.man.tar.bz2，解压后将 man3/ 拷贝至 /usr/share/man/，运行 man std::vector 确认是否安装成功；
     vim 内置的 man.vim 插件可以查看已安装的 man，需在 .vimrc 中配置启动时自动加载该插件：
 " 启用:Man命令查看各类man信息
 source $VIMRUNTIME/ftplugin/man.vim
@@ -1079,7 +1091,7 @@ nmap <Leader>man :Man 3 <cword><CR>
     另外，我们编码时通常都是先声明使用 std 名字空间，在使用某个标准库中的类时前不会添加 std:: 前缀，所以 vim 取到的当前光标所在单词中也不会含有 std:: 前缀，而，C++ 标准库所有 man 文件名均有 std:: 前缀，所以必须将所有文件的 std:: 前缀去掉才能让 :Man 找到正确的 man 文件。在 libstdc++-api-X.X.X.man/man3/ 执行批量重命名以取消所有 man文件的 std:: 前缀： 
 rename "std::" "" std::* 
 顺便说下，很多人以为 rename 命令只是 mv 命令的简单封装，非也，在重命名方面，rename 太专业了，远非 mv 可触及滴，就拿上例来说，mv 必须结合 sed 才能达到这样的效果。
-    我认为，好的库信息参考手册不仅有对参数、返回值的描述，还应有使用范例，上面介绍的 LINUX 系统函数 man 做到了，C++ 标准库 man 还未达到我要求。所以，若有网络条件，我更愿意选择查看在线参考，C++ 推荐：http://www.cplusplus.com/reference/、http://en.cppreference.com/w/Cppreference:Archives，前者范例多、后者更新勤；UNIX 推荐：http://pubs.opengroup.org/onlinepubs/9699919799/functions/contents.html、http://man7.org/LINUX/man-pages/dir_all_alphabetic.html，前者基于最新 SUS（Single UNIX Specification，单一 UNIX 规范）、后者偏重 LINUX 扩展。
+    我认为，好的库信息参考手册不仅有对参数、返回值的描述，还应有使用范例，上面介绍的 linux 系统函数 man 做到了，C++ 标准库 man 还未达到我要求。所以，若有网络条件，我更愿意选择查看在线参考，C++ 推荐：http://www.cplusplus.com/reference/、http://en.cppreference.com/w/Cppreference:Archives，前者范例多、后者更新勤；UNIX 推荐：http://pubs.opengroup.org/onlinepubs/9699919799/functions/contents.html、http://man7.org/linux/man-pages/dir_all_alphabetic.html，前者基于最新 SUS（Single UNIX Specification，单一 UNIX 规范）、后者偏重 linux 扩展。
 
 6 工程管理
     我虽不要求达不到软件工程的高度，但基本的管理还是有必要的，比如，工程文件的管理、多文档编辑、工程环境的保存与恢复。
@@ -1154,7 +1166,7 @@ map <leader>rs :source my.vim<cr> :rviminfo my.viminfo<cr>
     先说下编译器和构建工具。vim 再强大也只能是个优秀的编辑器而非编译器，它能高效地完成代码编辑工作，但必须通过其他外部命令实现将代码转换为二进制可执行文件；一旦工程上规模，你不可能单个单个文件编译，这时构建工具就派上场了。
 
 代码编译
-    GCC 是 LINUX 上 C/C++ 编译器的事实标准，几乎所有发行套件都默认安装，它很好但不是最好：编译错误提示信息可读性不够（特别对于 C++ 模板错误信息基本就是读天书）、基于 GCC 的二次开发困难重重。我需要更优秀的 C++ 编译器。
+    GCC 是 linux 上 C/C++ 编译器的事实标准，几乎所有发行套件都默认安装，它很好但不是最好：编译错误提示信息可读性不够（特别对于 C++ 模板错误信息基本就是读天书）、基于 GCC 的二次开发困难重重。我需要更优秀的 C++ 编译器。
     Stanley B. Lippman 先生所推荐宇宙最强 C++ 编译器 —— LLVM/clang。Stanley 何许人也？不是吧，你玩 C++ 居然不认识他。C++ 世界二号人物，当年在贝尔实验室，Bjarne Stroustrup 构思了 C++ 功能框架，Stanley Lippman 实现了第一个版本。还无感？好吧，他是《C++ Primer》的作者。说了大神，再说说大神推荐的编译器。
     LLVM 出自伊利诺伊大学研究项目，由 google 和苹果公司赞助。LLVM 的存在只为两个目的：一是尽可能地模块化现有代码以方便在此基础上进行二次开发、一是提供比传统构建工具链更好的用户体验。LLVM 是个很大很大的项目群，几乎把从编译到调试的各个构建环节都重新实现了一遍：
 机器码生成方面：包含 LLVM core 子项目， LLVM core 能把满足它约定的中间语言翻译为高质量的机器码；
@@ -1172,7 +1184,7 @@ map <leader>rs :source my.vim<cr> :rviminfo my.viminfo<cr>
 3）高度抽象的模块化设计。弱耦合性带来的模块高度复用、二次开发非常容易，比如，前面介绍的基于语义的 C/C++ 代码补全插件 YouCompleteMe，就是借助 libclang 库实现。
     还在担心采用 clang 编译的源码移到 GCC 下无法编译？安啦，没问题的，你无非担心四方面：
 0）编译参数是否兼容？前面说过，clang 全面兼容 GCC，所以编译参数完全兼容；
-1）语言扩展是否兼容？只要不是像 LINUX 内核那样大规模采用各种复杂语言扩展属性，一般项目中用到的简单扩展是没问题的；
+1）语言扩展是否兼容？只要不是像 linux 内核那样大规模采用各种复杂语言扩展属性，一般项目中用到的简单扩展是没问题的；
 2）标准库接口是否兼容？标准库接口是 C++ 规范中指定的，根本不存在标准库接口不兼容一说；
 3）标准库动/静态库符号是否兼容？你只要确保采用 clang 的标准库头文件对应链接 clang 的动态链接库、采用 GCC 的标准库头文件对应链接 GCC 的动态链接库的要求就不会出现问题。
     在源码安装 clang 前，你需先自行安装 GCC，两个目的，一是你得有个编译器来编译编译器 clang （呵呵，绕了吧），二是其他人的项目可能会用到 GCC。
@@ -1240,7 +1252,7 @@ clang++ -std=c++11 -stdlib=libc++ -Werror -Weverything -Wno-disabled-macro-expan
 
 系统构建
     对于只有单个代码文件的项目来说，无非是保存代码文件、shell 中调用 GCC 编译、链接这样的简单方式即可实现；但，对于动辄几十上百个文件的工程项目，采用这种方式只会把自己逼疯，必须借助构建工具管理工程的整个构建过程。
-    LINUX 有两类工程构建工具 —— Makefile系 和非 Makefile 系，Makefile 系常见构建工具有 GNU 出品的老牌 autoconf、新生代的 CMake，非 Makefile 系中最著名的要数 SCons。KDE 就是通过 CMake（http://www.cmake.org/cmake/resources/software.html）构建出来的，易用性灵活性兼备，洒泪推荐。
+    linux 有两类工程构建工具 —— Makefile系 和非 Makefile 系，Makefile 系常见构建工具有 GNU 出品的老牌 autoconf、新生代的 CMake，非 Makefile 系中最著名的要数 SCons。KDE 就是通过 CMake（http://www.cmake.org/cmake/resources/software.html）构建出来的，易用性灵活性兼备，洒泪推荐。
     一般来说，你需要先写个名为 CMakeLists.txt 的构建脚本，然后执行 cmake  CMakeLists.txt 命令将生成 Makefile 文件，最后执行 make 命令即可编译生成可执行程序。
     举例来说，你工程包含 main.cpp 文件，要构建它，你需要执行如下步骤。
     第一步，编写 CMakeLists.txt，内容如下：
@@ -1316,7 +1328,7 @@ nnoremap <Leader>sb :GrepBuffer -ir<CR><CR>
     举个例子，光标移到 MyClassABC 下，键入 <leader>sp 后，grep.vim 自动提取 MyClassABC 为搜索关键字，执行工程中内查找，找到到 4 个匹配项并显示在 quickfix 中；接着键入 <leader>sb 后，执行打开文件内查找，找到 1 个匹配项。如下图所示：
 （内容查找）
 
-8.2 内容替换
+[>8.2 内容替换<]
     有个名为 iFoo 的全局变量，被工程中 16 个文件引用过，由于你岳母觉得匈牙利命名法严重、异常、绝对以及十分万恶，为讨岳母欢心，不得不将该变量更名为 foo，怎么办？依次打开每个文件，逐一查找后替换？vim 有强大的内容替换命令：
 :[range]s/{pattern}/{string}/[flags]
     在进行内容替换操作时，我关注几个因素：如何指定替换文件范围、是否整词匹配、是否逐一确认后再替换。
@@ -1409,11 +1421,21 @@ backpage kcal liam jack facebook target luach ajax
     类似，前面提过的 w、e、b、ge、F、j、k 等命令在 easymotion 作用下也能实现快速移动，其中，j 和 k 可跨行移动。同时，你还可以搭配 v 选中命令、d 删除命令、y 拷贝命令，比如，v<leader><leader>fa，快速选中光标当前位置到指定字符 a 之间的文本，d<leader><leader>fa，快速删除光标当前位置到指定字符 a 之间的文本，下图所示：
 （搭配操作命令的快速移动）
 
+8.4 markdown 即时预览
+    作为一枚热衷开源的伪 geek，github.com 与我同在。发布在 github.com 的任何项目你得有个项目简介，README.md，这是一种用 markdown 文书编写语法制作的说明文档。关于 markdown，我有两个需求，一是 vim 要高亮显示 markdown 语法，一是 firefox 要能渲染其语法、即时显示更新结果。
+    第一个需求不是问题，新版 vim 已经集成了 markdown 语法高亮插件，无须单独配置。
+    第二个需求，按照一般逻辑，应该通过 firefox 的某款插件来实现，的确，Markdown Viewer 看起来是干这个事儿的，但它响应速度缓慢、中文显示乱码、无法即时渲染等等问题让我无法接受。网上倒是有些即时渲染 markdown 的网站，比如，https://stackedit.io/editor，左侧编辑右侧显示，所见即所得，但这又无法让我使用 vim，不行。还是回到 vim 身上想办法，vim-instant-markdown 来了。有了这款 vim 插件，一旦你启用 vim 编辑 markdown 文档，vim-instant-markdown 自动开启 firefox 为你显示 markdown 最终效果，如果你在 vim 中变更了文档内容，vim-instant-markdown 即时渲染、firefox 同步更新，太棒了！
+（markdown 即时渲染）
+    vim-instant-markdown（https://github.com/suan/vim-instant-markdown） 的安装相比其他插件较为特殊，它由 ruby 开发，所以你的 vim 必须集成 ruby 解释器（见“1 源码安装编辑器 vim”），并且安装 pygments.rb、redcarpet、instant-markdown-d 三个依赖库（npm 命令可通过 zypper install nodejs 安装）。
+    对于重内容、轻设计的我这类人来说，markdown 简洁的文书语法太贴心了。推荐三个网站：
+markdown 语法 http://daringfireball.net/projects/markdown/syntax
+github.com 扩展 https://guides.github.com/features/mastering-markdown/
+emoji 符号表情 http://www.emoji-cheat-sheet.com/
+
 9 尾声
     嗷呼，经过以上调教，你的 vim 已经成为非常舒适的 C/C++ 开发环境呢。等等，重装系统后又得折腾一次？不怕，除了 clang 等等几个需要源码安装的工具外，基本上，vim 的插件和相关配置文件你可以提前备份好，装完系统后恢复到对应目录中即可，丝毫不费脑力。
-    2011 年 9 月我写了篇《拼装的艺术：vim 之 IDE 进化实录》，原计划近期（13 年 10 月）更新下智能补全部分，后来越改越发觉原版问题太多，加之各插件推陈出新、自己对 vim 的认识加深，索性完全重新。
-    两年多时间，与很多朋友有过交流，有三类问题探讨得最频繁，我的观点简要阐述如下，后续不再欢迎、理会、回复相关问题。
-    为何不用 Code::Blocks 这类一站式 IDE？每个人的做事的出发点、性格观念千差万别，我不想拿 LINUX kernel 是 linus torvalds 用 microemacs（emacs 变种）开发的来说事儿，就我而言，迷恋 vim 的高效编辑能力、无限扩充能力，这是其他编辑器无法超越的。此外，我享受的是过程，不是结果！
-    哪个是最适合编码的编辑器？LINUX 上存在两种编辑器：神之编辑器 emacs，编辑器之神 vim。关于 emacs 与 vim 孰轻谁重之争已是世纪话题，我无意参与其中，在我眼里，它们流淌着自由的血液、继承着创新的基因，作为顶级编辑器，二者在这个领域都作到了极致，让世人重新认识了编辑的本质 —— 用命令规则而非字字键入 —— 去完成编辑任务。emacs，伪装成编辑器的操作系统，太杂、太重，我更喜欢专注于编辑的 vim。
-    怎样的 IDE 才算好？对于初入 LINUX 开发的人而言，Code::Blocks 是最快上手的选择；对于我这类喜欢折腾、追求效率、愿意用脑力换体力的人来说，vim 搭配各类插件是好的 IDE；对于 Donald Knuth 这等宗师，他们站在整个系统的层面，bash 加上几个命令行工具也是某种意义上的 IDE。所以，只要你能得心应手地完成软件开发任务，并且察觉不到工具的存在，那就是最适合你的 IDE。
+    2011 年 9 月我写了篇《拼装的艺术：vim 之 IDE 进化实录》，原计划近期（2014-09）更新下智能补全部分，后来越改越发觉原版问题太多，加之各插件推陈出新、自己对 vim 的认识加深，索性完全重新。期间，与很多朋友有过交流，有三类问题探讨得最频繁，我的观点简要阐述如下，后续不再欢迎、理会、回复相关问题：
+为何不用 Code::Blocks 这类一站式 IDE？每个人的做事的出发点、性格观念千差万别，我不想拿 linux kernel 是 linus torvalds 用 microemacs（emacs 变种）开发的来说事儿，就我而言，迷恋 vim 的高效编辑能力、无限扩充能力，这是其他编辑器无法超越的。此外，我享受的是过程，不是结果！
+哪个是最适合编码的编辑器？linux 上存在两种编辑器：神之编辑器 emacs，编辑器之神 vim。关于 emacs 与 vim 孰轻谁重之争已是世纪话题，我无意参与其中，在我眼里，它们流淌着自由的血液、继承着创新的基因，作为顶级编辑器，二者在这个领域都作到了极致，让世人重新认识了编辑的本质 —— 用命令规则而非字字键入 —— 去完成编辑任务。emacs，伪装成编辑器的操作系统，太杂、太重，我更喜欢专注于编辑的 vim。
+怎样的 IDE 才算好？对于初入开发的人员而言，Code::Blocks 是最易上手的选择；对于我这类喜欢折腾、追求效率、愿意用脑力换体力的人来说，vim 搭配各类插件是好的 IDE；对于 Donald Knuth 这等宗师，他们站在整个系统的层面，bash 加上几个命令行工具也是某种意义上的 IDE。所以，只要你能得心应手地完成软件开发任务，又察觉不到工具的存在，那这就是最适合你的 IDE。
     末了，我不清楚这篇文章能帮到哪些人、帮到什么程度，但我自己受益匪浅！写作的过程，是知识体系完整重构的过程，理清了思路、加深了记忆。如果它再能引发你的一点思绪，或许，这就是价值！
