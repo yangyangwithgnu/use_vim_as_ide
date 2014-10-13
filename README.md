@@ -1735,7 +1735,10 @@ clang++ -std=c++11 -stdlib=libc++ -Werror -Weverything -Wno-disabled-macro-expan
 * -std=c++11：使用 C++11 新特性；
 * -stdlib=libc++：指定使用 clang 的标准库头文件 /usr/include/c++/v1/；
 * -Werror：将所有编译警告视为编译错误；
-* -Weverything：打开所有编译警告选项。在 GCC 中，无法通过单个选项打开所有编译警告，必须繁琐的同时指定 -Wall、-Wextra、以及大量分散的其他选项，为此 clang 新增了 -Weverything。当然，有些警告意义不大，完全可忽略，如下；
+* -Weverything：打开所有编译警告选项。在 GCC 中，无法通过单个选项打开所有编译警告，必须繁琐的同时指定 -Wall、-Wextra、以及大量分散的其他选项，为此 clang 新增了 -Weverything。
+
+当然，有些警告意义不大，完全可忽略，如下；
+
 * -Wno-disabled-macro-expansion：禁止使用宏表达式，忽略此警告；
 * -Wno-float-equal：浮点类型不应使用 != 和 == 运算符，忽略此警告；
 * -Wno-c++98-compat、-Wno-c++98-compat-pedantic：采用 C++11 新特性的代码无法兼容 C++98，忽略此警告；
