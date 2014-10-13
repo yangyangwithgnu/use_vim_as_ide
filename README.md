@@ -118,7 +118,7 @@ yangyang.gnu@gmail.com
 开始前，我假设你：0）具备基本的 vim 操作能力，清楚如何打开/编辑/保存文档、命令与插入模式间切换；1）希望将 vim 打造成 C/C++ 语言的 IDE，而非其他语言。
 
 关于 vim 的优点，你在网上能查到 128+ 项，对我而言，只有两项：0）所想即所得，让手输入的速度跟上大脑思考的速度，1）所需即所获，只有你想不到的功能、没有实现不了的插件。希望获得前者的能力，你需要两本教程深入学习，《Practical Vim: Edit Text at the Speed of Thought》和《vim user manual》；要想拥有后者的能力，通读本文 -。-#。对于 vim 的喜爱，献上湿哥哥以表景仰之情：
-<div background=#030 align="center">
+<div align="center">
 vi 之大道如我心之禅，  
   vi 之漫路即为禅修，  
   vi 之命令禅印于心，  
@@ -127,8 +127,8 @@ vi 之大道如我心之禅，
  长修此道者巨变人生。 
 </div>
 <div align="right">
-> 作：reddy@lion.austin.com  
-> 译：yangyang.gnu@gmail.com
+作：reddy@lion.austin.com  
+译：yangyang.gnu@gmail.com
 </div>
 
 言归正传，说说 vim 用于代码编写提供了哪些直接和间接功能支撑。vim 用户手册中，50％ 的例子都是在讲 vim 如何高效编写代码，由此可见，vim 是一款面向于程序员的编辑器，即使某些功能 vim 无法直接完成，借助其丰富的插件资源，必定可以达成目标，这就是所需即所获。
