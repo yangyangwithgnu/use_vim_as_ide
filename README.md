@@ -1,11 +1,11 @@
 <h1 align="center">所需即所获：像 IDE 一样使用 vim</h1>
 yangyang.gnu@gmail.com  
-2014-10-14 10:07:40
+2014-10-14 22:42:52
 
 
 ##【公告】
 ----
-* <font color="red">**捐赠：如果觉得本文还不错，捐点碎银，支付宝 yangyang.gnu@gmail.com，给多了我跟你急 $\_$**</font>
+* <font color=red>**捐赠：如果觉得本文还不错，捐点碎银，支付宝 yangyang.gnu@gmail.com，给多了我跟你急 $\_$**</font>
 * **讨论**：任何意见建议移步 http://www.v2ex.com/t/138696
 
 
@@ -528,7 +528,7 @@ endif
 （可视化书签）
 </div>
 
-另外，我虽然选用了 visual mark，但不代表它完美了，对我而言，存在两个硬伤：一是，创建的书签无法保存，下次打开该文件后又得重新窗口；一是，无法在不同文件的书签间跳转。前者可借由 vim 的 session 和 viminfo 特性解决，详见后文“环境恢复”节，后者无解，只能先切换文件再跳转书签。
+另外，我虽然选用了 visual mark，但不代表它完美了，对我而言，存在两个硬伤：一是，创建的书签无法保存，下次打开该文件后又得重新创建；一是，无法在不同文件的书签间跳转。前者可借由 vim 的 session 和 viminfo 特性解决，详见后文“环境恢复”节，后者无解，只能先切换文件再跳转书签。
 
 <h3 name="4.6">4.6 代码导航</h3>
 
@@ -675,7 +675,7 @@ ctags --list-kinds=c++
 
 目前为止，离我预期还有差距。
 
-第一，选择候选列表影响思维连续性。首先得明白为何会出现待选列表。前面说过，vim 做的事情很简单，就是把光标所在单词放到标签文件中查找，如果只有一个，当前你可以直接导航过去，大部分时候会找到多项匹配标签，比如，函数声明、函数定义、函数调用、函数重载等等都会导致同个函数名出现在多个标签中，vim 无法知道你要查看哪项，只能让你自己选择。其实，因为标签文件中已经包含了函数签名属性，vim 的查找机制如果不是基于关键字，而是基于语义的话，那也可以直接命中，期待后续 vim 有此功能吧。既然无法直接解决，换个思路，我不想选择列表，但可以接受遍历匹配标签。就是说，我不想输入数字选择第几项，但可以接受键入正向快捷键后遍历第一个匹配标签，再次键入快捷键遍历第二个，直到最后一个，键入反向快捷键逆序遍历。这下事情简单了，命令 :tnext 和 :tprevious 分别先后和向前遍历匹配标签，定义两个快捷键搞定：
+第一，选择候选列表影响思维连续性。首先得明白为何会出现待选列表。前面说过，vim 做的事情很简单，就是把光标所在单词放到标签文件中查找，如果只有一个，当然你可以直接导航过去，大部分时候会找到多项匹配标签，比如，函数声明、函数定义、函数调用、函数重载等等都会导致同个函数名出现在多个标签中，vim 无法知道你要查看哪项，只能让你自己选择。其实，因为标签文件中已经包含了函数签名属性，vim 的查找机制如果不是基于关键字，而是基于语义的话，那也可以直接命中，期待后续 vim 有此功能吧。既然无法直接解决，换个思路，我不想选择列表，但可以接受遍历匹配标签。就是说，我不想输入数字选择第几项，但可以接受键入正向快捷键后遍历第一个匹配标签，再次键入快捷键遍历第二个，直到最后一个，键入反向快捷键逆序遍历。这下事情简单了，命令 :tnext 和 :tprevious 分别先后和向前遍历匹配标签，定义两个快捷键搞定：
 
 ```
 " 正向遍历同名标签
@@ -709,7 +709,7 @@ let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v 
 >[example]  
 >/data/workplace/example/  
 
-上例设定了四个工程的根目录，方括号内是对应工程名，后续有新工程，直接添至该文件中即可。这样，从以上目录打开任何代码文件时，indexer 便对整个目录创建标签文件，若代码文件有更新，那么在文件保存时，indexer 将自动调用 ctags 更新标签文件，并自动引入进 vim 中。（indexer 生成的标签文件以工程名命名，位于 ~/.indexer_files_tags/）
+上例设定了三个工程的根目录，方括号内是对应工程名，后续有新工程，直接添至该文件中即可。这样，从以上目录打开任何代码文件时，indexer 便对整个目录创建标签文件，若代码文件有更新，那么在文件保存时，indexer 将自动调用 ctags 更新标签文件，并自动引入进 vim 中。（indexer 生成的标签文件以工程名命名，位于 ~/.indexer_files_tags/）
 
 好了，解决了这三个问题后，vim 的代码导航已经达到我的预期。
 
@@ -830,11 +830,11 @@ if (${1:/* condition */}) {
 } 
 endsnippet
 ```
-其中，snippet 和 endsnippet 用于表示模板的开始和结束；if 是模板名；"if statement" 是模板描述，你可以把多个模板的模板名定义成一样（如，if () {} 和 if () {} else {} 两模板都定义成相同模板名 if），在模板描述中加以区分（如，分别对应 "if statement" 和 "if-else statement"），这样，在 YCM（重量级智能补全插件） 的补全列表中可以根据模板描述区分选项不同模板；i 是模板控制参数，用于控制模板补全行为，具体参见“快速输入结对符”一节；${1}、${2} 是 <tab> 跳转的先后顺序。
+其中，snippet 和 endsnippet 用于表示模板的开始和结束；if 是模板名；"if statement" 是模板描述，你可以把多个模板的模板名定义成一样（如，if () {} 和 if () {} else {} 两模板都定义成相同模板名 if），在模板描述中加以区分（如，分别对应 "if statement" 和 "if-else statement"），这样，在 YCM（重量级智能补全插件） 的补全列表中可以根据模板描述区分选项不同模板；i 是模板控制参数，用于控制模板补全行为，具体参见“快速输入结对符”一节；${1}、${2} 是 \<tab> 跳转的先后顺序。
 
-在进行模板补全时，你是先键入模板名（如，if），接着键入补全快捷键（默认<tab>），然后 UltiSnips 根据你键入的模板名在代码模板文件中搜索匹配的“模板名-模板”，找到对应模板后，将模板在光标当前位置展开。
+在进行模板补全时，你是先键入模板名（如，if），接着键入补全快捷键（默认 \<tab>），然后 UltiSnips 根据你键入的模板名在代码模板文件中搜索匹配的“模板名-模板”，找到对应模板后，将模板在光标当前位置展开。
 
-默认情况下，UltiSnips 模板补全快捷键是 <tab>，与后面介绍的 YCM 快捷键有冲突，所有须在 .vimrc 中重新设定：
+默认情况下，UltiSnips 模板补全快捷键是 \<tab>，与后面介绍的 YCM 快捷键有冲突，所有须在 .vimrc 中重新设定：
 
 ```
 " UltiSnips 的 tab 键与 YCM 冲突，重新设定
@@ -1042,8 +1042,7 @@ snippet b "bracket"
 (${1})${2} 
 endsnippet
 ```
-我要调用函数 printf()，在输入完 printf 后应该接着输入括号模板名 b，然后输入模板展开快捷键 \<leader><tab>，你会发现 UltiSnips 无法帮你补全模板，因为它看到的不是 b 而是 printfb，这在模板文件中根本未定义。有一种间接解决方式是在 printf 后加个空格，再输入 b\<leader><tab> 进行补全，这就成了 printf ()，不喜欢这种编码风格。其实，UltiSnips 的作者也注意到这个问题了，他让你可以通过前面提过的模板控制参数 i 进行解决。重新定义 () 的模板如下：
-
+我要调用函数 printf()，在输入完 printf 后应该接着输入括号模板名 b，然后输入模板展开快捷键 \<leader>\<tab>，你会发现 UltiSnips 无法帮你补全模板，因为它看到的不是 b 而是 printfb，这在模板文件中根本未定义。有一种间接解决方式是在 printf 后加个空格，再输入 b\<leader>\<tab> 进行补全，这就成了 printf ()，不喜欢这种编码风格。其实，UltiSnips 的作者也注意到这个问题了，他让你可以通过前面提过的模板控制参数 i 进行解决。重新定义 () 的模板如下： 
 ```
 snippet b "bracket" i
 (${1})${2} 
@@ -1153,7 +1152,7 @@ set tags+=/usr/include/sys.tags
 </div>
 代码中定义的 TCandyBar 类型只包括 3 个成员，但 clang_complete 能补全编译器根据 C++ 规范自动添加的两个重载操作符、一个默认构造函数、一个析构函数，这就是基于语义分析的智能补全。
 
-要进行语义分析，编译器必不可少。linux 上有两大主流 C++ 编译器 GCC 和 clang，基于不同编译器，开源社区分别创造出 GCCSense 和 clang_complete 两个语义补全插件，又得纠结选哪个 -。- ... <穿越> 请跳转至“源码安装编译器 clang”部分做两件事，一是按介绍安装好最新版 clang 及其标准库，二是看明白 clang 相较 GCC 的优势 </穿越> ...
+要进行语义分析，编译器必不可少。linux 上 GCC 和 clang 两大主流 C++ 编译器，基于不同编译器，开源社区分别创造出 GCCSense 和 clang_complete 两个语义补全插件，又得纠结选哪个 -。- ... <穿越> 请跳转至“源码安装编译器 clang”部分做两件事，一是按介绍安装好最新版 clang 及其标准库，二是看明白 clang 相较 GCC 的优势 </穿越> ...
 
 我选 clang_complete，原因如下：
 
@@ -1346,18 +1345,18 @@ let g:ycm_collect_identifiers_from_tags_files=1
 " 引入 C++ 标准库tags
 set tags+=/data/misc/software/misc./vim/stdcpp.tags
 ```
-其中，工程自身代码的标签可借助 indexer 插件自动生成自动引入，但由于 YCM 要求 tag 文件中必须含有 language:<X> 字段（ctags 的命令行参数 --fields 必须含有 l 选项），所有必须通过 indexer_ctagsCommandLineOptions 告知 indexer 调用 ctags 时注意生成该字段，具体设置参见“代码导航”章节；前面章节介绍过如何生成、引入 C++ 标准库的 tag 文件，设置成正确路径即可。另外，由于引入过多 tag 文件会导致 vim 变得非常缓慢，我的经验是，只引入工程自身（indexer 自动引入）和 C++ 标准库的标签（上面配置的最后一行）。如下图所示：
+其中，工程自身代码的标签可借助 indexer 插件自动生成自动引入，但由于 YCM 要求 tag 文件中必须含有 language:\<X> 字段（ctags 的命令行参数 --fields 必须含有 l 选项），所有必须通过 indexer_ctagsCommandLineOptions 告知 indexer 调用 ctags 时注意生成该字段，具体设置参见“代码导航”章节；前面章节介绍过如何生成、引入 C++ 标准库的 tag 文件，设置成正确路径即可。另外，由于引入过多 tag 文件会导致 vim 变得非常缓慢，我的经验是，只引入工程自身（indexer 自动引入）和 C++ 标准库的标签（上面配置的最后一行）。如下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/YCM%20%E7%9A%84%E6%A0%87%E7%AD%BE%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
 （YCM 的标签补全）
 </div>
 
-YCM 的 OmniCppComplete 补全引擎。我要进行 linux 系统开发，打开系统函数头文件觉得麻烦（也就无法使用 YCM 的语义补全），引入系统函数 tag 文件又影响 vim 速度（也就无法使用 YCM 的标签补全），这种情况又如何让 YCM 补全呢？WOW，别担心，YCM 还有 OmniCppComplete 补全引擎，只要你在当前代码文件中 #include 了该标识符所在头文件即可。通过 OmniCppComplete 补全无法使用 YCM 的随键而全的特性，你需要手工告知 YCM 需要补全，OmniCppComplete 的默认补全快捷键为 <C-x><C-o>，不太方便，我重新设定为 \<leader>;，如前面配置所示：
+YCM 的 OmniCppComplete 补全引擎。我要进行 linux 系统开发，打开系统函数头文件觉得麻烦（也就无法使用 YCM 的语义补全），引入系统函数 tag 文件又影响 vim 速度（也就无法使用 YCM 的标签补全），这种情况又如何让 YCM 补全呢？WOW，别担心，YCM 还有 OmniCppComplete 补全引擎，只要你在当前代码文件中 #include 了该标识符所在头文件即可。通过 OmniCppComplete 补全无法使用 YCM 的随键而全的特性，你需要手工告知 YCM 需要补全，OmniCppComplete 的默认补全快捷键为 \<C-x>\<C-o>，不太方便，我重新设定为 \<leader>;，如前面配置所示：
 
 ```
 inoremap <leader>; <C-x><C-o>
 ```
-比如，我要补全 fork()，该函数所在头文件为 unistd.h，正确添加 #include <unistd.h> 后即可补全。如下图所示：
+比如，我要补全 fork()，该函数所在头文件为 unistd.h，正确添加 #include \<unistd.h> 后即可补全。如下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/YCM_%E7%9A%84_OmniCppComplete%20%E8%A1%A5%E5%85%A8%E5%BC%95%E6%93%8E.gif" alt=""/><br />
 （YCM 的 OmniCppComplete 补全引擎）
@@ -1816,21 +1815,25 @@ make
 ```
 nmap <Leader>m :wa<CR>:make<CR><CR>:cw<CR>
 ```
-分解说明下，m 为设定的一键编译快捷键，:wa<CR> 保存所有调整文档内容，:make<CR> 调用 make 命令，后面的 <CR> 消除执行完 make 命令屏幕上“Press ENTER or type command to continue”的输入等待提示，:cw<CR> 显示 quickfix（仅当有编译错误或警告时）。如下图所示：
+分解说明下，m 为设定的一键编译快捷键，:wa\<CR> 保存所有调整文档内容，:make\<CR> 调用 make 命令，后面的 \<CR> 消除执行完 make 命令屏幕上“Press ENTER or type command to continue”的输入等待提示，:cw\<CR> 显示 quickfix（仅当有编译错误或警告时）。如下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%80%E9%94%AE%E7%BC%96%E8%AF%91.gif" alt=""/><br />
 （一键编译）
 </div>
 我新建了一个工程，编辑好 CMakeLists.txt，执行 :!cmake CMakeLists.txt，接着 \<leader>m 一键编译，quickfix 窗口显示了编译错误，光标自动定位到需要你解决的第一个编译错误，回车后光标自动调整到该错误对应的代码位置，修正后重新 \<leader>r，编译通过并运行生成的程序。
 
-你可能会遇到，调整过的代码能通过编译，但是，要么在工程目录中无法找到可执行程序，要么有程序但体现不出代码调整的内容（就像没调整过代码一样）。对于情况一，还算好，至少你晓得生成可程序失败了，肯定哪儿出了问题，不会继续往下新增代码；情况二，就麻烦了，你想通过运行程序检查刚才添加的代码运行是否正常，以为运行的是新程序，其实，代码调整后的新程序并未生成，运行是老程序，“哇，一切正常，往下写新业务逻辑代码”。导致这两个情况的根本原因，代码中存在链接错误导致并未正常创建新的可执行程序。bad news —— 如果编译错误，quickfix 窗口会固定在底部，罗列出所有编译过程中的所有错误，如果编译正常（即便是存在链接错误），quickfix 窗口会出现“Press ENTER or type command to continue”的输入等待提示信息，前面提过，为了省去手工输入回车，已经在 \<Leader>m 中为 :make 多绑定个回车符 <CR>，换言之，在编译正确链接错误的情况下，你是无法查看到 quickfix 窗口的；good news —— 有两种方式解决该问题：
+你可能会遇到，调整过的代码能通过编译，但是，要么在工程目录中无法找到可执行程序，要么有程序但体现不出代码调整的内容（就像没调整过代码一样）。对于情况一，还算好，至少你晓得生成可程序失败了，肯定哪儿出了问题，不会继续往下新增代码；情况二，就麻烦了，你想通过运行程序检查刚才添加的代码运行是否正常，以为运行的是新程序，其实，代码调整后的新程序并未生成，运行是老程序，“哇，一切正常，往下写新业务逻辑代码”。导致这两个情况的根本原因，代码中存在链接错误导致并未正常创建新的可执行程序。bad news —— 如果编译错误，quickfix 窗口会固定在底部，罗列出所有编译过程中的所有错误，如果编译正常（即便是存在链接错误），quickfix 窗口会出现“Press ENTER or type command to continue”的输入等待提示信息，前面提过，为了省去手工输入回车，已经在 \<Leader>m 中为 :make 多绑定个回车符 \<CR>，换言之，在编译正确链接错误的情况下，你是无法查看到 quickfix 窗口的；good news —— 有两种方式解决该问题：
 
-* 方式一，将前面 \<Leader>m 中为 :make 绑定的回车符 <CR> 去掉，即
+* 方式一，将前面 \<Leader>m 中为 :make 绑定的回车符 \<CR> 去掉，即
+
+```
 nmap <Leader>m :wa<CR>:make<CR><CR>:cw<CR>
-
+```
 * 方式二，先删除老的可执行程序，再编译、链接，发现缺失可执行程序时，再手工执行 :make，这样，可查看具体是什么链接错误了，将如下配置信息加入 .vimrc 中：
-nmap <Leader>m :!rm -rf main<CR>:wa<CR>:make<CR><CR>:cw<CR>
 
+```
+nmap <Leader>m :!rm -rf main<CR>:wa<CR>:make<CR><CR>:cw<CR>
+```
 我选方式二。
 
 到此，已实现一键编译，要实现一键编译及运行无非就在刚才的快捷键中追加绑定运行程序的外部命令即可。新快捷键设定为 \<leader>g，假定生成的可执行程序名为 main，将如下配置信息加入 .vimrc 中：
@@ -1880,7 +1883,7 @@ nnoremap <Leader>sp :Grep -ir<CR><CR><CR>
 " 使用 Grep.vim 插件在工程内全局查找，设置快捷键。快捷键速记法：search in buffer
 nnoremap <Leader>sb :GrepBuffer -ir<CR><CR>
 ```
-:Grep 默认需要手工确认搜索关键字、搜索文件类型，方便起见，我在映射命令后加了几个连续 <CR>，这样就不用手工回车确认了。
+:Grep 默认需要手工确认搜索关键字、搜索文件类型，方便起见，我在映射命令后加了几个连续 \<CR>，这样就不用手工回车确认了。
 
 举个例子，光标移到 MyClassABC 下，键入 \<leader>sp 后，grep.vim 自动提取 MyClassABC 为搜索关键字，执行工程中内查找，找到到 4 个匹配项并显示在 quickfix 中；接着键入 \<leader>sb 后，执行打开文件内查找，找到 1 个匹配项。如下图所示：
 <div align="center">
