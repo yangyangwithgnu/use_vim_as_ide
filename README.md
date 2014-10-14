@@ -1,6 +1,6 @@
 <h1 align="center">所需即所获：像 IDE 一样使用 vim</h1>
 yangyang.gnu@gmail.com  
-2014-10-13 19:02:40
+2014-10-14 10:07:40
 
 
 ##【公告】
