@@ -103,13 +103,13 @@ vi 之大道如我心之禅，<br />
 
 很多人之所以觉得 vim 难用，是因为 vim 缺少默认设置，甚至安装完后你连配置文件自身都找不到，不进行任何配置的 vim 的确难看、难用。不论用于代码还是普通文本编辑，有必要将如下基本配置加入 .vimrc 中。
 
-前缀键。各类 vim 插件帮助文档中经常出现 <leader>，即，前缀键。vim 自带有很多快捷键，再加上各类插件的快捷键，大量快捷键出现在单层空间中难免引起冲突，为缓解该问题，引入了前缀键 <leader>，这样，键 r 可以配置成 r、<leader>r、<leader><leader>r 等等多个快捷键。前缀键是 vim 使用率较高的一个键（最高的当属 Esc），选一个最方便输入的键作为前缀键，将有助于提高编辑效率。找个无须眼睛查找、无须移动手指的键 —— 分号键，挺方便的，就在你右手小指处：
+前缀键。各类 vim 插件帮助文档中经常出现 \<leader>，即，前缀键。vim 自带有很多快捷键，再加上各类插件的快捷键，大量快捷键出现在单层空间中难免引起冲突，为缓解该问题，引入了前缀键 \<leader>，这样，键 r 可以配置成 r、\<leader>r、\<leader>\<leader>r 等等多个快捷键。前缀键是 vim 使用率较高的一个键（最高的当属 Esc），选一个最方便输入的键作为前缀键，将有助于提高编辑效率。找个无须眼睛查找、无须移动手指的键 —— 分号键，挺方便的，就在你右手小指处：
 
 ```
 " 定义快捷键的前缀，即<Leader>
 let mapleader=";"
 ```
-既然前缀键是为快捷键服务的，那随便说下快捷键设定原则：不同快捷键尽量不要有同序的相同字符。比如，<leader>e 执行操作 0 和 <leader>eb 执行操作 1，在你键入 <leader>e 后，vim 不会立即执行操作 0，而是继续等待用户键入 b，即便你只想键入 <leader>e，vim 也不得不花时间等待输入以确认是哪个快捷键，显然，这让 <leader>e 响应速度变慢。<leader>ea 和 <leader>eb 就没问题。
+既然前缀键是为快捷键服务的，那随便说下快捷键设定原则：不同快捷键尽量不要有同序的相同字符。比如，\<leader>e 执行操作 0 和 \<leader>eb 执行操作 1，在你键入 \<leader>e 后，vim 不会立即执行操作 0，而是继续等待用户键入 b，即便你只想键入 \<leader>e，vim 也不得不花时间等待输入以确认是哪个快捷键，显然，这让 \<leader>e 响应速度变慢。\<leader>ea 和 \<leader>eb 就没问题。
 
 文件类型侦测。允许基于不同语言加载不同插件（如，C++ 的语法高亮插件与 python 的不同）：
 
@@ -683,7 +683,7 @@ nmap <Leader>tn :tnext<CR>
 " 反向遍历同名标签
 nmap <Leader>tp :tprevious<CR>
 ```
-等等，这还不行，vim 中有个叫标签栈（tags stack）的机制，:tnext、:tprevious 只能遍历已经压入标签栈内的标签，所以，你在遍历前需要通过快捷键 ctrl-] 将光标所在单词匹配的所有标签压入标签栈中，然后才能遍历。不说复杂了，以后你只需先键入 ctrl-]，若没导航至需要的标签，再键入 <leader>tn 往后或者 <leader>tp 往前遍历即可。如下图所示：
+等等，这还不行，vim 中有个叫标签栈（tags stack）的机制，:tnext、:tprevious 只能遍历已经压入标签栈内的标签，所以，你在遍历前需要通过快捷键 ctrl-] 将光标所在单词匹配的所有标签压入标签栈中，然后才能遍历。不说复杂了，以后你只需先键入 ctrl-]，若没导航至需要的标签，再键入 \<leader>tn 往后或者 \<leader>tp 往前遍历即可。如下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%BB%A3%E7%A0%81%E5%AF%BC%E8%88%AA.gif" alt=""/><br />
 （代码导航）
@@ -762,7 +762,7 @@ let g:tagbar_type_cpp = {
 ```
 说下 external 和 local，前面提过，ctags 默认并不会提取局部对象、函数声明、外部对象等类型的标签，我必须让 tagbar 告诉 ctags 改变默认参数 —— 这就是 tagbar_type_cpp 变量存在的意义，所以才在前面的配置信息中将外部对象和局部对象显式将其加进 tagbar_type_cpp 中。
 
-重启 vim 后，打开一个 C/C++ 源码文件，键入 <leader>tl，将在左侧的 tagbar 窗口中将可看到标签列表：
+重启 vim 后，打开一个 C/C++ 源码文件，键入 \<leader>tl，将在左侧的 tagbar 窗口中将可看到标签列表：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%A0%87%E7%AD%BE%E5%88%97%E8%A1%A8.png" alt=""/><br />
 （标签列表）
@@ -788,8 +788,8 @@ let g:tagbar_type_cpp = {
 
 常用操作：
 
-* <leader>cc，注释当前选中文本，如果选中的是整行则在每行首添加 //，如果选中一行的部分内容则在选中部分前后添加分别 /*、*/；
-* <leader>cu，取消选中文本块的注释。
+* \<leader>cc，注释当前选中文本，如果选中的是整行则在每行首添加 //，如果选中一行的部分内容则在选中部分前后添加分别 /*、*/；
+* \<leader>cu，取消选中文本块的注释。
 
 如下图所示：
 <div align="center">
@@ -1042,7 +1042,7 @@ snippet b "bracket"
 (${1})${2} 
 endsnippet
 ```
-我要调用函数 printf()，在输入完 printf 后应该接着输入括号模板名 b，然后输入模板展开快捷键 <leader><tab>，你会发现 UltiSnips 无法帮你补全模板，因为它看到的不是 b 而是 printfb，这在模板文件中根本未定义。有一种间接解决方式是在 printf 后加个空格，再输入 b<leader><tab> 进行补全，这就成了 printf ()，不喜欢这种编码风格。其实，UltiSnips 的作者也注意到这个问题了，他让你可以通过前面提过的模板控制参数 i 进行解决。重新定义 () 的模板如下：
+我要调用函数 printf()，在输入完 printf 后应该接着输入括号模板名 b，然后输入模板展开快捷键 \<leader><tab>，你会发现 UltiSnips 无法帮你补全模板，因为它看到的不是 b 而是 printfb，这在模板文件中根本未定义。有一种间接解决方式是在 printf 后加个空格，再输入 b\<leader><tab> 进行补全，这就成了 printf ()，不喜欢这种编码风格。其实，UltiSnips 的作者也注意到这个问题了，他让你可以通过前面提过的模板控制参数 i 进行解决。重新定义 () 的模板如下：
 
 ```
 snippet b "bracket" i
@@ -1161,17 +1161,17 @@ set tags+=/usr/include/sys.tags
 * 维护时间长。clang_complete 最新更新为 13 年上，而 GCCSense 则是 09 年下；
 * 支持跨平台。clang_complete 支持所有平台，而 GCCSense 支持 UNIX-like，不支持 windows。（好啦，这点是我凑数的，我又不用 windows <_<）
 
-clang_complete 使用简单，在 vim 输入模式下，依次键入要补全的字符，需要弹出补全列表时，手工输入 <leader>tab。比如有如下代码片断：
+clang_complete 使用简单，在 vim 输入模式下，依次键入要补全的字符，需要弹出补全列表时，手工输入 \<leader>tab。比如有如下代码片断：
 
 ```
 string name_yang = "yangyang.gnu";
 string name_wang = "wangwang";
 ```
-我要补全这两个对象，可以先键入 n <leader>tab，这时 clang_complete 将罗列出所有以 n 开头的待选项，接着输入 ame_ 后剩下 name_yang 和 name_wang 两项，按需选择即可。
+我要补全这两个对象，可以先键入 n \<leader>tab，这时 clang_complete 将罗列出所有以 n 开头的待选项，接着输入 ame_ 后剩下 name_yang 和 name_wang 两项，按需选择即可。
 
 到这个节目眼上，我应该先给出 clang_complete 的下载地址，再告诉你如何配置 .vimrc，然后给个截图收工，但是、但是，你知道我是个纠结症+完美症重度患者，虽然 clang_complete 相较 ctags+new-omni-completion 的模式有了质的飞跃，仍有雕琢余地：    
 
-* 无法随键而全。补全动作有感知，要弹出候选列表菜单还得键入 <leader>tab，我希望插件能自动感知我的补全需求；
+* 无法随键而全。补全动作有感知，要弹出候选列表菜单还得键入 \<leader>tab，我希望插件能自动感知我的补全需求；
 * 无法模糊搜索。上例中，键入的字符要是少了那要出来一堆待选项，选起来眼睛累，多键入几个字符倒是可以让选项少些，但输入多了手又累。这是由于 clang_complete 采用的顺序匹配算法，只要改用子序列匹配算法（模糊搜索算法的一种）即可搞定，这样，我键入 ny 就只出现 name_yang，键入 nw 出现 name_wang；
 * 无法高速补全。补全列表速度不够快，clang_complete 由 python 编写，生成补全列表的速度有一定影响，再加上整个补全动作是在 vim GUI 主线程中执行，所以有时会导致 GUI 假死，我需要由静态语言编写插件内核、动态语言作为粘合剂的补全插件，提升效率；
 
@@ -1352,7 +1352,7 @@ set tags+=/data/misc/software/misc./vim/stdcpp.tags
 （YCM 的标签补全）
 </div>
 
-YCM 的 OmniCppComplete 补全引擎。我要进行 linux 系统开发，打开系统函数头文件觉得麻烦（也就无法使用 YCM 的语义补全），引入系统函数 tag 文件又影响 vim 速度（也就无法使用 YCM 的标签补全），这种情况又如何让 YCM 补全呢？WOW，别担心，YCM 还有 OmniCppComplete 补全引擎，只要你在当前代码文件中 #include 了该标识符所在头文件即可。通过 OmniCppComplete 补全无法使用 YCM 的随键而全的特性，你需要手工告知 YCM 需要补全，OmniCppComplete 的默认补全快捷键为 <C-x><C-o>，不太方便，我重新设定为 <leader>;，如前面配置所示：
+YCM 的 OmniCppComplete 补全引擎。我要进行 linux 系统开发，打开系统函数头文件觉得麻烦（也就无法使用 YCM 的语义补全），引入系统函数 tag 文件又影响 vim 速度（也就无法使用 YCM 的标签补全），这种情况又如何让 YCM 补全呢？WOW，别担心，YCM 还有 OmniCppComplete 补全引擎，只要你在当前代码文件中 #include 了该标识符所在头文件即可。通过 OmniCppComplete 补全无法使用 YCM 的随键而全的特性，你需要手工告知 YCM 需要补全，OmniCppComplete 的默认补全快捷键为 <C-x><C-o>，不太方便，我重新设定为 \<leader>;，如前面配置所示：
 
 ```
 inoremap <leader>; <C-x><C-o>
@@ -1362,7 +1362,7 @@ inoremap <leader>; <C-x><C-o>
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/YCM_%E7%9A%84_OmniCppComplete%20%E8%A1%A5%E5%85%A8%E5%BC%95%E6%93%8E.gif" alt=""/><br />
 （YCM 的 OmniCppComplete 补全引擎）
 </div>
-其实，只要你正确插入头文件，YCM 的 OmniCppComplete 补全引擎可以替代语义引擎和标签引擎，比如，上面的 MyClass 在不打开 MyClass.h 情况下也可由OmniCppComplete（键入 <leader>;）补全：
+其实，只要你正确插入头文件，YCM 的 OmniCppComplete 补全引擎可以替代语义引擎和标签引擎，比如，上面的 MyClass 在不打开 MyClass.h 情况下也可由OmniCppComplete（键入 \<leader>;）补全：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/OmniCppComplete%20%E6%9B%BF%E4%BB%A3%E8%AF%AD%E4%B9%89%E3%80%81%E6%A0%87%E7%AD%BE%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
 （OmniCppComplete 替代语义、标签补全）
@@ -1424,7 +1424,7 @@ class MyClass
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%8E%A5%E5%8F%A3%E7%94%9F%E6%88%90%E5%AE%9E%E7%8E%B0.gif" alt=""/><br />
 （接口生成实现）
 </div>
-MyClass.cpp 中我键入 protodef 定义的快捷键 <leader>PP，自动生成了函数框架。
+MyClass.cpp 中我键入 protodef 定义的快捷键 \<leader>PP，自动生成了函数框架。
 
 上图既突显了 protodef 的优点：
 
@@ -1473,7 +1473,7 @@ source $VIMRUNTIME/ftplugin/man.vim
 " 定义:Man命令查看各类man信息的快捷键
 nmap <Leader>man :Man 3 <cword><CR>
 ```
-需要查看时，在 vim 中键入输入 :Man fork 或者 :Man std::vector （注意大小写）即可在新建分割子窗口中查看到函数参考信息，为了方便，我设定了快捷键 <Leader>man，这样，光标所在单词将被传递给 :Man 命令，不用再手工键入，如下图所示：
+需要查看时，在 vim 中键入输入 :Man fork 或者 :Man std::vector （注意大小写）即可在新建分割子窗口中查看到函数参考信息，为了方便，我设定了快捷键 \<Leader>man，这样，光标所在单词将被传递给 :Man 命令，不用再手工键入，如下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BA%93%E4%BF%A1%E6%81%AF%E5%8F%82%E8%80%83.gif" alt=""/><br />
 （库信息参考）
@@ -1513,7 +1513,7 @@ let NERDTreeMinimalUI=1
 let NERDTreeAutoDeleteBuffer=1
 ```
 
-常用操作：回车，打开选中文件；r，刷新工程目录文件列表；I（大写），显示/隐藏隐藏文件；m，出现创建/删除/剪切/拷贝操作列表。键入 <leader>fl 后，右边子窗口为工程项目文件列表，如下图所示：
+常用操作：回车，打开选中文件；r，刷新工程目录文件列表；I（大写），显示/隐藏隐藏文件；m，出现创建/删除/剪切/拷贝操作列表。键入 \<leader>fl 后，右边子窗口为工程项目文件列表，如下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%B7%A5%E7%A8%8B%E6%96%87%E4%BB%B6%E6%B5%8F%E8%A7%88.png" alt=""/><br />
 （工程文件浏览）
@@ -1631,7 +1631,7 @@ LLVM 出自伊利诺伊大学研究项目，由 google 和苹果公司赞助。L
 
 颤抖吧，小伙伴们！
 
-们重点介绍 clang 子项目，clang 把标准 C/C++ 代码转换为中间语言，换言之，前端 clang + 后端 LLVM（后简称 LLVM/clang）就是一款可替代 GCC 的优秀编译器。相较 GCC，LLVM/clang 有众多优势，尤其以下几点：
+我们重点介绍 clang 子项目，clang 把标准 C/C++ 代码转换为中间语言，换言之，前端 clang + 后端 LLVM（后简称 LLVM/clang）就是一款可替代 GCC 的优秀编译器。相较 GCC，LLVM/clang 有众多优势，尤其以下几点：
 
 * 错误信息可读性强。能指出哪行、哪列有错误，并且用波浪线突显出来；另外，尽可能给出修改建议（比如提示你是否拼写错误）；最重要的是对 C++ 模板相关语法错误提示非常友好；（注，GCC 4.8 开始学习 clang 优化错误信息可读性）
 * 编译速度快且占用资源少。编译速度是 GCC 的 2.5 倍，内存消耗只有 GCC 的 1/5；
@@ -1821,11 +1821,11 @@ nmap <Leader>m :wa<CR>:make<CR><CR>:cw<CR>
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%80%E9%94%AE%E7%BC%96%E8%AF%91.gif" alt=""/><br />
 （一键编译）
 </div>
-我新建了一个工程，编辑好 CMakeLists.txt，执行 :!cmake CMakeLists.txt，接着 <leader>m 一键编译，quickfix 窗口显示了编译错误，光标自动定位到需要你解决的第一个编译错误，回车后光标自动调整到该错误对应的代码位置，修正后重新 <leader>r，编译通过并运行生成的程序。
+我新建了一个工程，编辑好 CMakeLists.txt，执行 :!cmake CMakeLists.txt，接着 \<leader>m 一键编译，quickfix 窗口显示了编译错误，光标自动定位到需要你解决的第一个编译错误，回车后光标自动调整到该错误对应的代码位置，修正后重新 \<leader>r，编译通过并运行生成的程序。
 
-你可能会遇到，调整过的代码能通过编译，但是，要么在工程目录中无法找到可执行程序，要么有程序但体现不出代码调整的内容（就像没调整过代码一样）。对于情况一，还算好，至少你晓得生成可程序失败了，肯定哪儿出了问题，不会继续往下新增代码；情况二，就麻烦了，你想通过运行程序检查刚才添加的代码运行是否正常，以为运行的是新程序，其实，代码调整后的新程序并未生成，运行是老程序，“哇，一切正常，往下写新业务逻辑代码”。导致这两个情况的根本原因，代码中存在链接错误导致并未正常创建新的可执行程序。bad news —— 如果编译错误，quickfix 窗口会固定在底部，罗列出所有编译过程中的所有错误，如果编译正常（即便是存在链接错误），quickfix 窗口会出现“Press ENTER or type command to continue”的输入等待提示信息，前面提过，为了省去手工输入回车，已经在 <Leader>m 中为 :make 多绑定个回车符 <CR>，换言之，在编译正确链接错误的情况下，你是无法查看到 quickfix 窗口的；good news —— 有两种方式解决该问题：
+你可能会遇到，调整过的代码能通过编译，但是，要么在工程目录中无法找到可执行程序，要么有程序但体现不出代码调整的内容（就像没调整过代码一样）。对于情况一，还算好，至少你晓得生成可程序失败了，肯定哪儿出了问题，不会继续往下新增代码；情况二，就麻烦了，你想通过运行程序检查刚才添加的代码运行是否正常，以为运行的是新程序，其实，代码调整后的新程序并未生成，运行是老程序，“哇，一切正常，往下写新业务逻辑代码”。导致这两个情况的根本原因，代码中存在链接错误导致并未正常创建新的可执行程序。bad news —— 如果编译错误，quickfix 窗口会固定在底部，罗列出所有编译过程中的所有错误，如果编译正常（即便是存在链接错误），quickfix 窗口会出现“Press ENTER or type command to continue”的输入等待提示信息，前面提过，为了省去手工输入回车，已经在 \<Leader>m 中为 :make 多绑定个回车符 <CR>，换言之，在编译正确链接错误的情况下，你是无法查看到 quickfix 窗口的；good news —— 有两种方式解决该问题：
 
-* 方式一，将前面 <Leader>m 中为 :make 绑定的回车符 <CR> 去掉，即
+* 方式一，将前面 \<Leader>m 中为 :make 绑定的回车符 <CR> 去掉，即
 nmap <Leader>m :wa<CR>:make<CR><CR>:cw<CR>
 
 * 方式二，先删除老的可执行程序，再编译、链接，发现缺失可执行程序时，再手工执行 :make，这样，可查看具体是什么链接错误了，将如下配置信息加入 .vimrc 中：
@@ -1833,7 +1833,7 @@ nmap <Leader>m :!rm -rf main<CR>:wa<CR>:make<CR><CR>:cw<CR>
 
 我选方式二。
 
-到此，已实现一键编译，要实现一键编译及运行无非就在刚才的快捷键中追加绑定运行程序的外部命令即可。新快捷键设定为 <leader>g，假定生成的可执行程序名为 main，将如下配置信息加入 .vimrc 中：
+到此，已实现一键编译，要实现一键编译及运行无非就在刚才的快捷键中追加绑定运行程序的外部命令即可。新快捷键设定为 \<leader>g，假定生成的可执行程序名为 main，将如下配置信息加入 .vimrc 中：
 
 ```
 nmap <Leader>g :!rm -rf main<CR>:wa<CR>:make<CR>:cw<CR><CR>:!./main<CR>
@@ -1856,7 +1856,7 @@ let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
 ```
 
-第三步，查看错误。好了，现在已经知道哪行代码有问题，具体问题描述如何查看？两种方式：一种是将光标移至问题行，vim 将在其底部显示简要错误描述；一种是将光标移至问题行，键入 <leader>d 后，vim 将在其底部显示详细错误描述。 
+第三步，查看错误。好了，现在已经知道哪行代码有问题，具体问题描述如何查看？两种方式：一种是将光标移至问题行，vim 将在其底部显示简要错误描述；一种是将光标移至问题行，键入 \<leader>d 后，vim 将在其底部显示详细错误描述。 
 
 如下所示：
 <div align="center">
@@ -1882,7 +1882,7 @@ nnoremap <Leader>sb :GrepBuffer -ir<CR><CR>
 ```
 :Grep 默认需要手工确认搜索关键字、搜索文件类型，方便起见，我在映射命令后加了几个连续 <CR>，这样就不用手工回车确认了。
 
-举个例子，光标移到 MyClassABC 下，键入 <leader>sp 后，grep.vim 自动提取 MyClassABC 为搜索关键字，执行工程中内查找，找到到 4 个匹配项并显示在 quickfix 中；接着键入 <leader>sb 后，执行打开文件内查找，找到 1 个匹配项。如下图所示：
+举个例子，光标移到 MyClassABC 下，键入 \<leader>sp 后，grep.vim 自动提取 MyClassABC 为搜索关键字，执行工程中内查找，找到到 4 个匹配项并显示在 quickfix 中；接着键入 \<leader>sb 后，执行打开文件内查找，找到 1 个匹配项。如下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%86%85%E5%AE%B9%E6%9F%A5%E6%89%BE.gif" alt=""/><br />
 （内容查找）
@@ -1956,7 +1956,7 @@ nnoremap <Leader>rc :call Replace(1, 0, input('Replace '.expand('<cword>').' wit
 nnoremap <Leader>rcw :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
 nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
 ```
-我平时用的最多的无须确认但整词匹配的替换模式，即 <leader>rw。
+我平时用的最多的无须确认但整词匹配的替换模式，即 \<leader>rw。
 
 请将完整配置信息添加进 .vimrc 中：
 
@@ -2014,13 +2014,13 @@ vim 有两类快速移动光标的方式：一类是以单词为单位的移动�
 
 假定光标在行首，需要移动到 facebook 的字符 a 处，先来数下前面有 1、2 ... 5 个 a，然后用前面所说的 5fa，唔，怎么在 jack 上呢？等等，好像数错了，再数次 1、2 ... 6，对滴，应该是 6fa，这下对了。我的个天，不能让哥太累，得找个插件帮忙 —— easymotion（https://github.com/Lokaltog/vim-easymotion ）。
 
-easymotion 只做一件事：把满足条件的位置用 [A~Za~z] 间的标签字符标出来，找到你想去的位置再键入对应标签字符即可快速到达。比如，上面的例子，假设光标在行首，我只需键入 <leader><leader>fa （为避免与其他快捷键冲突，easymotion 采用两次 <leader> 作为前缀键），所有的字符 a 都被重新标记成 a、b、c、d、e、f 等等标签（原始内容不会改变），f 标签为希望移动去的位置，随即键入 f 即可到达。如下图所示：
+easymotion 只做一件事：把满足条件的位置用 [A~Za~z] 间的标签字符标出来，找到你想去的位置再键入对应标签字符即可快速到达。比如，上面的例子，假设光标在行首，我只需键入 \<leader>\<leader>fa （为避免与其他快捷键冲突，easymotion 采用两次 \<leader> 作为前缀键），所有的字符 a 都被重新标记成 a、b、c、d、e、f 等等标签（原始内容不会改变），f 标签为希望移动去的位置，随即键入 f 即可到达。如下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8.gif" alt=""/><br />
 （快速移动）
 </div>
 
-类似，前面提过的 w、e、b、ge、F、j、k 等命令在 easymotion 作用下也能实现快速移动，其中，j 和 k 可跨行移动。同时，你还可以搭配 v 选中命令、d 删除命令、y 拷贝命令，比如，v<leader><leader>fa，快速选中光标当前位置到指定字符 a 之间的文本，d<leader><leader>fa，快速删除光标当前位置到指定字符 a 之间的文本，下图所示：
+类似，前面提过的 w、e、b、ge、F、j、k 等命令在 easymotion 作用下也能实现快速移动，其中，j 和 k 可跨行移动。同时，你还可以搭配 v 选中命令、d 删除命令、y 拷贝命令，比如，v\<leader>\<leader>fa，快速选中光标当前位置到指定字符 a 之间的文本，d\<leader>\<leader>fa，快速删除光标当前位置到指定字符 a 之间的文本，下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%90%AD%E9%85%8D%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E7%9A%84%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8.gif" alt=""/><br />
 （搭配操作命令的快速移动）
@@ -2038,7 +2038,9 @@ easymotion 只做一件事：把满足条件的位置用 [A~Za~z] 间的标签�
 （markdown 即时渲染）
 </div>
 
-vim-instant-markdown（https://github.com/suan/vim-instant-markdown ） 的安装相比其他插件较为特殊，它由 ruby 开发，所以你的 vim 必须集成 ruby 解释器（见“1 源码安装编辑器 vim”），并且安装 pygments.rb、redcarpet、instant-markdown-d 三个依赖库（npm 命令可通过 zypper install nodejs 安装）。
+vim-instant-markdown（https://github.com/suan/vim-instant-markdown ） 的安装相比其他插件较为特殊，它由 ruby 开发，所以你的 vim 必须集成 ruby 解释器（见“1 源码安装编辑器 vim
+”），并且安装 pygments.rb、redcarpet、instant-markdown-d 三个依赖库（npm 命令可通过 zypper install nodejs
+ 安装）。
 
 对于重内容、轻设计的我这类人来说，markdown 简洁的文书语法太贴心了。推荐三个网站：
 
