@@ -740,9 +740,9 @@ let g:tagbar_type_cpp = {
         \ 'f:functions',
         \ 'm:members:0:0',
         \ 'v:global:0:0',
-         'x:external:0:0',
-       \ 'l:local:0:0'
-     \ ]
+        \ 'x:external:0:0',
+        \ 'l:local:0:0'
+     \ ],
      \ 'sro'        : '::',
      \ 'kind2scope' : {
          \ 'g' : 'enum',
