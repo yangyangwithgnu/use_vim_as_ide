@@ -191,7 +191,7 @@ vim someplugin.vba
 ```
 cd ~/downloads/vim74/
 ./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --with-python-config-dir=/usr/lib/python2.7/config/ --enable-perlinterp --enable-gui=gtk2 --enable-cscope --prefix=/usr --enable-luainterp 
-ake VIMRUNTIMEDIR=/usr/share/vim/vim74 && make install
+make VIMRUNTIMEDIR=/usr/share/vim/vim74 && make install
 ```
 其中，--enable-rubyinterp、--enable-pythoninterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk2 表示生成 gvim，--enable-cscope 支持 cscope，--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。注意，你得预先安装相关依赖库的头文件，python-devel、python3-devel、ruby-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel，如果缺失，源码构建过程虽不会报错，但构建完成后的 vim 很可能丢失相关功能。构建完成后执行在 vim 中执行
 
@@ -742,7 +742,7 @@ let g:tagbar_type_cpp = {
         \ 'v:global:0:0',
         \ 'x:external:0:0',
         \ 'l:local:0:0'
-     \ ],
+     \ ]
      \ 'sro'        : '::',
      \ 'kind2scope' : {
          \ 'g' : 'enum',
@@ -2061,4 +2061,4 @@ vim-instant-markdown（https://github.com/suan/vim-instant-markdown ） 的安�
 * 哪个是最适合编码的编辑器？linux 上存在两种编辑器：神之编辑器 emacs，编辑器之神 vim。关于 emacs 与 vim 孰轻谁重之争已是世纪话题，我无意参与其中，在我眼里，它们流淌着自由的血液、继承着创新的基因，作为顶级编辑器，二者在这个领域都作到了极致，让世人重新认识了编辑的本质 —— 用命令规则而非字字键入 —— 去完成编辑任务。emacs，伪装成编辑器的操作系统，太杂、太重，我更喜欢专注于编辑的 vim。
 * 怎样的 IDE 才算好？对于初入开发的人员而言，Code::Blocks 是最易上手的选择；对于我这类喜欢折腾、追求效率、愿意用脑力换体力的人来说，vim 搭配各类插件是好的 IDE；对于 Donald Knuth 这等宗师，他们站在整个系统的层面，bash 加上几个命令行工具也是某种意义上的 IDE。所以，只要你能得心应手地完成软件开发任务，又察觉不到工具的存在，那这就是最适合你的 IDE。
 
-末了，我不清楚这篇文章能帮到哪些人、帮到什么程度，但我自己受益匪浅！写作的过程，是知识体系完整重构的过程，理清了思路、加深了记忆。如果它再能引发你的一点思绪，或许，这就是价值！
+末了，写作的过程，是知识体系完整重构的过程，理清了思路、加深了记忆。如果它再能引发你的一点思绪，或许，这就是价值！
