@@ -5,7 +5,7 @@ yangyang.gnu@gmail.com
 
 ##【公告】
 ----
-* <font color=red>**捐赠：如果觉得本文还不错，捐点碎银，支付宝 yangyang.gnu@gmail.com （https://shenghuo.alipay.com/send/payment/fill.htm ），给多了我跟你急 $\_$**</font>
+* **捐赠：如果觉得本文还不错，捐点碎银，支付宝 yangyang.gnu@gmail.com （https://shenghuo.alipay.com/send/payment/fill.htm ），给多了我跟你急 $\_$**
 * **讨论**：任何意见建议移步 http://www.v2ex.com/t/138696
 
 
