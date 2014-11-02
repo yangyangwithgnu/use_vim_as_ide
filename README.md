@@ -5,7 +5,10 @@ yangyang.gnu@gmail.com
 
 ##【公告】
 ----
-* **捐赠：如果觉得本文还不错，捐点碎银，支付宝 yangyang.gnu@gmail.com （https://shenghuo.alipay.com/send/payment/fill.htm ），给多了我跟你急 $\_$**
+* **捐赠：支付宝 yangyang.gnu@gmail.com 。支付宝链接 https://shenghuo.alipay.com/send/payment/fill.htm?optEmail=yangyang.gnu@gmail.com ，支付宝二维码 $_$**
+<div align="center">
+<img src="https://raw.githubusercontent.com/yangyangwithgnu/yangyangwithgnu.github.io/master/pics/donate_qr.png" alt=""/><br>
+</div>
 * **讨论**：任何意见建议移步 http://www.v2ex.com/t/138696
 
 
