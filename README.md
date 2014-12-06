@@ -745,7 +745,7 @@ let g:tagbar_type_cpp = {
         \ 'v:global:0:0',
         \ 'x:external:0:0',
         \ 'l:local:0:0'
-     \ ]
+     \ ],
      \ 'sro'        : '::',
      \ 'kind2scope' : {
          \ 'g' : 'enum',
