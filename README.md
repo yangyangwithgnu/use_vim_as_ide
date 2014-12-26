@@ -1,6 +1,6 @@
 <h1 align="center">所需即所获：像 IDE 一样使用 vim</h1>
 yangyang.gnu@gmail.com  
-2014-10-14 22:42:52
+2014-12-27 01:11:10
 
 
 ##【公告】
@@ -14,7 +14,8 @@ yangyang.gnu@gmail.com
 
 ##【版本】
 ----
-* v0.1，2014-10-13。发布初始版本。
+* v0.2.0，2014-12-27，新增/修正。0）重写“代码收藏”章节，停用过时的 visual mark，启用用户体验更优的 vim-signature；1）新增“基于语义的导航”章节，YCM 新增该项功能；2）调整“5.2 模板补全”章节结构，UltiSnips 不再提供预定义代码模板；3）protodef 插件更新，修复 protodef 生成成员函数实现的返回语句错误的问题；4）给出安装插件 vim-instant-markdown 的详细步骤。  
+* v0.1.0，2014-10-13，新增。发布初始版本。
 
 
 ##【目录】
@@ -196,7 +197,7 @@ cd ~/downloads/vim74/
 ./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --with-python-config-dir=/usr/lib/python2.7/config/ --enable-perlinterp --enable-gui=gtk2 --enable-cscope --prefix=/usr --enable-luainterp 
 make VIMRUNTIMEDIR=/usr/share/vim/vim74 && make install
 ```
-其中，--enable-rubyinterp、--enable-pythoninterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk2 表示生成 gvim，--enable-cscope 支持 cscope，--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。注意，你得预先安装相关依赖库的头文件，python-devel、python3-devel、ruby-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel，如果缺失，源码构建过程虽不会报错，但构建完成后的 vim 很可能丢失相关功能。构建完成后执行在 vim 中执行
+其中，--enable-rubyinterp、--enable-pythoninterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk2 表示生成 gvim，--enable-cscope 支持 cscope，--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。注意，你得预先安装相关依赖库的头文件，python-devel、python3-devel、ruby-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel，如果缺失，源码构建过程虽不会报错，但最终生成的 vim 很可能缺失某些功能。构建完成后在 vim 中执行
 
 ```
 :echo has('python')
@@ -386,7 +387,7 @@ syntax on
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE.png" alt=""/><br />
 （语法高亮）
 </div>
-上图中 STL 容器模板类 unordered_multimap 并未高亮，对滴，vim 对 C++ 语法高亮支持不够好（特别是 STL、C++11 新增元素），必须借由插件 stl.vim 进行增强，下载（http://www.vim.org/scripts/script.php?script_id=4293 ）后拷贝至 ~/.vim/bundle/STL-Syntax/after/syntax/cpp/，重启即可。效果如下：
+上图中 STL 容器模板类 unordered\_multimap 并未高亮，对滴，vim 对 C++ 语法高亮支持不够好（特别是 STL、C++14 新增元素），必须借由插件 stl.vim 进行增强，下载（https://github.com/Mizuchi/STL-Syntax ）后拷贝至 ~/.vim/bundle/STL-Syntax/after/syntax/cpp/，重启即可。效果如下：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%A2%9E%E5%BC%BA%20C%2B%2B11%20%E5%8F%8A%20STL%20%E7%9A%84%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE.png" alt=""/><br />
 （增强 C++11 及 STL 的语法高亮）
@@ -491,39 +492,51 @@ a.vim 实现原理很简单，基于文件名进行关联，比如，a.vim 能�
 
 源码分析过程中，常常需要在不同代码间来回跳转，我需要“收藏”分散在不同处的代码行，以便需要查看时能快速跳转过去，这时，vim 的书签（mark）功能派上大用途了。
 
-vim 书签的使用很简单，在你需要收藏的代码行键入 mm，这样就收藏好了，你试试，没反应？不会吧，难道你 linux 内核编译参数有问题，或者，vim 的编译参数没给全，让我想想，别急，喔，对了，你是指看不到书签？对对对，书签本来就看不到吖。这可不行，小二，来个让书签可视化的插件，亲，来了，visual mark （https://github.com/vim-scripts/Visual-Mark ），记得好评。
+vim 书签的使用很简单，在你需要收藏的代码行键入 mm，这样就收藏好了，你试试，没反应？不会吧，难道你 linux 内核编译参数有问题，或者，vim 的编译参数没给全，让我想想，别急，喔，对了，你是指看不到书签？好吧，我承认这是 vim 最大的坑，书签所在行与普通行外观上没任何差别，肉眼，你是找不到他滴。这可不行，得来个让书签可视化的插件，vim-signature（https://github.com/kshenoy/vim-signature ）。vim-signature 通过在书签所在行的前面添加字符的形式，以此可视化书签，这就要求你源码安装的 vim 具备 signs 特性，具体可在 vim 命令模式下键入
+```
+:echo has('signs')
+```
+若显示 1 则具备该特性，反之 0 则不具备该特性，需参考“1 源码安装编辑器 vim ”重新编译 vim。
 
-visual mark 使用快捷键 mm 创建/删除书签，F2 正向遍历书签，Shift + F2 逆向遍历，不太方便，得改；另外，书签颜色不好看，得调。看看帮助如何配置，昏，没帮助，得，直接改它的源码吧。找到 ~/.vim/bundle/Visual-Mark/plugin/visualmark.vim，将
+vim 的书签分为两类，独立书签和分类书签。独立书签，书签名只能由字母（a-zA-Z）组成，长度最多不超过 2 个字母，并且，同个文件中，不同独立书签名中不能含有相同字母，比如，a 和 bD 可以同时出现在同个文件在，而 Fc 和 c 则不行。分类书签，书签名只能由可打印特殊字符（!@#$%^&*()）组成，长度只能有 1 个字符，同个文件中，你可以不同行设置同名书签，这样，这些行在逻辑上就成归类成相同类型的书签了。下图定义了名为 a 和 dF 两个独立书签（分别 259 行和 261 行）、名为 # 的一类分类书签（含 256 行和 264 行）、名为 @ 的一类分类书签（257 行），如下所示：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E7%8B%AC%E7%AB%8B%E4%B9%A6%E7%AD%BE%E5%92%8C%E5%88%86%E7%B1%BB%E4%B9%A6%E7%AD%BE.png" alt=""/><br />
+（独立书签和分类书签）
+</div>
 
-```
-map <unique> <F2> <Plug>Vm_goto_next_sign
-map <unique> <s-F2> <Plug>Vm_goto_prev_sign
-```
-替换成
+两种形式的书签完全分布在各自不同的空间中，所以，它两的任何操作都是互不相同的，比如，你无法遍历所有书签，要么只能各个独立书签间遍历，要么只能在分类书签见遍历。显然，两种形式的书签都有各自的使用场景，就我而言，只使用独立书签，原因有二：一是独立书签可保存，当我设置好独立书签后关闭文档，下次重新打开该文档时，先前的独立书签仍然有效，而分类书签没有该特性（其他文档环境恢复参见“6.3 环境恢复”）；一是减少记忆快捷键，光是独立书签就有 8 种遍历方式，每种遍历对应一种快捷键，太难了。
 
-```
-map <unique> mn <Plug>Vm_goto_next_sign
-map <unique> mp <Plug>Vm_goto_prev_sign
-```
-这样，mn 正向遍历书签、mp 逆向遍历；再将
-
-```
-if &bg == "dark" 
- highlight SignColor ctermfg=white ctermbg=blue guifg=white guibg=RoyalBlue3 
-else 
- highlight SignColor ctermbg=white ctermfg=blue guibg=grey guifg=RoyalBlue3 
-endif
-```
-替换成
+vim-signature 快捷键如下：
 
 ```
-if &bg == "dark" 
- highlight SignColor ctermfg=white ctermbg=blue guifg=#FD971F guibg=#1D1D1D
-else 
- highlight SignColor ctermbg=white ctermfg=blue guifg=LightGreen guibg=DarkRed
-endif
+let g:SignatureMap = {
+        \ 'Leader'             :  "m",
+        \ 'PlaceNextMark'      :  "m,",
+        \ 'ToggleMarkAtLine'   :  "m.",
+        \ 'PurgeMarksAtLine'   :  "m-",
+        \ 'DeleteMark'         :  "dm",
+        \ 'PurgeMarks'         :  "mda",
+        \ 'PurgeMarkers'       :  "m<BS>",
+        \ 'GotoNextLineAlpha'  :  "']",
+        \ 'GotoPrevLineAlpha'  :  "'[",
+        \ 'GotoNextSpotAlpha'  :  "`]",
+        \ 'GotoPrevSpotAlpha'  :  "`[",
+        \ 'GotoNextLineByPos'  :  "]'",
+        \ 'GotoPrevLineByPos'  :  "['",
+        \ 'GotoNextSpotByPos'  :  "mn",
+        \ 'GotoPrevSpotByPos'  :  "mp",
+        \ 'GotoNextMarker'     :  "[+",
+        \ 'GotoPrevMarker'     :  "[-",
+        \ 'GotoNextMarkerAny'  :  "]=",
+        \ 'GotoPrevMarkerAny'  :  "[=",
+        \ 'ListLocalMarks'     :  "ms",
+        \ 'ListLocalMarkers'   :  "m?"
+        \ }
 ```
-你可以根据自己喜好提取喜欢颜色的 RGB（推荐，提色工具 gpick，色卡 http://www.colorschemer.com/schemes/ ），按上例设置即可。提醒下，RGB 的前缀是 # 而非 0X，别惯性思维 .*_*.
+够多了吧，粗体部分是按个人习惯重新定义的快捷键，请添加进 .vimrc 中，如下几类：
+* 书签设定。mx，设定/取消当前行名为 x 的标签；m,，自动设定下一个可用书签名，前面提说，独立书签名是不能重复的，在你已经有了多个独立书签，当想再设置书签时，需要记住已经设定的所有书签名，否则很可能会将已有的书签冲掉，这可不好，所以，vim-signature 为你提供了 m, 快捷键，自动帮你选定下一个可用独立书签名；mda，删除当前文件中所有独立书签。
+* 书签罗列。ms，罗列出当前文件中所有书签，选中后回车可直接跳转；
+* 书签跳转：mn，按行号前后顺序，跳转至下个独立书签；mp，按行号前后顺序，跳转至前个独立书签。书签跳转方式很多，除了这里说的行号前后顺序，还可以基于书签名字母顺序跳转、分类书签同类跳转、分类书签不同类间跳转等等。
 
 效果如下：
 <div align="center">
@@ -531,11 +544,16 @@ endif
 （可视化书签）
 </div>
 
-另外，我虽然选用了 visual mark，但不代表它完美了，对我而言，存在两个硬伤：一是，创建的书签无法保存，下次打开该文件后又得重新创建；一是，无法在不同文件的书签间跳转。前者可借由 vim 的 session 和 viminfo 特性解决，详见后文“环境恢复”节，后者无解，只能先切换文件再跳转书签。
+另外，我虽然选用了 vim-signature，但不代表它完美了，对我而言，无法在不同文件的书签间跳转绝对算是硬伤。当然，或许这是 vim 自身限制。
+
 
 <h3 name="4.6">4.6 代码导航</h3>
 
 假设你正在分析某个开源项目源码，在 main.cpp 中遇到调用函数 func()，想要查看它如何实现，一种方式：在 main.cpp 中查找 -> 若没有在工程内查找 -> 找到后打开对应文件 -> 文件内查找其所在行 -> 移动光标到该行 -> 分析完后切换会先前文件，不仅效率太低更要命的是影响我的思维连续性。我需要另外高效的方式，就像真正函数调用一样：光标选中调用处的 func() -> 键入某个快捷键自动转换到 func() 实现处 -> 键入某个键又回到 func() 调用处，这就是所谓的代码导航。
+
+基本上，vim 世界存在两类导航：基于标签的导航和基于语义的导航。
+
+<h4 name="4.6.1">基于标签的导航</h4>
 
 先了解下什么是标签（tag）。这可厉害了，标签可谓是现代 IDE 的基石之一，没有它，类/函数/对象列表、代码补全、代码导航、函数原型提示等等功能是不可能实现的。代码中的类、结构、类成员、函数、对象、宏这些元素就是标签，每个标签有它自己的名字、定义、类型、所在文件中的行位置、所在文件的路径等等属性。
 
@@ -705,16 +723,32 @@ let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v 
 另外，indexer 还有个自己的配置文件，用于设定各个工程的根目录路径，配置文件位于 ~/.indexer_files，内容可以设定为：
 
 >--------------- ~/.indexer_files ---------------  
->[multiple_source_proj]  
->/data/workplace/multiple_source_proj/  
->[single_source_proj]  
->/data/workplace/single_source_proj/  
->[example]  
->/data/workplace/example/  
+>[foo]  
+>/data/workplace/foo/  
+>[bar]  
+>/data/workplace/bar/  
 
-上例设定了三个工程的根目录，方括号内是对应工程名，后续有新工程，直接添至该文件中即可。这样，从以上目录打开任何代码文件时，indexer 便对整个目录创建标签文件，若代码文件有更新，那么在文件保存时，indexer 将自动调用 ctags 更新标签文件，并自动引入进 vim 中。（indexer 生成的标签文件以工程名命名，位于 ~/.indexer_files_tags/）
+上例设定了两个工程的根目录，方括号内是对应工程名，后续有新工程，直接添至该文件中即可。这样，从以上目录打开任何代码文件时，indexer 便对整个目录创建标签文件，若代码文件有更新，那么在文件保存时，indexer 将自动调用 ctags 更新标签文件，并自动引入进 vim 中（indexer 生成的标签文件以工程名命名，位于 ~/.indexer_files_tags/）。好了，解决了这三个问题后，vim 的代码导航已经达到我的预期。
 
-好了，解决了这三个问题后，vim 的代码导航已经达到我的预期。
+<h4 name="4.6.2">基于语义的导航</h4>
+    
+优秀和卓越你选哪个？我，不论代价多大，肯定后者。有个 vim 插件叫 YCM，有个 C++ 编译器叫 clang，只要正确使用它两，你将获得无与伦比的代码导航用户体验，当然，还有代码补全。当然，代价是相对复杂的配置，涉及几个后续章节知识点（“基于语义的智能补全”和“源码安装编译器 clang”），正因如此，此时我只给出快捷键设置，在看完“基于语义的智能补全”后请返回此处，重新查阅。
+
+请增加如下快捷键到 .vimrc 中：
+
+```
+nnoremap <leader>jd :YcmCompleter GoToDeclaration<CR>
+" 只能是 #include 或已打开的文件
+nnoremap <leader>je :YcmCompleter GoToDefinition<CR>
+```
+效果如下：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E8%AF%AD%E4%B9%89%E7%9A%84%E5%AF%BC%E8%88%AA.gif" alt=""/><br />
+（基于语义的导航）
+</div>
+
+另外，基于标签的导航建议你也要了解，有助于你熟悉标签系统，毕竟，使用标签的插件很有几个。
+
 
 <h3 name="4.7">4.7 标签列表</h3>
 
@@ -824,7 +858,9 @@ if (/* condition */) {
 ```
 而且帮我选中 /* condition */ 部分，不会影响编码连续性 —— UltiSnips（https://github.com/SirVer/ultisnips ），我的选择。
 
-UltiSnips 预定义了几十种语言常用的代码模板，位于 ~/.vim/bundle/UltiSnips/UltiSnips/，UltiSnips 有一套自己的代码模板语法规则，比如：
+在进行模板补全时，你是先键入模板名（如，if），接着键入补全快捷键（默认 \<tab>），然后 UltiSnips 根据你键入的模板名在代码模板文件中搜索匹配的“模板名-模板”，找到对应模板后，将模板在光标当前位置展开。
+
+UltiSnips 有一套自己的代码模板语法规则，类似：
 
 ```
 snippet if "if statement" i
@@ -835,18 +871,11 @@ endsnippet
 ```
 其中，snippet 和 endsnippet 用于表示模板的开始和结束；if 是模板名；"if statement" 是模板描述，你可以把多个模板的模板名定义成一样（如，if () {} 和 if () {} else {} 两模板都定义成相同模板名 if），在模板描述中加以区分（如，分别对应 "if statement" 和 "if-else statement"），这样，在 YCM（重量级智能补全插件） 的补全列表中可以根据模板描述区分选项不同模板；i 是模板控制参数，用于控制模板补全行为，具体参见“快速输入结对符”一节；${1}、${2} 是 \<tab> 跳转的先后顺序。
 
-在进行模板补全时，你是先键入模板名（如，if），接着键入补全快捷键（默认 \<tab>），然后 UltiSnips 根据你键入的模板名在代码模板文件中搜索匹配的“模板名-模板”，找到对应模板后，将模板在光标当前位置展开。
+新版 UltiSnips 并未自带预定义的代码模板，你可以从 https://github.com/honza/vim-snippets 获取各类语言丰富的代码模板，也可以重新写一套符合自己编码风格的模板。无论哪种方式，你需要在 .vimrc 中设定该模板所在目录名，以便 UltiSnips 寻找到。比如，我自定义的代码模板文件 cpp.snippets，路径为 ~/.vim/bundle/ultisnips/mysnippets/cpp.snippets，对应设置如下：
+let g:UltiSnipsSnippetDirectories=["mysnippets"]
+其中，目录名切勿取为 snippets，这是 UltiSnips 内部保留关键字；另外，目录一定要是 ~/.vim/bundle/ 下的子目录，也就是 vim 的运行时目录。
 
-默认情况下，UltiSnips 模板补全快捷键是 \<tab>，与后面介绍的 YCM 快捷键有冲突，所有须在 .vimrc 中重新设定：
-
-```
-" UltiSnips 的 tab 键与 YCM 冲突，重新设定
-let g:UltiSnipsExpandTrigger="<leader><tab>"
-let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
-let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
-```
-
-UltiSnips 预定义了几十种语言常用的代码模板，我关注 C/C++ 的两个文件：~/.vim/bundle/UltiSnips/UltiSnips/c.snippets 和 ~/.vim/bundle/UltiSnips/UltiSnips/cpp.snippets，显然，前者是 C 程序的代码模板，后者是 C++ 程序的代码模板。我现在几乎不写纯 C 代码了，所以为了以后代码模板维护方便，我把 c.snippets 清空了，按自己习惯重写了cpp.snippets，完整 cpp.snippets 内容如下：
+完整 cpp.snippets 内容如下：
 
 ```
 #================================= 
@@ -1028,7 +1057,16 @@ snippet s "scope" i
 endsnippet
 ```
 
-很简单，根据个人偏好按需调整。效果如下：
+默认情况下，UltiSnips 模板补全快捷键是 \<tab>，与后面介绍的 YCM 快捷键有冲突，所有须在 .vimrc 中重新设定：
+
+```
+" UltiSnips 的 tab 键与 YCM 冲突，重新设定
+let g:UltiSnipsExpandTrigger="<leader><tab>"
+let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
+let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
+```
+
+效果如下：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%A8%A1%E6%9D%BF%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
 （模板补全）
@@ -1196,7 +1234,7 @@ cd YouCompleteMe/
 git submodule update --init --recursive
 ```
 
-第二步，下载 libclang。你系统中可能已有现成的 libclang（自行源码编译或者发行套件中预案装的），最好别用，YCM 作者强烈建议你下载 LLVM 官网提供预编译二进制文件，以避免各种妖人问题。在 http://llvm.org/releases/download.html 找到最新版 LLVM，在其 Pre-built Binaries 下选择适合你发行套件的最新版预编译二进制文件，下载并解压至 ~/downloads/clang+llvm-3.4.2；
+第二步，下载 libclang。你系统中可能已有现成的 libclang（自行源码编译或者发行套件中自带的），最好别用，YCM 作者强烈建议你下载 LLVM 官网的提供预编译二进制文件，以避免各种妖人问题。在 http://llvm.org/releases/download.html 找到最新版 LLVM，Pre-built Binaries 下选择适合你发行套件的最新版预编译二进制文件，下载并解压至 ~/downloads/clang+llvm；
 
 第三步，编译 YCM 共享库：
 
@@ -1204,7 +1242,7 @@ git submodule update --init --recursive
 cd ~/downloads/ 
 mkdir ycm_build 
 cd ycm_build 
-cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/downloads/clang+llvm-3.4.2/ . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/downloads/clang+llvm/ . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
 make ycm_support_libs
 ```
 在 ~/.vim/bundle/YouCompleteMe/third_party/ycmd 中将生成 ycm_client_support.so、ycm_core.so、libclang.so 等三个共享库文件；
@@ -1300,7 +1338,7 @@ def FlagsForFile( filename, \*\*kwargs ):
     'do_cache': True 
   }
 ```
-基本上，根据你工程情况只需调整 .ycm_extra_conf.py 的 flags 部分，前面说过， flags 用于 YCM 调用 libclang 时指定的参数，通常应与构建脚本保持一致（如，CMakeLists.txt）。flags 会产生两方面影响，一是影响 YCM 的补全内容、一是影响代码静态分析插件 syntastic 的显示结果（详见后文“静态分析器集成”）。另外你得注意，该配置文件其实就是个 python 脚本，python 把缩进视为语法，如果你是直接拷贝文中的 .ycm_extra_conf.py 小心缩进部分。另外，/usr/include/c++/4.8/ 需要替换成你系统中 C++ 标准库头文件所在路径； 
+基本上，根据你工程情况只需调整 .ycm_extra_conf.py 的 flags 部分，前面说过， flags 用于 YCM 调用 libclang 时指定的参数，通常应与构建脚本保持一致（如，CMakeLists.txt）。flags 会产生两方面影响，一是影响 YCM 的补全内容、一是影响代码静态分析插件 syntastic 的显示结果（详见后文“静态分析器集成”）。/usr/include/c++/4.8/ 需要替换成你系统中 C++ 标准库头文件所在路径。另外，你得注意，该配置文件其实就是个 python 脚本，python 把缩进视为语法，如果你是直接拷贝文中的 .ycm_extra_conf.py 小心缩进部分。 
 
 设置二，在 .vimrc 中增加如下配置信息：
 
@@ -1390,10 +1428,6 @@ YCM 的其他补全。YCM 还集成了其他辅助补全引擎，可以补全路
 </div>
 上图中，当我键入 tia 时这两个对象均匹配，接着输入大写 L 时就只剩  This_Is_A_Long_Name 匹配。
 
-当然，YCM 也有缺陷：
-
-* 工程所在路径中不能有中文名，否则 YCM 报错；
-* YCM 自身也有简单的代码导航功能，但只能在文件内跳转而不能跨文件。
 
 <h3 name="5.5">5.5 由接口快速生成实现框架</h3>
 
@@ -1428,24 +1462,16 @@ class MyClass
 </div>
 MyClass.cpp 中我键入 protodef 定义的快捷键 \<leader>PP，自动生成了函数框架。
 
-上图既突显了 protodef 的优点：
+上图既突显了 protodef 的优点：优点一，virtual、默认参数等应在函数声明而不应在函数定义中出现的关键字，protodef 已为你过滤；优点二：doNothing() 这类纯虚函数不应有实现的自动被 protodef 忽略。同时也暴露了 protodef 问题：printMsg(int = 16) 的函数声明变更为 printMsg(unsigned)，protodef 无法自动为你更新，它把更改后的函数声明视为新函数添加在实现文件中，老声明对应的实现仍然保留。
 
-* 优点一，virtual、默认参数等应在函数声明而不应在函数定义中出现的关键字，protodef 已为你过滤；
-* 优点二：doNothing() 这类纯虚函数不应有实现的自动被 protodef 忽略；
-
-同时也暴露出几个问题：
-
-* 缺点一，printMsg(int = 16) 的函数声明变更为 printMsg(unsigned)，protodef 无法自动为你更新，它把更改后的函数声明视为新函数添加在实现文件中，老声明对应的实现仍然保留；
-* 缺点二：protodef 对函数返回值分析得似乎有问题，int getSize(void) 声明 int 返回值但实现框架无 return，而 void printMsg(int) 声明无返回值反而在实现框架中出现了 return。
-
-关于两个缺点，先前我计划优化下 protodef 源码再发给原作者，后来想想，protodef 借助 ctags 代码分析实现的，本来就存在某些缺陷，好吧，后续我找个时间写个与 protodef 相同功能但对 C++ 支持更完善的插件，内部当然借助 libclang 啦。
+关于缺点，先我计划优化下 protodef 源码再发给原作者，后来想想，protodef 借助 ctags 代码分析实现的，本来就存在某些缺陷，好吧，后续我找个时间写个与 protodef 相同功能但对 C++ 支持更完善的插件，内部当然借助 libclang 啦。
 
 另外，每个人都有自己的代码风格，比如，return 语句我喜欢
 
 ```
 return(TODO);
 ```
-所以，调整了 protodef.vim 源码，把 242 行改为
+所以，调整了 protodef.vim 源码，把 239、241、244、246 四行改为
 
 ```
 call add(full, "    return(TODO);") 
@@ -1455,10 +1481,10 @@ call add(full, "    return(TODO);")
 ```
 void MyClass::getSize (void);
 ```
-所以，把 213 行改为
+所以，把 217 行改为
 
 ```
-let proto = substitute(proto, '(\_.\*$', " (" . params . Tail, '')    
+let proto = substitute(proto, '(\_.*$', ' (' . params . Tail, '') 
 ```
 
 <h3 name="5.6">5.6 库信息参考</h3>
@@ -1517,7 +1543,7 @@ let NERDTreeAutoDeleteBuffer=1
 
 常用操作：回车，打开选中文件；r，刷新工程目录文件列表；I（大写），显示/隐藏隐藏文件；m，出现创建/删除/剪切/拷贝操作列表。键入 \<leader>fl 后，右边子窗口为工程项目文件列表，如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%B7%A5%E7%A8%8B%E6%96%87%E4%BB%B6%E6%B5%8F%E8%A7%88.png" alt=""/><br />
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%96%87%E4%BB%B6%E5%88%97%E8%A1%A8.gif" alt=""/><br />
 （工程文件浏览）
 </div>
 
@@ -1730,7 +1756,7 @@ cp ~/downloads/libcxxabi/lib/libc++abi.so\* /usr/lib/
 后续可以通过如下选项进行代码编译：
 
 ```
-clang++ -std=c++11 -stdlib=libc++ -Werror -Weverything -Wno-disabled-macro-expansion -Wno-float-equal -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-global-constructors -Wno-exit-time-destructors -Wno-missing-prototypes -Wno-padded -lc++ -lc++abi main.cpp
+clang++ -std=c++11 -stdlib=libc++ -Werror -Weverything -Wno-disabled-macro-expansion -Wno-float-equal -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-global-constructors -Wno-exit-time-destructors -Wno-missing-prototypes -Wno-padded -Wno-old-style-cast -lc++ -lc++abi main.cpp
 ```
 这一大波编译选项很崩溃么 @\_@！我来简单说说：
 
@@ -1748,6 +1774,7 @@ clang++ -std=c++11 -stdlib=libc++ -Werror -Weverything -Wno-disabled-macro-expan
 * -Wno-exit-time-destructors：在 main() 之后存在执行的代码，忽略此警告；
 * -Wno-missing-prototypes：虽有函数定义但缺失函数原型，忽略此警告；
 * -Wno-padded：结构体大小应为 4 字节整数倍，忽略此警告（编译器自动调整对齐边界）；
+* -Wno-old-style-cast：C 语言的强制类型转换，忽略此警告；
 * -lc++：指定链接 /usr/lib/libc++.so 标准库（缺失将导致链接失败！）；
 * -lc++abi：指定链接 /usr/lib/libc++abi.so 标准库（缺失将导致链接失败！）。
 
@@ -2044,9 +2071,16 @@ easymotion 只做一件事：把满足条件的位置用 [A~Za~z] 间的标签�
 （markdown 即时渲染）
 </div>
 
-vim-instant-markdown（https://github.com/suan/vim-instant-markdown ） 的安装相比其他插件较为特殊，它由 ruby 开发，所以你的 vim 必须集成 ruby 解释器（见“1 源码安装编辑器 vim
-”），并且安装 pygments.rb、redcarpet、instant-markdown-d 三个依赖库（npm 命令可通过 zypper install nodejs
- 安装）。
+vim-instant-markdown（https://github.com/suan/vim-instant-markdown ） 的安装相比其他插件较为特殊，它由 ruby 开发，所以你的 vim 必须集成 ruby 解释器（见“1 源码安装编辑器 vim ”），并且安装 pygments.rb、redcarpet、instant-markdown-d 三个依赖库：
+
+```
+gem install pygments.rb
+gem install redcarpet
+# 若系统提示无 npm 命令，你需要先执行 zypper --no-refresh install nodejs
+npm -g install instant-markdown-d
+```
+
+注意，以上三条命令均要访问墙外服务器，所以，你得先有 VPN 全局翻墙工具或者透明代理工具，可参考《美丽新世界：linux 下的惬意生活》中“3.2 搭梯翻墙”（https://github.com/yangyangwithgnu/the_new_world_linux ）。
 
 对于重内容、轻设计的我这类人来说，markdown 简洁的文书语法太贴心了。推荐三个网站：
 
