@@ -1,4 +1,4 @@
-" 更新时间：2014-2-28 16:12:00
+" 更新时间：2014-12-27 00:51:58
 
 " 定义快捷键的前缀，即 <Leader>
 let mapleader=";"
@@ -201,7 +201,39 @@ nmap <Leader>sch :AS<CR>
 " <<
 
 " >>
+" 代码收藏
+
+" 自定义 vim-signature 快捷键
+let g:SignatureMap = {
+        \ 'Leader'             :  "m",
+        \ 'PlaceNextMark'      :  "m,",
+        \ 'ToggleMarkAtLine'   :  "m.",
+        \ 'PurgeMarksAtLine'   :  "m-",
+        \ 'DeleteMark'         :  "dm",
+        \ 'PurgeMarks'         :  "mda",
+        \ 'PurgeMarkers'       :  "m<BS>",
+        \ 'GotoNextLineAlpha'  :  "']",
+        \ 'GotoPrevLineAlpha'  :  "'[",
+        \ 'GotoNextSpotAlpha'  :  "`]",
+        \ 'GotoPrevSpotAlpha'  :  "`[",
+        \ 'GotoNextLineByPos'  :  "]'",
+        \ 'GotoPrevLineByPos'  :  "['",
+        \ 'GotoNextSpotByPos'  :  "mn",
+        \ 'GotoPrevSpotByPos'  :  "mp",
+        \ 'GotoNextMarker'     :  "[+",
+        \ 'GotoPrevMarker'     :  "[-",
+        \ 'GotoNextMarkerAny'  :  "]=",
+        \ 'GotoPrevMarkerAny'  :  "[=",
+        \ 'ListLocalMarks'     :  "ms",
+        \ 'ListLocalMarkers'   :  "m?"
+        \ }
+
+" <<
+
+" >>
 " 代码导航
+ 
+" 基于标签的代码导航
 
 " 设置插件 indexer 调用 ctags 的参数
 " 默认 --c++-kinds=+p+l，重新设置为 --c++-kinds=+l+p+x+c+d+e+f+g+m+n+s+t+u+v
@@ -213,8 +245,11 @@ nmap <Leader>tn :tnext<CR>
 " 反向遍历同名标签
 nmap <Leader>tp :tprevious<CR>
 
-" 跳转到定义处
-"nmap <Leader>gd <C-]>
+" 基于语义的代码导航
+
+nnoremap <leader>jd :YcmCompleter GoToDeclaration<CR>
+" 只能是 #include 或已打开的文件
+nnoremap <leader>je :YcmCompleter GoToDefinition<CR>
 
 " <<
 
@@ -268,6 +303,7 @@ let g:tagbar_type_cpp = {
 
 " 模板补全
 " UltiSnips 的 tab 键与 YCM 冲突，重新设定
+let g:UltiSnipsSnippetDirectories=["mysnippets"]
 let g:UltiSnipsExpandTrigger="<leader><tab>"
 let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
 let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
@@ -290,9 +326,7 @@ let g:ycm_confirm_extra_conf=0
 " 开启 YCM 标签补全引擎
 let g:ycm_collect_identifiers_from_tags_files=1
 " 引入 C++ 标准库 tags
-set tags+=/data/misc/software/misc./vim/stdcpp.tags
-" 引入 libcurl 库 tags
-set tags+=/usr/include/curl/curl.tags
+set tags+=/data/misc/software/app/vim/stdcpp.tags
 
 " YCM 集成 OmniCppComplete 补全引擎，设置其快捷键
 inoremap <leader>; <C-x><C-o>
@@ -319,7 +353,7 @@ let g:syntastic_warning_symbol = '⚠'
 " 由接口快速生成实现框架
 
 " 设置 pullproto.pl 脚本路径
-let g:protodefprotogetter='~/.vim/bundle/protodef/pullproto.pl'
+let g:protodefprotogetter='~/.vim/bundle/vim-protodef/pullproto.pl'
 
 " 成员函数的实现顺序与声明顺序一致
 let g:disable_protodef_sorting=1
