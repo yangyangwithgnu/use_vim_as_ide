@@ -1,11 +1,11 @@
 <h1 align="center">所需即所获：像 IDE 一样使用 vim</h1>
-yangyang.gnu@gmail.com  
+yangyangwithgnu@yeah.net  
 2014-12-27 01:11:10
 
 
 ##【公告】
 ----
-* **捐赠：支付宝 yangyang.gnu@gmail.com 。支付宝链接 https://shenghuo.alipay.com/send/payment/fill.htm?optEmail=yangyang.gnu@gmail.com ，支付宝二维码 $_$**
+* **捐赠：支付宝 yangyangwithgnu@yeah.net 。支付宝链接 https://shenghuo.alipay.com/send/payment/fill.htm?optEmail=yangyangwithgnu@yeah.net ，支付宝二维码 $_$**
 <div align="center">
 <img src="https://raw.githubusercontent.com/yangyangwithgnu/yangyangwithgnu.github.io/master/pics/donate_qr.png" alt=""/><br>
 </div>
@@ -84,7 +84,7 @@ vi 之大道如我心之禅，<br />
 </div>
 <div align="right">
 作：reddy@lion.austin.com<br />
-译：yangyang.gnu@gmail.com<br />
+译：yangyangwithgnu@yeah.net<br />
 </div><br />  
 
 言归正传，说说 vim 用于代码编写提供了哪些直接和间接功能支撑。vim 用户手册中，50％ 的例子都是在讲 vim 如何高效编写代码，由此可见，vim 是一款面向于程序员的编辑器，即使某些功能 vim 无法直接完成，借助其丰富的插件资源，必定可以达成目标，这就是所需即所获。
@@ -736,7 +736,7 @@ let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v 
 
 <h4 name="4.6.2">基于语义的导航</h4>
     
-优秀和卓越你选哪个？我，不论代价多大，肯定后者。有个 vim 插件叫 YCM，有个 C++ 编译器叫 clang，只要正确使用它两，你将获得无与伦比的代码导航用户体验，当然，还有代码补全。当然，代价是相对复杂的配置，涉及几个后续章节知识点（“基于语义的智能补全”和“源码安装编译器 clang”），正因如此，此时我只给出快捷键设置，在看完“基于语义的智能补全”后请返回此处，重新查阅。
+优秀和卓越你选哪个？我，不论代价多大，肯定后者。有个 vim 插件叫 YCM，有个 C++ 编译器叫 clang，只要正确使用它两，你将获得无与伦比的代码导航用户体验，以及，代码补全。当然，代价是相对复杂的配置，涉及几个后续章节知识点（“基于语义的智能补全”和“源码安装编译器 clang”），正因如此，此时我只给出快捷键设置，在看完“基于语义的智能补全”后请返回此处，重新查阅。
 
 请增加如下快捷键到 .vimrc 中：
 
