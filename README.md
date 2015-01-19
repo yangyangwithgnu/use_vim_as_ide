@@ -1,6 +1,6 @@
 <h1 align="center">所需即所获：像 IDE 一样使用 vim</h1>
 yangyangwithgnu@yeah.net  
-2014-12-27 01:11:10
+2015-01-18 21:30:31
 
  
 ##【公告】
@@ -14,7 +14,8 @@ yangyangwithgnu@yeah.net
 
 ##【版本】
 ----
-* v0.2.0，2014-12-27，新增/修正。0）重写“代码收藏”章节，停用过时的 visual mark，启用用户体验更优的 vim-signature（@arcticlion，谢谢）；1）新增“基于语义的导航”章节，YCM 新增该项功能；2）调整“5.2 模板补全”章节结构，UltiSnips 不再提供预定义代码模板；3）protodef 插件更新，修复 protodef 生成成员函数实现的返回语句错误的问题；4）给出安装插件 vim-instant-markdown 的详细步骤。  
+* v0.1.2，2015-01-18，新增：0）重写“内容查找”，让匹配项具备上下文提醒能力；1）“快速输入结对符”扩充快速选中结对符内文本的相关知识；2）增加支持分支 undo 的介绍；3）增加持久化保存 undo 历史的介绍；4）全文结构调整，将“内容查找”和“内容替换”移至“4 代码分析”，将“快速输入结对符”更名为“快速编辑结对符”，并移至“8 其他辅助”。  
+* v0.1.1，2014-12-27，新增/修正。0）重写“代码收藏”章节，停用过时的 visual mark，启用用户体验更优的 vim-signature（@arcticlion，谢谢）；1）新增“基于语义的导航”章节，YCM 新增该项功能；2）调整“5.2 模板补全”章节结构，UltiSnips 不再提供预定义代码模板；3）protodef 插件更新，修复 protodef 生成成员函数实现的返回语句错误的问题；4）给出安装插件 vim-instant-markdown 的详细步骤。  
 * v0.1.0，2014-10-13，新增。发布初始版本。
 
 
@@ -41,10 +42,12 @@ yangyangwithgnu@yeah.net
 ................[基于标签的导航 ](#4.6.1)  
 ................[基于语义的导航 ](#4.6.2)  
 ........[4.7 标签列表 ](#4.7)  
+........[4.8 内容查找 ](#4.8)  
+........[4.9 内容替换 ](#4.9)  
 [5 代码开发 ](#5)  
 ........[5.1 快速开关注释 ](#5.1)  
 ........[5.2 模板补全 ](#5.2)  
-........[5.3 快速输入结对符 ](#5.3)  
+........[5.3 coming soon (｡◕‿◕｡) ](#5.3)  
 ........[5.4 智能补全 ](#5.4)  
 ................[基于标签的智能补全 ](#5.4.1)  
 ................[基于语义的智能补全 ](#5.4.2)  
@@ -61,8 +64,8 @@ yangyangwithgnu@yeah.net
 ................[一键编译 ](#7.1.3)  
 ........[7.2 静态分析器集成 ](#7.2)  
 [8 其他辅助 ](#8)  
-........[8.1 内容查找 ](#8.1)  
-........[8.2 内容替换 ](#8.2)  
+........[8.1 快速编辑结对符 ](#8.1)  
+........[8.2 支持分支的 undo ](#8.2)  
 ........[8.3 快速移动 ](#8.3)  
 ........[8.4 markdown 即时预览 ](#8.4)  
 [9 尾声](#9)
@@ -819,9 +822,167 @@ let g:tagbar_type_cpp = {
 
 另外，我在想个问题：indexer 调用 ctags 生成用标签，tagbar 也要调用 ctags 生成用标签，为何不能由其中之一生成标签，另外一个复用呢？我到没细看两个插件的实现代码，估计是前者与 ctags 间是文件接口模式，后者与 ctags 是管道接口模式。插件多了还是麻烦 -。-
 
+<h3 name="4.8">4.8 内容查找</h3>
+
+vim 支持正则表达式，那么已经具有强劲的查供能力，在当前文件内查找，vim 的 / 和 ? 查找命令非常好用，但工程内查找，自带的查找用户体验还无法达到我的预期。
+
+内容查找，你第一反应会想到 grep 和 ack 两个工具，没错，它俩强大的正则处理能力无需质疑，如果有插件能在 vim 中集成两个工具之一，那么任何查找任务均可轻松搞定，为此，出现了 grep.vim（https://github.com/yegappan/grep ）和 ack.vim（https://github.com/mileszs/ack.vim ）两个插件，通过它们，你可以在 vim 中自在地使用高度整合的 grep 或 ack 两个外部命令，就像 vim 的内部命令一样：查找时，把光标定位到待查找关键字上后，通过快捷键立即查找该关键字，查询结果通过列表形式将关键字所在行罗列出来，选择后就能跳转到对应位置。很好，这是我想要的，但，还不是我想要的全部。
+
+你知道，在分析源码时，同个关键字会在不同文件的不同位置多次出现，grep.vim 和 ack.vim 只能“将关键字所在行罗列出来”，如果关键字出现的那几行完全相同，那么，我单凭这个列表是无法确定哪行是我需要的，比如，我查找关键字 cnt，代码中，cnt 在 4 行出现过、64 行、128 行、1024 行都出现过，且每行内容均为
+
+```
+++cnt;
+```
+这时，即便 grep.vim 或 ack.vim 在一个有四个选项的列表中为你罗列出相关行，因为完全相同，所以你也无法确定到底应该查看第几项。换言之，除了罗列关键字所在行之外，我还需要看到所在行的上下几行，这样，有了上下文，我就可以最终决定哪一行是我需要的了。ctrlsf.vim（https://github.com/dyng/ctrlsf.vim ）为此而生。
+
+ctrlsf.vim 后端调用 ack，所以你得提前自行安装，版本不得低于 v2.0，openSUSE 用户可以
+
+```
+zypper --no-refresh in ack
+```
+进行安装。ctrlsf.vim 支持 ack 所有选项，要查找某个关键字（如，yangyang），你可以想让光标定位在该关键字上面，然后命令模式下键入
+
+```
+:CtrlSF
+```
+将自动提取光标所在关键字进行查找，你也可以指定 ack 的选项
+
+```
+:CtrlSF -i -C 1 [pattern] /my/path/
+```
+为方便操作，我设定了快捷键：
+
+```
+" 使用 ctrlsf.vim 插件在工程内全局查找光标所在关键字，设置快捷键。快捷键速记法：search in project
+nnoremap <Leader>sp :CtrlSF<CR>
+```
+避免手工键入命令的麻烦。查找结果将以子窗口在左侧呈现，不仅罗列出所有匹配项，而且给出匹配项的上下文。如果从上下文中你还觉得信息量不够，没事，可以键入 p 键，将在右侧子窗口中给出该匹配项的完整代码，而不再仅有前后几行。不想跳至任何匹配项，可以直接键入 q 退出 ctrlsf.vim；如果有钟意的匹配项，光标定位该项后回车，立即跳至新 buffer 中对应位置。
+
+太性感了，以关键字 CmdlineOption 为例，如下所示：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%86%85%E5%AE%B9%E6%9F%A5%E6%89%BE.gif" alt=""/><br />
+（内容查找）
+</div>
+
+<h3 name="4.9">4.9 内容替换</h3>
+
+有个名为 iFoo 的全局变量，被工程中 16 个文件引用过，由于你岳母觉得匈牙利命名法严重、异常、绝对以及十分万恶，为讨岳母欢心，不得不将该变量更名为 foo，怎么办？依次打开每个文件，逐一查找后替换？vim 有强大的内容替换命令：
+
+```
+:[range]s/{pattern}/{string}/[flags]
+```
+
+在进行内容替换操作时，我关注几个因素：如何指定替换文件范围、是否整词匹配、是否逐一确认后再替换。
+
+如何指定替换文件范围？
+
+* 如果在当前文件内替换，[range] 不用指定，默认就在当前文件内；
+* 如果在当前选中区域，[range] 也不用指定，在你键入替换命令时，vim 自动将生成如下命令：
+
+```
+:'<,'>s/{pattern}/{string}/[flags]
+```
+* 你也可以指定行范围，如，第三行到第五行：
+
+```
+:3,5s/{pattern}/{string}/[flags]
+```
+* 如果对打开文件进行替换，你需要先通过 :bufdo 命令显式告知 vim 范围，再执行替换；
+* 如果对工程内所有文件进行替换，先 :args \*\*/*.cpp **/*.h 告知 vim 范围，再执行替换；
+
+是否整词匹配？{pattern} 用于指定匹配模式。如果需要整词匹配，则该字段应由 \< 和 \> 修饰待替换字符串（如，\<iFoo\>）；无须整词匹配则不用修饰，直接给定该字符串即可；
+
+是否逐一确认后再替换？[flags] 可用于指定是否需要确认。若无须确认，该字段设定为 ge 即可；有时不见得所有匹配的字符串都需替换，若在每次替换前进行确认，该字段设定为 gec 即可。
+
+是否整词匹配和是否确认两个条件叠加就有 4 种组合：非整词且不确认、非整词且确认、整词且不确认、整词且确认，每次手工输入这些命令真是麻烦；我把这些组合封装到一个函数中，如下 Replace() 所示：
+
+```
+" 替换函数。参数说明：
+" confirm：是否替换前逐一确认
+" wholeword：是否整词匹配
+" replace：被替换字符串
+function! Replace(confirm, wholeword, replace)
+    wa
+    let flag = ''
+    if a:confirm
+        let flag .= 'gec'
+    else
+        let flag .= 'ge'
+    endif
+    let search = ''
+    if a:wholeword
+        let search .= '\<' . escape(expand('<cword>'), '/\.*$^~[') . '\>'
+    else
+        let search .= expand('<cword>')
+    endif
+    let replace = escape(a:replace, '/\&~')
+    execute 'argdo %s/' . search . '/' . replace . '/' . flag . '| update'
+endfunction
+```
+为最大程度减少手工输入，Replace() 还能自动提取待替换字符串（只要把光标移至待替换字符串上），同时，替换完成后自动为你保存更改的文件。现在要做的就是赋予 confirm、wholeword 不同实参实现 4 种组合，再绑定 4 个快捷键即可。如下：
+
+```
+" 不确认、非整词
+nnoremap <Leader>R :call Replace(0, 0, input('Replace '.expand('<cword>').' with: '))<CR>
+" 不确认、整词
+nnoremap <Leader>rw :call Replace(0, 1, input('Replace '.expand('<cword>').' with: '))<CR>
+" 确认、非整词
+nnoremap <Leader>rc :call Replace(1, 0, input('Replace '.expand('<cword>').' with: '))<CR>
+" 确认、整词
+nnoremap <Leader>rcw :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
+nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
+```
+我平时用的最多的无须确认但整词匹配的替换模式，即 \<leader>rw。
+
+请将完整配置信息添加进 .vimrc 中：
+
+```
+" 替换函数。参数说明：
+" confirm：是否替换前逐一确认
+" wholeword：是否整词匹配
+" replace：被替换字符串
+function! Replace(confirm, wholeword, replace)
+    wa
+    let flag = ''
+    if a:confirm
+        let flag .= 'gec'
+    else
+        let flag .= 'ge'
+    endif
+    let search = ''
+    if a:wholeword
+        let search .= '\<' . escape(expand('<cword>'), '/\.*$^~[') . '\>'
+    else
+        let search .= expand('<cword>')
+    endif
+    let replace = escape(a:replace, '/\&~')
+    execute 'argdo %s/' . search . '/' . replace . '/' . flag . '| update'
+endfunction
+" 不确认、非整词
+nnoremap <Leader>R :call Replace(0, 0, input('Replace '.expand('<cword>').' with: '))<CR>
+" 不确认、整词
+nnoremap <Leader>rw :call Replace(0, 1, input('Replace '.expand('<cword>').' with: '))<CR>
+" 确认、非整词
+nnoremap <Leader>rc :call Replace(1, 0, input('Replace '.expand('<cword>').' with: '))<CR>
+" 确认、整词
+nnoremap <Leader>rcw :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
+nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
+```
+
+比如，我将工程的所有 *.cpp 和 *.h 中的关键字 MyClassA 按不确认且整词匹配模式替换成 MyClass，所以注释中的关键字不会被替换掉。如下所示：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%8D%E7%A1%AE%E8%AE%A4%E4%B8%94%E6%95%B4%E8%AF%8D%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
+（不确认且整词匹配模式的替换）
+</div>
+又比如，对当前文件采用需确认且无须整词匹配的模式进行替换，你会看到注释中的关键字也被替换了：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E7%A1%AE%E8%AE%A4%E4%B8%94%E6%97%A0%E9%A1%BB%E6%95%B4%E8%AF%8D%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
+（确认且无须整词匹配模式的替换）
+</div>
+
 <h2 name="5">5 代码开发</h2>
 
-在具体编码过程中，我需要一系列提高生产力的功能：批量开/关注释、快速输入结对符、快速输入代码模板、代码智能补全、路径智能补全、从接口生成实现、查看参考库信息等等，我们逐一来实现。
+在具体编码过程中，我需要一系列提高生产力的功能：批量开/关注释、快速输入代码模板、代码智能补全、路径智能补全、从接口生成实现、查看参考库信息等等，我们逐一来实现。
 
 <h3 name="5.1">5.1 快速开关注释</h3>
 
@@ -873,7 +1034,7 @@ if (${1:/* condition */}) {
 } 
 endsnippet
 ```
-其中，snippet 和 endsnippet 用于表示模板的开始和结束；if 是模板名；"if statement" 是模板描述，你可以把多个模板的模板名定义成一样（如，if () {} 和 if () {} else {} 两模板都定义成相同模板名 if），在模板描述中加以区分（如，分别对应 "if statement" 和 "if-else statement"），这样，在 YCM（重量级智能补全插件） 的补全列表中可以根据模板描述区分选项不同模板；i 是模板控制参数，用于控制模板补全行为，具体参见“快速输入结对符”一节；${1}、${2} 是 \<tab> 跳转的先后顺序。
+其中，snippet 和 endsnippet 用于表示模板的开始和结束；if 是模板名；"if statement" 是模板描述，你可以把多个模板的模板名定义成一样（如，if () {} 和 if () {} else {} 两模板都定义成相同模板名 if），在模板描述中加以区分（如，分别对应 "if statement" 和 "if-else statement"），这样，在 YCM（重量级智能补全插件） 的补全列表中可以根据模板描述区分选项不同模板；i 是模板控制参数，用于控制模板补全行为，具体参见“快速编辑结对符”一节；${1}、${2} 是 \<tab> 跳转的先后顺序。
 
 新版 UltiSnips 并未自带预定义的代码模板，你可以从 https://github.com/honza/vim-snippets 获取各类语言丰富的代码模板，也可以重新写一套符合自己编码风格的模板。无论哪种方式，你需要在 .vimrc 中设定该模板所在目录名，以便 UltiSnips 寻找到。比如，我自定义的代码模板文件 cpp.snippets，路径为 ~/.vim/bundle/ultisnips/mysnippets/cpp.snippets，对应设置如下：
 let g:UltiSnipsSnippetDirectories=["mysnippets"]
@@ -1076,35 +1237,9 @@ let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 （模板补全）
 </div>
 
-<h3 name="5.3">5.3 快速输入结对符</h3>
+<h3 name="5.3">coming soon (｡◕‿◕｡)</h3>
 
-平时，最让我头痛的字符莫过于 {}、""、[] 等这类结对符，输入它们之所以麻烦，主要因为A）盲打很难找准它们位置，B）还得同时按住shift键。两者再一叠加，非常影响我的思维。要高效输入结对符，应该是输入少量几个字母（对，字母，不是字符）后 vim 自动为你输入完整结对符，而非是我输入一半 vim 输入另一半（不用 delimitMate 的原因）。刚好，这在 UltiSnips 能力范围内，只要定义好模板，可完美地解决这类问题，具体模板见上例中最后的结对符部分。
-
-在定义结对符模板时，你应该考虑加上模板控制参数 i。默认情况下，UltiSnips 只会当模板名前是空白字符或行首时才进行模板补全，比如，定义 () 的模板如下：
-
-```
-snippet b "bracket"
-(${1})${2} 
-endsnippet
-```
-我要调用函数 printf()，在输入完 printf 后应该接着输入括号模板名 b，然后输入模板展开快捷键 \<leader>\<tab>，你会发现 UltiSnips 无法帮你补全模板，因为它看到的不是 b 而是 printfb，这在模板文件中根本未定义。有一种间接解决方式是在 printf 后加个空格，再输入 b\<leader>\<tab> 进行补全，这就成了 printf ()，不喜欢这种编码风格。其实，UltiSnips 的作者也注意到这个问题了，他让你可以通过前面提过的模板控制参数 i 进行解决。重新定义 () 的模板如下： 
-```
-snippet b "bracket" i
-(${1})${2} 
-endsnippet
-```
-这样，UltiSnips 只管光标前 1 个字符是否是 b，若是则补全 ()，不论 b 前是否有其他字符。类似，其他结对符模板都按此加上 i 控制参数。结对符模板完整定义参见上一节 cpp.snippets 示例。如下是几个快速输入结对符的演示：
-<div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E8%BE%93%E5%85%A5%E7%BB%93%E5%AF%B9%E7%AC%A6.gif" alt=""/><br />
-（快速输入结对符）
-</div>
-
-另外，要想高效编辑结对符，你得了解 vim 自身的某些快捷键。比如，有如下字符串且光标在该字符串的任意字符上，这时在命令模式下键入 va) 后将选中包括括号在内的整个字符串：
-<div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BB%93%E5%AF%B9%E7%AC%A6.gif" alt=""/><br />
-（快速选中结对符）
-</div>
-其中，v 是动作、a 是范围、) 是结对符。结对符命令的动作包括：选中 v、复制 y、删除 d、删除后插入 c；结对符命令的范围包括：含结对符 a、不含结对符 i。针对不同结对符，组合不同动作和范围就有 4\*2 种方式。比如，va{ 将选中含结对符 {} 的所有字符，di[ 删除不含结对符 [] 的字符串。
+coming soon (｡◕‿◕｡)
 
 <h3 name="5.4">5.4 智能补全</h3>
 
@@ -1905,141 +2040,83 @@ let g:syntastic_warning_symbol = '⚠'
 
 大家关注的 IDE 核心功能前面都已逐一介绍过了，有些辅助功能我认为也有必要让你知道，不是都在提程序员人文关怀嘛，从我做起！
 
-<h3 name="8.1">8.1 内容查找</h3>
+<h3 name="8.1">8.1 快速编辑结对符</h3>
 
-vim 支持正则表达式，那么已经具有强劲的查供能力，在当前文件内查找，vim 的 / 和 ? 查找命令非常好用，但工程内查找，自带的查找用户体验还无法达到我的预期。我希望查找时直接根据光标位置确定查找关键字，查询结果通过列表形式罗列处理，选择某项光标就能跳转到对应位置，另外，可以在工程范围内查找，或者在打开文件内查找。有个叫 grep.vim（https://github.com/yegappan/grep ）的插件满足我的需求。
+平时，最让我头痛的字符莫过于 {}、""、[] 等这类结对符，输入它们之所以麻烦，主要因为A）盲打很难找准它们位置，B）还得同时按住shift键。两者再一叠加，非常影响我的思维。要高效输入结对符，应该是输入少量几个字母（对，字母，不是字符）后 vim 自动为你输入完整结对符，而非是我输入一半 vim 输入另一半（不用 delimitMate 的原因）。刚好，这在 UltiSnips 能力范围内，只要定义好模板，可完美地解决这类问题，具体模板见上例中最后的结对符部分。
 
-grep.vim 实际上提供了在 vim 内部方便使用 grep、fgrep、egrep、agrep、find、xargs等工具的接口。如果要在工程内进行查找，可以在 vim 命令行中执行 :Grep，grep.vim 插件会依次提示输入待查找关键字、待查找的文件类型，回车即可执行查找，结果将罗列在 quickfix 中（注，vim与很多外部命令、插件的交互信息都将在 quickfix 中呈现，这里说到的搜索结果是一个例子，另外一个前面“一键编译”章节提到的编译结果也将输出至此，可用 :cw 命令打开/关闭 quickfix 窗口）。若是要忽然大小写则执行 :Grep -i，若是要递归搜索子目录则执行 :Grep -r；另外，如果光标在某个字符串上，那么 grep.vim 插件将自动提取该字符串作为查找关键字。如果要在当前打开文件内查找，可以执行 :GrepBffer 命令，参数同上。为高效执行搜索操作，可以设定快捷键：
+在定义结对符模板时，你应该考虑加上模板控制参数 i。默认情况下，UltiSnips 只会当模板名前是空白字符或行首时才进行模板补全，比如，定义 () 的模板如下：
 
 ```
-" 使用 Grep.vim 插件在工程内全局查找，设置快捷键。快捷键速记法：search in project
-nnoremap <Leader>sp :Grep -ir<CR><CR><CR>
-" 使用 Grep.vim 插件在工程内全局查找，设置快捷键。快捷键速记法：search in buffer
-nnoremap <Leader>sb :GrepBuffer -ir<CR><CR>
+snippet b "bracket"
+(${1})${2} 
+endsnippet
 ```
-:Grep 默认需要手工确认搜索关键字、搜索文件类型，方便起见，我在映射命令后加了几个连续 \<CR>，这样就不用手工回车确认了。
-
-举个例子，光标移到 MyClassABC 下，键入 \<leader>sp 后，grep.vim 自动提取 MyClassABC 为搜索关键字，执行工程中内查找，找到到 4 个匹配项并显示在 quickfix 中；接着键入 \<leader>sb 后，执行打开文件内查找，找到 1 个匹配项。如下图所示：
+我要调用函数 printf()，在输入完 printf 后应该接着输入括号模板名 b，然后输入模板展开快捷键 \<leader>\<tab>，你会发现 UltiSnips 无法帮你补全模板，因为它看到的不是 b 而是 printfb，这在模板文件中根本未定义。有一种间接解决方式是在 printf 后加个空格，再输入 b\<leader>\<tab> 进行补全，这就成了 printf ()，不喜欢这种编码风格。其实，UltiSnips 的作者也注意到这个问题了，他让你可以通过前面提过的模板控制参数 i 进行解决。重新定义 () 的模板如下： 
+```
+snippet b "bracket" i
+(${1})${2} 
+endsnippet
+```
+这样，UltiSnips 只管光标前 1 个字符是否是 b，若是则补全 ()，不论 b 前是否有其他字符。类似，其他结对符模板都按此加上 i 控制参数。结对符模板完整定义参见上一节 cpp.snippets 示例。如下是几个快速输入结对符的演示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%86%85%E5%AE%B9%E6%9F%A5%E6%89%BE.gif" alt=""/><br />
-（内容查找）
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E8%BE%93%E5%85%A5%E7%BB%93%E5%AF%B9%E7%AC%A6.gif" alt=""/><br />
+（快速输入结对符）
 </div>
 
-<h3 name="8.2">8.2 内容替换</h3>
-
-有个名为 iFoo 的全局变量，被工程中 16 个文件引用过，由于你岳母觉得匈牙利命名法严重、异常、绝对以及十分万恶，为讨岳母欢心，不得不将该变量更名为 foo，怎么办？依次打开每个文件，逐一查找后替换？vim 有强大的内容替换命令：
-
-```
-:[range]s/{pattern}/{string}/[flags]
-```
-
-在进行内容替换操作时，我关注几个因素：如何指定替换文件范围、是否整词匹配、是否逐一确认后再替换。
-
-如何指定替换文件范围？
-
-* 如果在当前文件内替换，[range] 不用指定，默认就在当前文件内；
-* 如果在当前选中区域，[range] 也不用指定，在你键入替换命令时，vim 自动将生成如下命令：
-
-```
-:'<,'>s/{pattern}/{string}/[flags]
-```
-* 你也可以指定行范围，如，第三行到第五行：
-
-```
-:3,5s/{pattern}/{string}/[flags]
-```
-* 如果对打开文件进行替换，你需要先通过 :bufdo 命令显式告知 vim 范围，再执行替换；
-* 如果对工程内所有文件进行替换，先 :args \*\*/*.cpp **/*.h 告知 vim 范围，再执行替换；
-
-是否整词匹配？{pattern} 用于指定匹配模式。如果需要整词匹配，则该字段应由 \< 和 \> 修饰待替换字符串（如，\<iFoo\>）；无须整词匹配则不用修饰，直接给定该字符串即可；
-
-是否逐一确认后再替换？[flags] 可用于指定是否需要确认。若无须确认，该字段设定为 ge 即可；有时不见得所有匹配的字符串都需替换，若在每次替换前进行确认，该字段设定为 gec 即可。
-
-是否整词匹配和是否确认两个条件叠加就有 4 种组合：非整词且不确认、非整词且确认、整词且不确认、整词且确认，每次手工输入这些命令真是麻烦；我把这些组合封装到一个函数中，如下 Replace() 所示：
-
-```
-" 替换函数。参数说明：
-" confirm：是否替换前逐一确认
-" wholeword：是否整词匹配
-" replace：被替换字符串
-function! Replace(confirm, wholeword, replace)
-    wa
-    let flag = ''
-    if a:confirm
-        let flag .= 'gec'
-    else
-        let flag .= 'ge'
-    endif
-    let search = ''
-    if a:wholeword
-        let search .= '\<' . escape(expand('<cword>'), '/\.*$^~[') . '\>'
-    else
-        let search .= expand('<cword>')
-    endif
-    let replace = escape(a:replace, '/\&~')
-    execute 'argdo %s/' . search . '/' . replace . '/' . flag . '| update'
-endfunction
-```
-为最大程度减少手工输入，Replace() 还能自动提取待替换字符串（只要把光标移至待替换字符串上），同时，替换完成后自动为你保存更改的文件。现在要做的就是赋予 confirm、wholeword 不同实参实现 4 种组合，再绑定 4 个快捷键即可。如下：
-
-```
-" 不确认、非整词
-nnoremap <Leader>R :call Replace(0, 0, input('Replace '.expand('<cword>').' with: '))<CR>
-" 不确认、整词
-nnoremap <Leader>rw :call Replace(0, 1, input('Replace '.expand('<cword>').' with: '))<CR>
-" 确认、非整词
-nnoremap <Leader>rc :call Replace(1, 0, input('Replace '.expand('<cword>').' with: '))<CR>
-" 确认、整词
-nnoremap <Leader>rcw :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
-nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
-```
-我平时用的最多的无须确认但整词匹配的替换模式，即 \<leader>rw。
-
-请将完整配置信息添加进 .vimrc 中：
-
-```
-" 替换函数。参数说明：
-" confirm：是否替换前逐一确认
-" wholeword：是否整词匹配
-" replace：被替换字符串
-function! Replace(confirm, wholeword, replace)
-    wa
-    let flag = ''
-    if a:confirm
-        let flag .= 'gec'
-    else
-        let flag .= 'ge'
-    endif
-    let search = ''
-    if a:wholeword
-        let search .= '\<' . escape(expand('<cword>'), '/\.*$^~[') . '\>'
-    else
-        let search .= expand('<cword>')
-    endif
-    let replace = escape(a:replace, '/\&~')
-    execute 'argdo %s/' . search . '/' . replace . '/' . flag . '| update'
-endfunction
-" 不确认、非整词
-nnoremap <Leader>R :call Replace(0, 0, input('Replace '.expand('<cword>').' with: '))<CR>
-" 不确认、整词
-nnoremap <Leader>rw :call Replace(0, 1, input('Replace '.expand('<cword>').' with: '))<CR>
-" 确认、非整词
-nnoremap <Leader>rc :call Replace(1, 0, input('Replace '.expand('<cword>').' with: '))<CR>
-" 确认、整词
-nnoremap <Leader>rcw :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
-nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
-```
-
-比如，我将工程的所有 *.cpp 和 *.h 中的关键字 MyClassA 按不确认且整词匹配模式替换成 MyClass，所以注释中的关键字不会被替换掉。如下所示：
+另外，要想高效编辑结对符，你得了解 vim 自身的某些快捷键。比如，有如下字符串且光标在该字符串的任意字符上，这时在命令模式下键入 va) 后将选中包括括号在内的整个字符串：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%8D%E7%A1%AE%E8%AE%A4%E4%B8%94%E6%95%B4%E8%AF%8D%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
-（不确认且整词匹配模式的替换）
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BB%93%E5%AF%B9%E7%AC%A6.gif" alt=""/><br />
+（快速选中结对符）
 </div>
-又比如，对当前文件采用需确认且无须整词匹配的模式进行替换，你会看到注释中的关键字也被替换了：
+其中，v 是动作、a 是范围、) 是结对符。结对符命令的动作包括：选中 v、复制 y、删除 d、删除后插入 c；结对符命令的范围包括：含结对符 a、不含结对符 i。针对不同结对符，组合不同动作和范围就有 4\*2 种方式。比如，di{ 删除不含结对符 {} 的字符串，va\[ 将选中含结对符 [] 内的所有字符。
+
+选中结对符内的文本是我较为频繁的操作之一，通过诸如 vi\[ 的命令可以选中当前结对符 [] 内的所有文本，这虽谈不上麻烦，但每次都得去看下是 ]、)、> 还是 }，总是有点别扭。有款叫 wildfire.vim（https://github.com/gcmt/wildfire.vim ）的插件，让我能更自然地选中结对符内的文本，有了它，我只需按下空格（你也可以设置成其他快捷键），自动选中光标所在区域最近的一层结对符内的文本，如果没有结对符，则选择最近的一个段落。
+
+简单设置：
+
+```
+" 快捷键
+map <SPACE> <Plug>(wildfire-fuel)
+vmap <S-SPACE> <Plug>(wildfire-water)
+" 适用于哪些结对符
+let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "ip"]
+```
+这样，在 vim 的命令模式下，一次空格选中最近一层结对符内的文本，两次则选中近两层内的文本，三次三层，依此类推；或者键入 3space，直接选中三层内的文本；若要取消，键入 shift-space 即可。另外，结对符类型也可以在 wildfire_objects 变量中指定。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E7%A1%AE%E8%AE%A4%E4%B8%94%E6%97%A0%E9%A1%BB%E6%95%B4%E8%AF%8D%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
-（确认且无须整词匹配模式的替换）
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BB%93%E5%AF%B9%E7%AC%A6%E6%96%87%E6%9C%AC.gif" alt=""/><br />
+（快速选中结对符文本）
 </div>
+
+<h3 name="8.2">8.2 支持分支的 undo</h3>
+
+undo，编辑器世界中的后悔药，让你有机会撤销最近一步或多步操作，这是任何编辑器都具备的基础功能。比如，第一步输入 A，第二步输入 B，第三步输入 C，当前文本为 ABC，一次 undo 后变成 AB，再次 undo 后变成 A，显然，每次 undo 撤销的均是最后的一步操作，通常采用栈这种数据结构来实现 undo 功能，由于栈具有后进先出的特点，所以，功能实现起来非常自然且便捷，但同时，也引入了致命伤，无法支持分支上的 undo 操作。
+
+还是前面的例子，分三步依次输入完 ABC 后，一次 undo 变成 AB，这时，输入 D，之后，无论你多少次 undo 都不可能再找回 C，究其原因，D 是彻底覆盖了 C，而不是与 C 形成两个分支，如下图所示：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%8D%E6%94%AF%E6%8C%81%E5%88%86%E6%94%AF%E7%9A%84%20undo.gif" alt=""/><br />
+（不支持分支的 undo）
+</div>
+
+在我的使用场景中，非常需要在我输入 D 后还能找回 C 的 undo 功能，即，支持分支的 undo，gundo.vim 降临。gundo.vim 采用树这种数据结构来实现 undo，每一次编辑操作均放在树的叶子上，每次 undo 后，先回到主干，新建分支继续后续操作，而不是直接覆盖，从而实现支持分支的 undo 功能。gundo.vim 要求 vim 版本不低于 v7.3 且支持 python v2.4 及以上。
+
+如下方式设置好调用 gundo.vim 的快捷方式：
+
+```
+" 调用 gundo 树
+nnoremap <Leader>ud :GundoToggle<CR>
+```
+gundo.vim 非常贴心，调用它后，你会在左侧看到一个分割为上下两个区域的子窗口。上半区域以可视化方式显示了整颗 undo 树，同时，用 @ 标识最后一步编辑操作，用序号标识各步编辑操作的先后顺序，用时长显示每步操作距离当前消耗时间。下半区域展示了各个操作间的 diff 信息及其上下文，默认为选中那步操作与前一步操作间的 diff，键入 p 可以查看选中那步操作与最后一步操作（即有 @ 标识的那步）间的 diff，这对于找回多次编辑操作之前的环境非常有用。
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%94%AF%E6%8C%81%E5%88%86%E6%94%AF%E7%9A%84%20undo.gif" alt=""/><br />
+（支持分支的 undo）
+</div>
+
+另外，我对持久保存 undo 历史也有需求，以便让我关闭 vim 后重新启动也能找到先前的所有 undo 历史，这需要你在 .vimrc 中添加：
+
+```
+set undofile
+```
+具体可参见“6.3 环境恢复”章节。
 
 <h3 name="8.3">8.3 快速移动</h3>
 
