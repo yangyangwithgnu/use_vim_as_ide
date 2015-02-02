@@ -1,15 +1,22 @@
 <h1 align="center">所需即所获：像 IDE 一样使用 vim</h1>
 yangyangwithgnu@yeah.net  
-2015-01-25 22:18:03
- 
- 
-##【公告】
-----
-* **捐赠：支付宝 yangyangwithgnu@yeah.net 。支付宝链接 https://shenghuo.alipay.com/send/payment/fill.htm?optEmail=yangyangwithgnu@yeah.net ，支付宝二维码 $_$**
+2015-02-02 09:34:16
+
+
+##谢谢
+
+**捐赠：支付宝 yangyangwithgnu@yeah.net 。支付宝链接 https://shenghuo.alipay.com/send/payment/fill.htm?optEmail=yangyangwithgnu@yeah.net ，支付宝二维码 $_$**
 <div align="center">
 <img src="https://raw.githubusercontent.com/yangyangwithgnu/yangyangwithgnu.github.io/master/pics/donate_qr.png" alt=""/><br>
 </div>
+
+**二手书**：书，我提高开发技能的重要手段之一，随着职业生涯的发展，书籍也在不断增多，对我而言，一本书最多读三遍，再往后，几乎没有什么营养吸收，这部分书对我已基本无用，但对其他人可能仍有价值，所以，为合理利用资源，我决定低价出售这些书，希望达到两个目的：0）用售出的钱购买更多新书（没当过雷锋的朋友 (๑´ڡ`๑)）；1）你低价购得需要的书（虽然二手）。到 http://yangyangwithgnu.ecvps.net/used_books/used_books.htm 看看有无你钟意的。
+
+ 
+##【公告】
+----
 * **帮助：英译版编制。github.com 上搜索 vim ide 关键字后第一匹配项便是本文，洋人浏览到本文的次数非常多，常常收到要求同步发表英文版的邮件，但是，你知道，这 80+ 页的中文已经耗费我大量业余时间，所以，如果可能，希望有精力的朋友可以将其翻译为英文，感谢！**
+
 * **讨论**：任何意见建议移步 http://www.v2ex.com/t/138696
 
 
