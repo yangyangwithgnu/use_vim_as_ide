@@ -453,6 +453,7 @@ map <C-S-Tab> :MBEbp<cr>
 set sessionoptions="blank,globals,localoptions,tabpages,sesdir,folds,help,options,resize,winpos,winsize"
 
 " 保存 undo 历史
+set undodir=~/.undo_history/
 set undofile
 
 " 保存快捷键

@@ -1,6 +1,6 @@
 <h1 align="center">所需即所获：像 IDE 一样使用 vim</h1>
 yangyangwithgnu@yeah.net  
-2015-02-02 09:34:16
+2015-02-15 13:30:59
 
 
 ##谢谢
@@ -1736,7 +1736,7 @@ map <C-S-Tab> :MBEbp<cr>
 vim 的编辑环境保存与恢复是我一直想要的功能，我希望恢复：已打开文件、光标位置、undo/redo、书签、子窗口、窗口大小、窗口位置、命令历史、buffer 列表、代码折叠。vim 文档说借助 viminfo（恢复书签） 和 session（恢复除书签外的其他项）特性很可以实现这个功能。请确保你的 vim 支持 +mksession 和 +viminfo 特性：
 
 ```
-vim --version | grep session
+vim --version | grep mksession
 vim --version | grep viminfo
 ```
 如果编译 vim 时添加了 --with-features=huge 选项那就没问题。
@@ -1772,6 +1772,7 @@ vim --version | grep viminfo
 " 设置环境保存项
 set sessionoptions="blank,buffers,globals,localoptions,tabpages,sesdir,folds,help,options,resize,winpos,winsize"
 " 保存 undo 历史
+set undodir=~/.undo_history/
 set undofile
 " 保存快捷键
 map <leader>ss :mksession! my.vim<cr> :wviminfo! my.viminfo<cr>
@@ -2107,7 +2108,7 @@ undo，编辑器世界中的后悔药，让你有机会撤销最近一步或多�
 （不支持分支的 undo）
 </div>
 
-在我的使用场景中，非常需要在我输入 D 后还能找回 C 的 undo 功能，即，支持分支的 undo，gundo.vim 降临。gundo.vim 采用树这种数据结构来实现 undo，每一次编辑操作均放在树的叶子上，每次 undo 后，先回到主干，新建分支继续后续操作，而不是直接覆盖，从而实现支持分支的 undo 功能。gundo.vim 要求 vim 版本不低于 v7.3 且支持 python v2.4 及以上。
+在我的使用场景中，非常需要在我输入 D 后还能找回 C 的 undo 功能，即，支持分支的 undo，gundo.vim （http://sjl.bitbucket.org/gundo.vim/ ）降临。gundo.vim 采用树这种数据结构来实现 undo，每一次编辑操作均放在树的叶子上，每次 undo 后，先回到主干，新建分支继续后续操作，而不是直接覆盖，从而实现支持分支的 undo 功能。gundo.vim 要求 vim 版本不低于 v7.3 且支持 python v2.4 及以上。
 
 如下方式设置好调用 gundo.vim 的快捷方式：
 
@@ -2124,9 +2125,12 @@ gundo.vim 非常贴心，调用它后，你会在左侧看到一个分割为上�
 另外，我对持久保存 undo 历史也有需求，以便让我关闭 vim 后重新启动也能找到先前的所有 undo 历史，这需要你在 .vimrc 中添加：
 
 ```
+" 开启保存 undo 历史功能
 set undofile
+" undo 历史保存路径
+set undodir=~/.undo_history/
 ```
-具体可参见“6.3 环境恢复”章节。
+你得先自行创建 .undo_history/。具体可参见“6.3 环境恢复”章节。
 
 <h3 name="8.3">8.3 快速移动</h3>
 
