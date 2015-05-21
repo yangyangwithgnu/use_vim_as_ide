@@ -4,7 +4,7 @@ yangyangwithgnu@yeah.net
 
 
 ##谢谢
-
+ 
 **捐赠：支付宝 yangyangwithgnu@yeah.net 。支付宝链接 https://shenghuo.alipay.com/send/payment/fill.htm?optEmail=yangyangwithgnu@yeah.net ，支付宝二维码 $_$**
 <div align="center">
 <img src="https://raw.githubusercontent.com/yangyangwithgnu/yangyangwithgnu.github.io/master/pics/donate_qr.png" alt=""/><br>
