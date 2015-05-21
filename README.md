@@ -84,7 +84,7 @@ yangyangwithgnu@yeah.net
 
 开始前，我假设你：0）具备基本的 vim 操作能力，清楚如何打开/编辑/保存文档、命令与插入模式间切换；1）希望将 vim 打造成 C/C++ 语言的 IDE，而非其他语言。
 
-关于 vim 的优点，你在网上能查到 128+ 项，对我而言，只有两项：0）所想即所得，让手输入的速度跟上大脑思考的速度，1）所需即所获，只有你想不到的功能、没有实现不了的插件。希望获得前者的能力，你需要两本教程深入学习，《Practical Vim: Edit Text at the Speed of Thought》和《vim user manual》；要想拥有后者的能力，通读本文 -。-#。对于 vim 的喜爱，献上湿哥哥以表景仰之情：
+关于 vim 的优点，你在网上能查到 128+ 项，对我而言，只有两项：0）所思即所得，让手输入的速度跟上大脑思考的速度，1）所需即所获，只有你想不到的功能、没有实现不了的插件。希望获得前者的能力，你需要两本教程深入学习，《Practical Vim: Edit Text at the Speed of Thought》和《vim user manual》；要想拥有后者的能力，通读本文 -。-#。对于 vim 的喜爱，献上湿哥哥以表景仰之情：
 <div align="center">
 vi 之大道如我心之禅，<br />
   vi 之漫路即为禅修，<br /> 
@@ -210,7 +210,7 @@ cd ~/downloads/vim74/
 ./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --with-python-config-dir=/usr/lib/python2.7/config/ --enable-perlinterp --enable-gui=gtk2 --enable-cscope --prefix=/usr --enable-luainterp 
 make VIMRUNTIMEDIR=/usr/share/vim/vim74 && make install
 ```
-其中，--enable-rubyinterp、--enable-pythoninterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk2 表示生成 gvim，--enable-cscope 支持 cscope，--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。注意，你得预先安装相关依赖库的头文件，python-devel、python3-devel、ruby-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel，如果缺失，源码构建过程虽不会报错，但最终生成的 vim 很可能缺失某些功能。构建完成后在 vim 中执行
+其中，--enable-rubyinterp、--enable-pythoninterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk2 表示生成 gvim，--enable-cscope 支持 cscope，--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。注意，你得预先安装相关依赖库的头文件，python-devel、python3-devel、ruby-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel、ncurses-devel，如果缺失，源码构建过程虽不会报错，但最终生成的 vim 很可能缺失某些功能。构建完成后在 vim 中执行
 
 ```
 :echo has('python')
@@ -739,11 +739,11 @@ let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v 
 
 >--------------- ~/.indexer_files ---------------  
 >[foo]  
->/data/workplace/foo/  
+>/data/workplace/foo/src/  
 >[bar]  
->/data/workplace/bar/  
+>/data/workplace/bar/src/  
 
-上例设定了两个工程的根目录，方括号内是对应工程名，后续有新工程，直接添至该文件中即可。这样，从以上目录打开任何代码文件时，indexer 便对整个目录创建标签文件，若代码文件有更新，那么在文件保存时，indexer 将自动调用 ctags 更新标签文件，并自动引入进 vim 中（indexer 生成的标签文件以工程名命名，位于 ~/.indexer_files_tags/）。好了，解决了这三个问题后，vim 的代码导航已经达到我的预期。
+上例设定了两个工程的根目录，方括号内是对应工程名，路径末端节点最好细到代码目录以减少冗余信息（如，构建系统生成的很多中间文件）。这样，从以上目录打开任何代码文件时，indexer 便对整个目录创建标签文件，若代码文件有更新，那么在文件保存时，indexer 将自动调用 ctags 更新标签文件，并自动引入进 vim 中（indexer 生成的标签文件以工程名命名，位于 ~/.indexer_files_tags/）。好了，解决了这三个问题后，vim 的代码导航已经达到我的预期。
 
 <h4 name="4.6.2">基于语义的导航</h4>
     
@@ -1362,7 +1362,7 @@ string name_wang = "wangwang";
 * 无法模糊搜索。上例中，键入的字符要是少了那要出来一堆待选项，选起来眼睛累，多键入几个字符倒是可以让选项少些，但输入多了手又累。这是由于 clang_complete 采用的顺序匹配算法，只要改用子序列匹配算法（模糊搜索算法的一种）即可搞定，这样，我键入 ny 就只出现 name_yang，键入 nw 出现 name_wang；
 * 无法高速补全。补全列表速度不够快，clang_complete 由 python 编写，生成补全列表的速度有一定影响，再加上整个补全动作是在 vim GUI 主线程中执行，所以有时会导致 GUI 假死，我需要由静态语言编写插件内核、动态语言作为粘合剂的补全插件，提升效率；
 
-什么叫所需即所获？就是当你需要什么功能，它就能给你什么功能。YouCompleteMe（后简称 YCM，https://github.com/Valloric/YouCompleteMe ），一个随键而全的、支持模糊搜索的、高速补全的插件，太棒了！YCM 由 google 公司搜索项目组的软件工程师 Strahinja Val Markovic 所开发，YCM 后端调用 libclang（以获取 AST，当然还有其他语言的语义分析库，我不关注）、前端由 C++ 开发（以提升补全效率）、外层由 python 封装（以成为 vim 插件），它可能是我见过安装最复杂的 vim 插件了。有了 YCM，基本上 clang_complete、AutoComplPop、Supertab、neocomplcache 可以再见了。
+什么叫所需即所获？就是当你需要什么功能，它就能给你什么功能。YouCompleteMe（后简称 YCM，https://github.com/Valloric/YouCompleteMe ），一个随键而全的、支持模糊搜索的、高速补全的插件，太棒了！YCM 由 google 公司搜索项目组的软件工程师 Strahinja Val Markovic 所开发，YCM 后端调用 libclang（以获取 AST，当然还有其他语言的语义分析库，我不关注）、前端由 C++ 开发（以提升补全效率）、外层由 python 封装（以成为 vim 插件），它可能是我见过安装最复杂的 vim 插件了。有了 YCM，基本上 clang_complete、AutoComplPop、Supertab、neocomplcache、UltiSnips 可以再见了。
 
 要运行 YCM 需要几个预备条件：
 
@@ -1779,7 +1779,7 @@ map <leader>ss :mksession! my.vim<cr> :wviminfo! my.viminfo<cr>
 " 恢复快捷键
 map <leader>rs :source my.vim<cr> :rviminfo my.viminfo<cr>
 ```
-这样，简化第二步、第四步操作。另外，sessionoptions 无法覆盖 undo 历史，所以，必须通过开启 undofile 进行单独设置，一旦开启，每次写文件时自动强制保存 undo 历史，下次加载在文件时自动强制恢复所有 undo 历史，不在由 :mksession/:wviminfo 和 :source/:rviminfo 控制。
+这样，简化第二步、第四步操作。另外，sessionoptions 无法包含 undo 历史，所以，先得手工创建存放 undo 历史的目录（如，.undo_history/）再通过开启 undofile 进行单独设置，一旦开启，每次写文件时自动强制保存 undo 历史，下次加载在文件时自动强制恢复所有 undo 历史，不在由 :mksession/:wviminfo 和 :source/:rviminfo 控制。
 
 按此操作，并不能像 vim 文档中描述的那样能保存所有环境，比如，书签、代码折叠、命令历史都无法恢复。这和我预期存在较大差距，暂且用用吧，找个时间在深入研究！
 
@@ -2007,7 +2007,7 @@ nmap <Leader>m :wa<CR>:make<CR><CR>:cw<CR>
 * 方式一，将前面 \<Leader>m 中为 :make 绑定的回车符 \<CR> 去掉，即
 
 ```
-nmap <Leader>m :wa<CR>:make<CR><CR>:cw<CR>
+nmap <Leader>m :wa<CR>:make<CR>:cw<CR>
 ```
 * 方式二，先删除老的可执行程序，再编译、链接，发现缺失可执行程序时，再手工执行 :make，这样，可查看具体是什么链接错误了，将如下配置信息加入 .vimrc 中：
 
