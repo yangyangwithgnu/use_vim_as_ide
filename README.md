@@ -159,7 +159,7 @@ nmap <Leader>Q :qa!<CR>
 nnoremap nw <C-W><C-W>
 " 跳转至右方的窗口
 nnoremap <Leader>lw <C-W>l
-" 跳转至方的窗口
+" 跳转至左方的窗口
 nnoremap <Leader>hw <C-W>h
 " 跳转至上方的子窗口
 nnoremap <Leader>kw <C-W>k
@@ -428,7 +428,7 @@ set softtabstop=4
 
 * expandtab，把制表符转换为多个空格，具体空格数量参考 tabstop 和 shiftwidth 变量；
 * tabstop 与 shiftwidth 是有区别的。tabstop 指定我们在插入模式下输入一个制表符占据的空格数量，linux 内核编码规范建议是 8，看个人需要；shiftwidth 指定在进行缩进格式化源码时制表符占据的空格数。所谓缩进格式化，指的是通过 vim 命令由 vim 自动对源码进行缩进处理，比如其他人的代码不满足你的缩进要求，你就可以对其进行缩进格式化。缩进格式化，需要先选中指定行，要么键入 = 让 vim 对该行进行智能缩进格式化，要么按需键入多次 < 或 > 手工缩进格式化；
-* softtabstop，如何处理连续多个空格。因为 expandtab 已经把制表符转换为空格，当你要删除制表符时你得连续删除多个空格，该就是告诉 vim 把连续数量的空格视为一个制表符，即，只删一个字符即可。通常应将这tabstop、shiftwidth、softtabstop 三个变量设置为相同值；
+* softtabstop，如何处理连续多个空格。因为 expandtab 已经把制表符转换为空格，当你要删除制表符时你得连续删除多个空格，该设置就是告诉 vim 把连续数量的空格视为一个制表符，即，只删一个字符即可。通常应将这tabstop、shiftwidth、softtabstop 三个变量设置为相同值；
 
 另外，你总会阅读其他人的代码吧，他们对制表符定义规则与你不同，这时你可以手工执行 vim 的 retab 命令，让 vim 按上述规则重新处理制表符与空格关系。
 
