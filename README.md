@@ -1,10 +1,10 @@
 <h1 align="center">所需即所获：像 IDE 一样使用 vim</h1>
 yangyangwithgnu@yeah.net  
-2015-02-15 13:30:59
+2015-10-05 17:07:59
 
 
 ##谢谢
- 
+
 **捐赠：支付宝 yangyangwithgnu@yeah.net 。支付宝链接 https://shenghuo.alipay.com/send/payment/fill.htm?optEmail=yangyangwithgnu@yeah.net ，支付宝二维码 $_$**
 <div align="center">
 <img src="https://raw.githubusercontent.com/yangyangwithgnu/yangyangwithgnu.github.io/master/pics/donate_qr.png" alt=""/><br>
@@ -233,13 +233,20 @@ vim 自身希望通过在 .vim/ 目录中预定义子目录管理所有插件（
 设置：接下来在 .vimrc 增加相关配置信息：
 
 ```
-# 将 pathogen 自身也置于独立目录中，需指定其路径 
+" 将 pathogen 自身也置于独立目录中，需指定其路径 
 runtime bundle/pathogen/autoload/pathogen.vim
-# 运行 pathogen
+" 运行 pathogen
 execute pathogen#infect()
 ```
 
-使用：比如要安装新插件 plugin_name，先在 ~/.vim/bundle/ 下创建目录  plugin_name/，然后到 vim 官网下载 plugin_name 压缩包并解压至 ~/.vim/bundle/plugin_name/ 即可，注意不要重复包含多次 plugin_name/ 目录，如，~/.vim/bundle/plugin_name/plugin_name/。要卸载插件，直接删除 plugin_name/ 插件目录即可。另外，通过 pathogen 管理插件后，相较以前有几点变化：
+此后，你有两种方式安装插件。如果插件通过 git 托管的，以 https://github.com/dyng/ctrlsf.vim 为例，该插件项目主页的右侧中间区域找到其  git clone 地址为 https://github.com/dyng/ctrlsf.vim.git，那么，你可以如下安装：  
+```
+cd ~/.vim/bundle/
+git clone https://github.com/dyng/ctrlsf.vim.git
+```
+如果插件只有压缩包下载地址，那么，先在 ~/.vim/bundle/ 创建目录  plugin_name/，然后到 vim 官网下载 plugin_name 压缩包并解压至 ~/.vim/bundle/plugin_name/ 即可，注意不要重复包含多次 plugin_name/ 目录，如，~/.vim/bundle/plugin_name/plugin_name/。要卸载插件，直接删除 plugin_name/ 插件目录即可。
+
+通过 pathogen 管理插件后，相较以前有几点变化：
 * 切勿通过发行套件自带的软件管理工具安装任何插件，不然 .vim/ 又要混乱了；
 * pathogen 无法安装配色主题风格，只能将主题插件手工放置于 ~/.vim/colors/；
 * 安装 \*.vba 类型插件：
@@ -1419,10 +1426,8 @@ flags = [
     'c++', 
     '-I', 
     '.', 
-    '-I', 
+    '-isystem', 
     '/usr/include/', 
-    '-I', 
-    '/usr/include/c++/4.8/'
 ] 
 compilation_database_folder = '' 
 if compilation_database_folder: 
@@ -1485,7 +1490,7 @@ def FlagsForFile( filename, \*\*kwargs ):
     'do_cache': True 
   }
 ```
-基本上，根据你工程情况只需调整 .ycm_extra_conf.py 的 flags 部分，前面说过， flags 用于 YCM 调用 libclang 时指定的参数，通常应与构建脚本保持一致（如，CMakeLists.txt）。flags 会产生两方面影响，一是影响 YCM 的补全内容、一是影响代码静态分析插件 syntastic 的显示结果（详见后文“静态分析器集成”）。/usr/include/c++/4.8/ 需要替换成你系统中 C++ 标准库头文件所在路径。另外，你得注意，该配置文件其实就是个 python 脚本，python 把缩进视为语法，如果你是直接拷贝文中的 .ycm_extra_conf.py 小心缩进部分。 
+基本上，根据你工程情况只需调整 .ycm_extra_conf.py 的 flags 部分，前面说过， flags 用于 YCM 调用 libclang 时指定的参数，通常应与构建脚本保持一致（如，CMakeLists.txt）。flags 会产生两方面影响，一是影响 YCM 的补全内容、一是影响代码静态分析插件 syntastic 的显示结果（详见后文“静态分析器集成”）。另外，你得注意，该配置文件其实就是个 python 脚本，python 把缩进视为语法，如果你是直接拷贝文中的 .ycm_extra_conf.py 小心缩进部分。 
 
 设置二，在 .vimrc 中增加如下配置信息：
 
@@ -1585,8 +1590,9 @@ YCM 的其他补全。YCM 还集成了其他辅助补全引擎，可以补全路
 let g:protodefprotogetter='~/.vim/bundle/protodef/pullproto.pl'
 " 成员函数的实现顺序与声明顺序一致
 let g:disable_protodef_sorting=1
-pullproto.pl 是 protodef 自带的 perl 脚本，默认位于 ~/.vim 目录，由于改用  pathogen 管理插件，所以路径需重新设置。
 ```
+
+pullproto.pl 是 protodef 自带的 perl 脚本，默认位于 ~/.vim 目录，由于改用 pathogen 管理插件，所以路径需重新设置。
 
 protodef 根据文件名进行关联，比如，MyClass.h 与 MyClass.cpp 是一对接口和实现文件，MyClass.h 中接口为：
 
@@ -1733,7 +1739,7 @@ map <C-S-Tab> :MBEbp<cr>
 
 <h3 name="6.3">6.3 环境恢复*</h3>
 
-vim 的编辑环境保存与恢复是我一直想要的功能，我希望恢复：已打开文件、光标位置、undo/redo、书签、子窗口、窗口大小、窗口位置、命令历史、buffer 列表、代码折叠。vim 文档说借助 viminfo（恢复书签） 和 session（恢复除书签外的其他项）特性很可以实现这个功能。请确保你的 vim 支持 +mksession 和 +viminfo 特性：
+vim 的编辑环境保存与恢复是我一直想要的功能，我希望每当重新打开 vim 时恢复：已打开文件、光标位置、undo/redo、书签、子窗口、窗口大小、窗口位置、命令历史、buffer 列表、代码折叠。vim 文档说借助 viminfo（恢复书签） 和 session（恢复除书签外的其他项）特性可以实现这个功能。请确保你的 vim 支持 +mksession 和 +viminfo 特性：
 
 ```
 vim --version | grep mksession
@@ -1781,7 +1787,7 @@ map <leader>rs :source my.vim<cr> :rviminfo my.viminfo<cr>
 ```
 这样，简化第二步、第四步操作。另外，sessionoptions 无法包含 undo 历史，所以，先得手工创建存放 undo 历史的目录（如，.undo_history/）再通过开启 undofile 进行单独设置，一旦开启，每次写文件时自动强制保存 undo 历史，下次加载在文件时自动强制恢复所有 undo 历史，不在由 :mksession/:wviminfo 和 :source/:rviminfo 控制。
 
-按此操作，并不能像 vim 文档中描述的那样能保存所有环境，比如，书签、代码折叠、命令历史都无法恢复。这和我预期存在较大差距，暂且用用吧，找个时间在深入研究！
+按此操作，并不能像 vim 文档中描述的那样能保存所有环境，比如，书签、代码折叠、命令历史都无法恢复。这和我预期存在较大差距，暂且用用吧，找个时间再深入研究！
 
 <h2 name="7">7 工具链集成</h2>
 
