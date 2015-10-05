@@ -239,7 +239,7 @@ runtime bundle/pathogen/autoload/pathogen.vim
 execute pathogen#infect()
 ```
 
-此后，你有两种方式安装插件。如果插件通过 git 托管的，以 https://github.com/dyng/ctrlsf.vim 为例，该插件项目主页的右侧中间区域找到其  git clone 地址为 https://github.com/dyng/ctrlsf.vim.git，那么，你可以如下安装：  
+此后，你有两种方式安装插件。如果插件通过 git 托管的，以 https://github.com/dyng/ctrlsf.vim 为例，该插件项目主页的右侧中间区域找到其  git clone 地址为 https://github.com/dyng/ctrlsf.vim.git ，那么，你可以如下安装：  
 ```
 cd ~/.vim/bundle/
 git clone https://github.com/dyng/ctrlsf.vim.git
