@@ -1,6 +1,6 @@
 <h1 align="center">所需即所获：像 IDE 一样使用 vim</h1>
 yangyangwithgnu@yeah.net  
-2015-10-05 17:07:59
+2015-11-08 10:05:53
 
 
 ##谢谢
@@ -22,6 +22,7 @@ yangyangwithgnu@yeah.net
 
 ##【版本】
 ----
+* v0.1.3，2015-11-08，新增：0）光标快速移至行首的快捷键 lh 与光标左移键键 l 冲突，导致光标左移操作等待，现添加 <Leader> 规避该问题；1）中文输入状态导致命令模式无效，借助插件解决该问题。  
 * v0.1.2，2015-01-18，新增。0）重写“内容查找”，让匹配项具备上下文提醒能力；1）“快速输入结对符”扩充快速选中结对符内文本的相关知识；2）增加支持分支 undo 的介绍；3）增加持久化保存 undo 历史的介绍；4）全文结构调整，将“内容查找”和“内容替换”移至“4 代码分析”，将“快速输入结对符”更名为“快速编辑结对符”，并移至“8 其他辅助”。  
 * v0.1.1，2014-12-27，新增/修正。0）重写“代码收藏”章节，停用过时的 visual mark，启用用户体验更优的 vim-signature（@arcticlion，谢谢）；1）新增“基于语义的导航”章节，YCM 新增该项功能；2）调整“5.2 模板补全”章节结构，UltiSnips 不再提供预定义代码模板；3）protodef 插件更新，修复 protodef 生成成员函数实现的返回语句错误的问题；4）给出安装插件 vim-instant-markdown 的详细步骤。  
 * v0.1.0，2014-10-13，新增。发布初始版本。
@@ -76,6 +77,7 @@ yangyangwithgnu@yeah.net
 ........[8.2 支持分支的 undo ](#8.2)  
 ........[8.3 快速移动 ](#8.3)  
 ........[8.4 markdown 即时预览 ](#8.4)  
+........[8.5 中/英输入平滑切换 ](#8.5)  
 [9 尾声](#9)
 
 
@@ -141,8 +143,8 @@ filetype plugin on
 
 ```
 " 定义快捷键到行首和行尾
-nmap lb 0
-nmap le $
+nmap <Leader>lb 0
+nmap <Leader>le $
 " 设置快捷键将选中文本块复制至系统剪贴板
 vnoremap <Leader>y "+y
 " 设置快捷键将系统剪贴板内容粘贴至 vim
@@ -2189,6 +2191,25 @@ npm -g install instant-markdown-d
 * markdown 语法 http://daringfireball.net/projects/markdown/syntax
 * github.com 扩展 https://guides.github.com/features/mastering-markdown/
 * emoji 符号表情 http://www.emoji-cheat-sheet.com/
+
+<h3 name="8.5">8.5 中/英输入平滑切换</h3>
+
+代码中不可能全是英文，即便注释是英文，用户提示信息也多多少少得用中文吧，所以，在 vim 中输入中文是常有的。中/英文输入切换本身很简单，但是，如果又与 vim 的插入模式和命令模式一纠缠，那么，这事儿就不太自然了。
+
+比如，我在插入模式下依次输入了中文的一二四三，本意是想输入一二三四，下意识地键入 esc 切换为命令模式，键入 x 剪切三，再键入 P 将三粘贴至四前。谁知，在键入 x 时，由于输入法仍保留在先前的中文状态下，导致 vim 的命令模式无法接收到命令，必须得再次键入 shift 切换至英文状态。如下图所示：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%AD%E6%96%87%E7%8A%B6%E6%80%81%E8%AE%A9%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F%E6%97%A0%E6%95%88.gif" alt=""/><br />
+（中文状态让命令模式无效）
+</div>
+
+这很不协调，我希望，在插入模式下输入完中文后，切换至命令模式后，即便先前是中文输入法，也不影响我正常使用命令模式，甚至再次切回插入模式后，能保持先前的输入状态。来了，fcitx.vim（https://github.com/lilydjwg/fcitx.vim ）就是我要的。对，前提是你系统中用得是 fcitx 输入法（为何不用 scim、ibus？https://github.com/yangyangwithgnu/the_new_world_linux#7.4 ）。装好这个插件后，我们再看看刚才的例子，在中文状态下从插入模式切换至命令模式，键入 x、P 调整完四和三顺序后，重新切换至插入模式，输入法状态仍保持中文。如下图所示：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%8D%B3%E4%BE%BF%E4%B8%AD%E6%96%87%E7%8A%B6%E6%80%81%E4%B9%9F%E4%B8%8D%E5%BD%B1%E5%93%8D%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F.gif" alt=""/><br />
+（即便中文状态也不影响命令模式）
+</div>
+
+几乎完美了，唯一问题是，该插件无法保证从其他程序窗口切换至 vim 后仍有效。
+
 
 <h2 name="9">9 尾声</h2>
 
