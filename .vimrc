@@ -70,7 +70,7 @@ set wildmenu
 
 " 插件管理
 " 将 pathogen 自身也置于独立目录中，需指定其路径
-runtime bundle/pathogen/autoload/pathogen.vim
+runtime bundle/vim-pathogen/autoload/pathogen.vim
 " 运行 pathogen
 execute pathogen#infect()
 
