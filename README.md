@@ -5,9 +5,10 @@ yangyangwithgnu@yeah.net
 
 ##谢谢
 
-**捐赠：支付宝 yangyangwithgnu@yeah.net 。支付宝链接 https://shenghuo.alipay.com/send/payment/fill.htm?optEmail=yangyangwithgnu@yeah.net ，支付宝二维码 $_$**
+**捐赠：支付宝 yangyangwithgnu@yeah.net ，支付宝二维码（左），微信二维码（右）**
 <div align="center">
-<img src="https://raw.githubusercontent.com/yangyangwithgnu/yangyangwithgnu.github.io/master/pics/donate_qr.png" alt=""/><br>
+<img src="https://raw.githubusercontent.com/yangyangwithgnu/yangyangwithgnu.github.io/master/pics/alipay_donate_qr.png" alt=""/>
+<img src="https://raw.githubusercontent.com/yangyangwithgnu/yangyangwithgnu.github.io/master/pics/wechat_donate_qr.png" alt=""/><br>
 </div>
 
 **二手书**：书，我提高开发技能的重要手段之一，随着职业生涯的发展，书籍也在不断增多，对我而言，一本书最多读三遍，再往后，几乎没有什么营养吸收，这部分书对我已基本无用，但对其他人可能仍有价值，所以，为合理利用资源，我决定低价出售这些书，希望达到两个目的：0）用售出的钱购买更多新书（没当过雷锋的朋友 (๑´ڡ`๑)）；1）你低价购得需要的书（虽然二手）。到 https://github.com/yangyangwithgnu/used_books 看看有无你钟意的。
@@ -2221,4 +2222,4 @@ npm -g install instant-markdown-d
 * 哪个是最适合编码的编辑器？linux 上存在两种编辑器：神之编辑器 emacs，编辑器之神 vim。关于 emacs 与 vim 孰轻谁重之争已是世纪话题，我无意参与其中，在我眼里，它们流淌着自由的血液、继承着创新的基因，作为顶级编辑器，二者在这个领域都作到了极致，让世人重新认识了编辑的本质 —— 用命令规则而非字字键入 —— 去完成编辑任务。emacs，伪装成编辑器的操作系统，太杂、太重，我更喜欢专注于编辑的 vim。
 * 怎样的 IDE 才算好？对于初入开发的人员而言，Code::Blocks 是最易上手的选择；对于我这类喜欢折腾、追求效率、愿意用脑力换体力的人来说，vim 搭配各类插件是好的 IDE；对于 Donald Knuth 这等宗师，他们站在整个系统的层面，bash 加上几个命令行工具也是某种意义上的 IDE。所以，只要你能得心应手地完成软件开发任务，又察觉不到工具的存在，那这就是最适合你的 IDE。
 
-末了，写作的过程，是知识体系完整重构的过程，理清了思路、加深了记忆。如果它再能引发你的一点思绪，或许，这就是价值！
+末了，写作的过程，是知识体系完整重构的过程，理清了思路、加深了记忆。如果它再能引发你一点思绪，或许，这就是价值！
