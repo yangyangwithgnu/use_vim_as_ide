@@ -144,8 +144,8 @@ filetype plugin on
 
 ```
 " 定义快捷键到行首和行尾
-nmap <Leader>lb 0
-nmap <Leader>le $
+nmap LB 0
+nmap LE $
 " 设置快捷键将选中文本块复制至系统剪贴板
 vnoremap <Leader>y "+y
 " 设置快捷键将系统剪贴板内容粘贴至 vim
@@ -168,8 +168,8 @@ nnoremap <Leader>hw <C-W>h
 nnoremap <Leader>kw <C-W>k
 " 跳转至下方的子窗口
 nnoremap <Leader>jw <C-W>j
-" 定义快捷键在结对符之间跳转，助记pair
-nmap <Leader>pa %
+" 定义快捷键在结对符之间跳转
+nmap <Leader>M %
 ```
 
 其他。搜索、vim 命令补全等设置：
