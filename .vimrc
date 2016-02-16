@@ -1,4 +1,4 @@
-" 更新时间：2015-01-18 21:30:31
+" 更新时间：2016-02-16 13:40:31
 
 " 定义快捷键的前缀，即 <Leader>
 let mapleader=";"
@@ -17,8 +17,8 @@ filetype plugin on
 " vim 自身（非插件）快捷键
 
 " 定义快捷键到行首和行尾
-nmap <Leader>lb 0
-nmap <Leader>le $
+nmap LB 0
+nmap LE $
 
 " 设置快捷键将选中文本块复制至系统剪贴板
 vnoremap <Leader>y "+y
@@ -46,8 +46,8 @@ nnoremap <Leader>kw <C-W>k
 " 跳转至下方的子窗口
 nnoremap <Leader>jw <C-W>j
 
-" 定义快捷键在结对符之间跳转，助记 pair
-nmap <Leader>pa %
+" 定义快捷键在结对符之间跳转
+nmap <Leader>M %
 
 " <<
 
@@ -452,6 +452,11 @@ map <C-S-Tab> :MBEbp<cr>
 
 " 设置环境保存项
 set sessionoptions="blank,globals,localoptions,tabpages,sesdir,folds,help,options,resize,winpos,winsize"
+
+" 保存折叠状态
+au BufWinLeave * silent mkview  
+" 恢复折叠状态
+au BufRead * silent loadview    
 
 " 保存 undo 历史。必须先行创建 .undo_history/
 set undodir=~/.undo_history/
