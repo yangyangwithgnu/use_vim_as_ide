@@ -2191,6 +2191,26 @@ npm -g install instant-markdown-d
 ```
 
 注意，以上三条命令均要访问墙外服务器，所以，你得先有 VPN 全局翻墙工具或者透明代理工具，可参考《美丽新世界：linux 下的惬意生活》中“3.2.5 VPN 代理”（https://github.com/yangyangwithgnu/the_new_world_linux#3.2.5 ）。
+  
+如果无法翻墙，那么可以修改ruby的gem源，将其更换为淘宝的RubyGems镜像。这是一个完整 rubygems.org 镜像，你可以用此代替官方版本，同步频率目前为15分钟一次以保证尽量与官方服务同步。更改命令如下：
+```
+gem sources --remove https://rubygems.org/
+gem sources -a https://ruby.taobao.org/
+```
+
+输入以下命令：
+
+```
+gem sources -l
+```
+
+如果显示以下信息，则说明更改成功。此时即可安装pygments.rb，redcarpet。
+
+```
+https://ruby.taobao.org
+# 请确保只有 ruby.taobao.org
+```
+
 
 对于重内容、轻设计的我这类人来说，markdown 简洁的文书语法太贴心了。推荐三个网站：
 
