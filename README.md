@@ -1500,7 +1500,7 @@ Plugin 'Valloric/YouCompleteMe'
 第三步，编译 YCM 共享库：
 
 ```
-zypper --no-refresh se python-devel python3-devel boost-devel
+zypper --no-refresh se python-devel python3-devel boost-devel llvm-clang-devel
 cd ~/downloads/ 
 mkdir ycm_build 
 cd ycm_build 
