@@ -28,7 +28,6 @@
 #
 # For more information, please refer to <http://unlicense.org/>
 
-
 import os
 import ycm_core
 
@@ -37,27 +36,27 @@ import ycm_core
 # CHANGE THIS LIST OF FLAGS. YES, THIS IS THE DROID YOU HAVE BEEN LOOKING FOR.
 flags = [
     '-std=c++11',
-    '-Werror',
-    '-Weverything',
-    '-Wno-documentation',
-    '-Wno-deprecated-declarations',
-    '-Wno-disabled-macro-expansion',
-    '-Wno-float-equal',
-    '-Wno-c++98-compat',
-    '-Wno-c++98-compat-pedantic',
-    '-Wno-global-constructors',
-    '-Wno-exit-time-destructors',
-    '-Wno-missing-prototypes',
-    '-Wno-padded',
+    '-O0',  
+    '-Werror', 
+    '-Weverything', 
+    '-Wno-documentation', 
+    '-Wno-deprecated-declarations', 
+    '-Wno-disabled-macro-expansion', 
+    '-Wno-float-equal', 
+    '-Wno-c++98-compat', 
+    '-Wno-c++98-compat-pedantic', 
+    '-Wno-global-constructors', 
+    '-Wno-exit-time-destructors', 
+    '-Wno-missing-prototypes', 
+    '-Wno-padded', 
     '-Wno-old-style-cast',
+    '-Wno-weak-vtables',
     '-x', 
     'c++', 
     '-I', 
     '.', 
-    '-I', 
+    '-isystem', 
     '/usr/include/', 
-    '-I', 
-    '/usr/include/c++/4.8/'
 ]
 
 

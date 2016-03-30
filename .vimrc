@@ -1,4 +1,4 @@
-" 更新时间：2016-02-16 13:40:31
+" 更新时间：2016-03-30 12:15:21
 
 " 定义快捷键的前缀，即 <Leader>
 let mapleader=";"
@@ -51,6 +51,9 @@ nmap <Leader>M %
 
 " <<
 
+" 让配置变更立即生效
+autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
 " >>
 " 其他
 
@@ -68,11 +71,48 @@ set wildmenu
 
 " <<
 
-" 插件管理
-" 将 pathogen 自身也置于独立目录中，需指定其路径
-runtime bundle/pathogen/autoload/pathogen.vim
-" 运行 pathogen
-execute pathogen#infect()
+" >>>>
+" 插件安装
+
+" vundle 环境设置
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+" vundle 管理的插件列表必须位于 vundle#begin() 和 vundle#end() 之间
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'tomasr/molokai'
+Plugin 'vim-scripts/phd'
+Plugin 'Lokaltog/vim-powerline'
+Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'derekwyatt/vim-fswitch'
+Plugin 'kshenoy/vim-signature'
+Plugin 'vim-scripts/BOOKMARKS--Mark-and-Highlight-Full-Lines'
+Plugin 'majutsushi/tagbar'
+Plugin 'vim-scripts/indexer.tar.gz'
+Plugin 'vim-scripts/DfrankUtil'
+Plugin 'vim-scripts/vimprj'
+Plugin 'dyng/ctrlsf.vim'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'vim-scripts/DrawIt'
+Plugin 'SirVer/ultisnips'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'derekwyatt/vim-protodef'
+Plugin 'scrooloose/nerdtree'
+Plugin 'fholgado/minibufexpl.vim'
+Plugin 'gcmt/wildfire.vim'
+Plugin 'sjl/gundo.vim'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'suan/vim-instant-markdown'
+Plugin 'lilydjwg/fcitx.vim'
+
+" 插件列表结束
+call vundle#end()
+filetype plugin indent on
+" <<<<
 
 " 配色方案
 set background=dark
@@ -102,7 +142,7 @@ fun! ToggleFullscreen()
 endf
 " 全屏开/关快捷键
 map <silent> <F11> :call ToggleFullscreen()<CR>
-" 启动 vim 时自动全屏
+"" 启动 vim 时自动全屏
 "autocmd VimEnter * call ToggleFullscreen()
 
 " <<
@@ -194,9 +234,7 @@ set nofoldenable
 " 接口与实现快速切换
 
 " *.cpp 和 *.h 间切换
-nmap <Leader>ch :A<CR>
-" 子窗口中显示 *.cpp 或 *.h
-nmap <Leader>sch :AS<CR>
+nmap <silent> <Leader>sw :FSHere<cr>
 
 " <<
 
@@ -231,56 +269,34 @@ let g:SignatureMap = {
 " <<
 
 " >>
-" 代码导航
- 
-" 基于标签的代码导航
-
-" 设置插件 indexer 调用 ctags 的参数
-" 默认 --c++-kinds=+p+l，重新设置为 --c++-kinds=+l+p+x+c+d+e+f+g+m+n+s+t+u+v
-" 默认 --fields=+iaS 不满足 YCM 要求，需改为 --fields=+iaSl
-let g:indexer_ctagsCommandLineOptions="--c++-kinds=+l+p+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
-
-" 正向遍历同名标签
-nmap <Leader>tn :tnext<CR>
-" 反向遍历同名标签
-nmap <Leader>tp :tprevious<CR>
-
-" 基于语义的代码导航
-
-nnoremap <leader>jd :YcmCompleter GoToDeclaration<CR>
-" 只能是 #include 或已打开的文件
-nnoremap <leader>je :YcmCompleter GoToDefinition<CR>
-
-" <<
-
-" >>
 " 标签列表
 
 " 设置 tagbar 子窗口的位置出现在主编辑区的左边
 let tagbar_left=1
-" 设置显示／隐藏标签列表子窗口的快捷键。速记：tag list
-nnoremap <Leader>tl :TagbarToggle<CR>
+" 设置显示／隐藏标签列表子窗口的快捷键。速记：identifier list by tag
+nnoremap <Leader>ilt :TagbarToggle<CR>
 " 设置标签子窗口的宽度
 let tagbar_width=32
 " tagbar 子窗口中不显示冗余帮助信息
 let g:tagbar_compact=1
-" 设置 ctags 对哪些代码元素生成标签
+" 设置 ctags 对哪些代码标识符生成标签
 let g:tagbar_type_cpp = {
      \ 'ctagstype' : 'c++',
      \ 'kinds'     : [
-         \ 'd:macros:1',
-         \ 'g:enums',
-         \ 't:typedefs:0:0',
-         \ 'e:enumerators:0:0',
-         \ 'n:namespaces',
-         \ 'c:classes',
-         \ 's:structs',
-         \ 'u:unions',
-         \ 'f:functions',
-         \ 'm:members:0:0',
-         \ 'v:global:0:0',
-         \ 'x:external:0:0',
-         \ 'l:local:0:0'
+         \ 'c:classes:0:1',
+         \ 'd:macros:0:1',
+         \ 'e:enumerators:0:0', 
+         \ 'f:functions:0:1',
+         \ 'g:enumeration:0:1',
+         \ 'l:local:0:1',
+         \ 'm:members:0:1',
+         \ 'n:namespaces:0:1',
+         \ 'p:functions_prototypes:0:1',
+         \ 's:structs:0:1',
+         \ 't:typedefs:0:1',
+         \ 'u:unions:0:1',
+         \ 'v:global:0:1',
+         \ 'x:external:0:1'
      \ ],
      \ 'sro'        : '::',
      \ 'kind2scope' : {
@@ -302,6 +318,29 @@ let g:tagbar_type_cpp = {
 " <<
 
 " >>
+" 代码导航
+ 
+" 基于标签的代码导航
+
+" 设置插件 indexer 调用 ctags 的参数
+" 默认 --c++-kinds=+p+l，重新设置为 --c++-kinds=+l+p+x+c+d+e+f+g+m+n+s+t+u+v
+" 默认 --fields=+iaS 不满足 YCM 要求，需改为 --fields=+iaSl
+let g:indexer_ctagsCommandLineOptions="--c++-kinds=+l+p+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
+
+" 正向遍历同名标签
+nmap <Leader>tn :tnext<CR>
+" 反向遍历同名标签
+nmap <Leader>tp :tprevious<CR>
+
+" 基于语义的代码导航
+
+nnoremap <leader>jc :YcmCompleter GoToDeclaration<CR>
+" 只能是 #include 或已打开的文件
+nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
+
+" <<
+
+" >>
 " 查找
 
 " 使用 ctrlsf.vim 插件在工程内全局查找光标所在关键字，设置快捷键。快捷键速记法：search in project
@@ -310,8 +349,13 @@ nnoremap <Leader>sp :CtrlSF<CR>
 " <<
 
 " >>
-" 替换
+" 内容替换
 
+" 快捷替换
+let g:multi_cursor_next_key='<S-n>'
+let g:multi_cursor_skip_key='<S-k>'
+
+" 精准替换
 " 替换函数。参数说明：
 " confirm：是否替换前逐一确认
 " wholeword：是否整词匹配
@@ -390,15 +434,8 @@ let g:ycm_seed_identifiers_with_syntax=1
 
 " <<
  
-" 静态分析器 syntastic 错误标识
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_warning_symbol = '⚠'
-
 " >>
 " 由接口快速生成实现框架
-
-" 设置 pullproto.pl 脚本路径
-let g:protodefprotogetter='~/.vim/bundle/vim-protodef/pullproto.pl'
 
 " 成员函数的实现顺序与声明顺序一致
 let g:disable_protodef_sorting=1
@@ -453,11 +490,6 @@ map <C-S-Tab> :MBEbp<cr>
 " 设置环境保存项
 set sessionoptions="blank,globals,localoptions,tabpages,sesdir,folds,help,options,resize,winpos,winsize"
 
-" 保存折叠状态
-au BufWinLeave * silent mkview  
-" 恢复折叠状态
-au BufRead * silent loadview    
-
 " 保存 undo 历史。必须先行创建 .undo_history/
 set undodir=~/.undo_history/
 set undofile
@@ -491,22 +523,3 @@ let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "ip"]
 " 调用 gundo 树
 nnoremap <Leader>ud :GundoToggle<CR>
 
-" >>
-" web 前端
-
-" surrond 添加 <p> 元素的快捷键
-nmap <Leader>ap yss<p><CR>
-
-" 对 HTML 元素进行转义：< -> &lt;、> -> &gt;、& -> &amp;、空格 -> &nbsp;、行尾添加 <br />
-" 先后顺序敏感
-function HtmlEscape()
-    retab<CR>
-    silent s/&/\&amp;/eg
-    silent s/</\&lt;/eg
-    silent s/>/\&gt;/eg
-    silent s/ /\&nbsp;/eg
-    silent s/$/<br \/>/eg
-endfunction
-vnoremap <Leader>he :call HtmlEscape()<CR>
-
-" <<
