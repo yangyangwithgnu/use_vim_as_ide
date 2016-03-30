@@ -1,6 +1,6 @@
 <h1 align="center">所需即所获：像 IDE 一样使用 vim</h1>
 yangyangwithgnu@yeah.net  
-2016-02-16 13:59:53
+2016-03-30 16:59:33
 
 
 ##【谢谢】
@@ -23,10 +23,11 @@ yangyangwithgnu@yeah.net
 
 ##【版本】
 ----
+* v0.1.5，2016-03-30，新增/优化：0）采用 vundle 作为插件管理器，并统一采用各插件在 github.com 的地址；1）C++11/14 语法高亮插件从 STL-Syntax 换为 vim-cpp-enhanced-highlight，后者支持 STL 以及自行编写函数、容器、模版等的高亮；2）接口文件（MyClass.h）与实现文件（MyClass.cpp）快捷切换的插件，从 a.vim 换为 vim-fswitch；3）增加标签系统和语义系统的介绍；4）其他调整；
 * v0.1.4，2016-02-16，优化：0）为规避快捷键前导字符重复导致操作等待的问题，优化光标快速移至行首/行尾的快捷键，优化结对符间快速移动的快捷键；1）增加代码折叠的环境恢复。  
 * v0.1.3，2015-11-08，新增：0）光标快速移至行首的快捷键 lh 与光标右移键 l 冲突，导致光标左移操作等待，现添加 \<Leader> 规避该问题；1）中文输入状态导致命令模式无效，借助插件解决该问题。  
-* v0.1.2，2015-01-18，新增。0）重写“内容查找”，让匹配项具备上下文提醒能力；1）“快速输入结对符”扩充快速选中结对符内文本的相关知识；2）增加支持分支 undo 的介绍；3）增加持久化保存 undo 历史的介绍；4）全文结构调整，将“内容查找”和“内容替换”移至“4 代码分析”，将“快速输入结对符”更名为“快速编辑结对符”，并移至“8 其他辅助”。  
-* v0.1.1，2014-12-27，新增/修正。0）重写“代码收藏”章节，停用过时的 visual mark，启用用户体验更优的 vim-signature（@arcticlion，谢谢）；1）新增“基于语义的导航”章节，YCM 新增该项功能；2）调整“5.2 模板补全”章节结构，UltiSnips 不再提供预定义代码模板；3）protodef 插件更新，修复 protodef 生成成员函数实现的返回语句错误的问题；4）给出安装插件 vim-instant-markdown 的详细步骤。  
+* v0.1.2，2015-01-18，新增：0）重写“内容查找”，让匹配项具备上下文提醒能力；1）“快速输入结对符”扩充快速选中结对符内文本的相关知识；2）增加支持分支 undo 的介绍；3）增加持久化保存 undo 历史的介绍；4）全文结构调整，将“内容查找”和“内容替换”移至“4 代码分析”，将“快速输入结对符”更名为“快速编辑结对符”，并移至“8 其他辅助”。  
+* v0.1.1，2014-12-27，新增/修正：0）重写“代码收藏”章节，停用过时的 visual mark，启用用户体验更优的 vim-signature（@arcticlion，谢谢）；1）新增“基于语义的导航”章节，YCM 新增该项功能；2）调整“5.2 模板补全”章节结构，UltiSnips 不再提供预定义代码模板；3）protodef 插件更新，修复 protodef 生成成员函数实现的返回语句错误的问题；4）给出安装插件 vim-instant-markdown 的详细步骤。  
 * v0.1.0，2014-10-13，新增。发布初始版本。
 
 
@@ -49,27 +50,29 @@ yangyangwithgnu@yeah.net
 ........[4.3 代码折叠 ](#4.3)  
 ........[4.4 接口与实现快速切换 ](#4.4)  
 ........[4.5 代码收藏 ](#4.5)  
-........[4.6 代码导航 ](#4.6)  
-................[基于标签的导航 ](#4.6.1)  
-................[基于语义的导航 ](#4.6.2)  
-........[4.7 标签列表 ](#4.7)  
+........[4.6 标识符列表 ](#4.6)  
+................[标签系统 ](#4.6.1)  
+................[语义系统 ](#4.6.2)  
+................[基于标签的标识符列表 ](#4.6.3)  
+........[4.7 声明/定义跳转 ](#4.7)  
+................[基于标签的声明/定义跳转 ](#4.7.1)  
+................[基于语义的声明/定义跳转 ](#4.7.2)  
 ........[4.8 内容查找 ](#4.8)  
 ........[4.9 内容替换 ](#4.9)  
 [5 代码开发 ](#5)  
 ........[5.1 快速开关注释 ](#5.1)  
 ........[5.2 模板补全 ](#5.2)  
-........[5.3 coming soon (｡◕‿◕｡) ](#5.3)  
-........[5.4 智能补全 ](#5.4)  
-................[基于标签的智能补全 ](#5.4.1)  
-................[基于语义的智能补全 ](#5.4.2)  
-........[5.5 由接口快速生成实现框架 ](#5.5)  
-........[5.6 库信息参考 ](#5.6)  
+........[5.3 智能补全 ](#5.4)  
+................[基于标签的智能补全 ](#5.3.1)  
+................[基于语义的智能补全 ](#5.3.2)  
+........[5.4 由接口快速生成实现框架 ](#5.4)  
+........[5.5 库信息参考 ](#5.5)  
 [6 工程管理 ](#6)  
 ........[6.1 工程文件浏览 ](#6.1)  
 ........[6.2 多文档编辑 ](#6.2)  
 ........[6.3 环境恢复 ](#6.3)  
 [7 工具链集成 ](#7)  
-........[7.1 编译器/构建工具集成 ](#7.1)  
+........[7.1 构建工具集成 ](#7.1)  
 ................[代码编译 ](#7.1.1)  
 ................[系统构建 ](#7.1.2)  
 ................[一键编译 ](#7.1.3)  
@@ -173,6 +176,18 @@ nnoremap <Leader>jw <C-W>j
 nmap <Leader>M %
 ```
 
+立即生效。全文频繁变更 .vimrc，要让变更内容生效，一般的做法是先保存 .vimrc 再重启 vim，太繁琐了，增加如下设置，可以实现保存 .vimrc 时自动重启加载它：
+
+```
+" 让配置变更立即生效
+autocmd BufWritePost $MYVIMRC source $MYVIMRC
+```
+比如，我可以随时切换配色方案：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4%E7%AB%8B%E5%8D%B3%E7%94%9F%E6%95%88.gif" alt=""/><br />
+（配置变更立即生效）
+</div>
+
 其他。搜索、vim 命令补全等设置：
 
 ```
@@ -199,22 +214,21 @@ vim someplugin.vba
 :so %
 :q
 ```
-不论是直接拷贝插件到目录，还是通过 \*.vba 安装，都不便于插件卸载、升级，后来又出现了管理插件的插件 pathogen，后文介绍。
+不论是直接拷贝插件到目录，还是通过 \*.vba 安装，都不便于插件卸载、升级，后来又出现了管理插件的插件 vundle。
 
 后面就正式开始了喽，文中前后内容顺序敏感，请依次查阅。
 
 <h2 name="1">1 源码安装编辑器 vim</h2>
 
-发行套件的软件源中预编译的 vim 要么不是最新版本，要么功能有阉割，有必要升级成全功能的最新版，当然，源码安装必须滴。
-
-卸载老版、下载新版（ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2 ），解压至 ~/downloads/vim74/，源码安装：
-
+发行套件的软件源中预编译的 vim 要么不是最新版本，要么功能有阉割，有必要升级成全功能的最新版，当然，源码安装必须滴：
 ```
-cd ~/downloads/vim74/
-./configure --with-features=huge --enable-rubyinterp --enable-pythoninterp --with-python-config-dir=/usr/lib/python2.7/config/ --enable-perlinterp --enable-gui=gtk2 --enable-cscope --prefix=/usr --enable-luainterp 
-make VIMRUNTIMEDIR=/usr/share/vim/vim74 && make install
+git clone git@github.com:vim/vim.git
+cd vim/
+./configure --with-features=huge --enable-pythoninterp --enable-rubyinterp --enable-luainterp --enable-perlinterp --with-python-config-dir=/usr/lib/python2.7/config/ --enable-gui=gtk2 --enable-cscope --prefix=/usr
+make
+make install
 ```
-其中，--enable-rubyinterp、--enable-pythoninterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk2 表示生成 gvim，--enable-cscope 支持 cscope，--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。注意，你得预先安装相关依赖库的头文件，python-devel、python3-devel、ruby-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel、ncurses-devel，如果缺失，源码构建过程虽不会报错，但最终生成的 vim 很可能缺失某些功能。构建完成后在 vim 中执行
+其中，--enable-pythoninterp、--enable-rubyinterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk2 表示生成采用 GNOME2 风格的 gvim，--enable-cscope 支持 cscope，--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。注意，你得预先安装相关依赖库的头文件，python-devel、python3-devel、ruby-devel、lua-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel、ncurses-devel，如果缺失，源码构建过程虽不会报错，但最终生成的 vim 很可能缺失某些功能。构建完成后在 vim 中执行
 
 ```
 :echo has('python')
@@ -228,46 +242,95 @@ make VIMRUNTIMEDIR=/usr/share/vim/vim74 && make install
 vim 自身希望通过在 .vim/ 目录中预定义子目录管理所有插件（比如，子目录 doc/ 存放插件帮助文档、plugin/ 存放通用插件脚本），vim 的各插件打包文档中通常也包含上述两个（甚至更多）子目录，用户将插件打包文档中的对应子目录拷贝至 .vim/ 目录即可完成插件的安装。一般情况下这种方式没问题，但我等重度插件用户，.vim/ 将变得混乱不堪，至少存在如下几个问题：
 
 * 插件名字冲突。所有插件的帮助文档都在 doc/ 子目录、插件脚本都在 plugin/ 子目录，同个名字空间下必然引发名字冲突；
-* 插件卸载麻烦。你需要先知道 doc/ 和 plugin/ 子目录下哪些文件是属于该插件的，再逐一删除，容易多删/漏删。
+* 插件卸载易误。你需要先知道 doc/ 和 plugin/ 子目录下哪些文件是属于该插件的，再逐一删除，容易多删/漏删。
 
-我希望每个插件在 .vim/ 下都有各自独立子目录，这样需要升级、卸载插件时，直接找到对应插件目录变更即可。pathogen 为此而生，它突破了 vim 只能识别 .vim/doc/、.vim/plugin/ 等等路径的限制，你可以在按插件名创建独立目录，然后将插件打包档提取至各自插件目录中。通常来说，你需要先创建 ~/.vim/bundle/ 目录，bundle/ 就是以后存放各插件目录的父目录。
+我希望每个插件在 .vim/ 下都有各自独立子目录，这样需要升级、卸载插件时，直接找到对应插件目录变更即可；另外，我希望所有插件清单能在某个配置文件中集中罗列，通过某种机制实现批量自动安装/更新/升级所有插件。vundle（https://github.com/VundleVim/Vundle.vim）为此而生，它让管理插件变得更清晰、智能。
 
-安装：先清空 .vim/ 下的所有文件（备份？）；创建目录 ~/.vim/bundle/pathogen/autoload/；下载 pathogen.vim（https://github.com/tpope/vim-pathogen ）至 ~/.vim/bundle/pathogen/autoload/。
-
-设置：接下来在 .vimrc 增加相关配置信息：
+vundle 会接管 .vim/ 下的所有原生目录，所以先清空该目录，再通过如下命令安装 vundle：
 
 ```
-" 将 pathogen 自身也置于独立目录中，需指定其路径 
-runtime bundle/pathogen/autoload/pathogen.vim
-" 运行 pathogen
-execute pathogen#infect()
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 ```
-
-此后，你有两种方式安装插件。如果插件通过 git 托管的，以 https://github.com/dyng/ctrlsf.vim 为例，该插件项目主页的右侧中间区域找到其  git clone 地址为 https://github.com/dyng/ctrlsf.vim.git ，那么，你可以如下安装：  
-```
-cd ~/.vim/bundle/
-git clone https://github.com/dyng/ctrlsf.vim.git
-```
-如果插件只有压缩包下载地址，那么，先在 ~/.vim/bundle/ 创建目录  plugin_name/，然后到 vim 官网下载 plugin_name 压缩包并解压至 ~/.vim/bundle/plugin_name/ 即可，注意不要重复包含多次 plugin_name/ 目录，如，~/.vim/bundle/plugin_name/plugin_name/。要卸载插件，直接删除 plugin_name/ 插件目录即可。
-
-通过 pathogen 管理插件后，相较以前有几点变化：
-* 切勿通过发行套件自带的软件管理工具安装任何插件，不然 .vim/ 又要混乱了；
-* pathogen 无法安装配色主题风格，只能将主题插件手工放置于 ~/.vim/colors/；
-* 安装 \*.vba 类型插件：
+接下来在 .vimrc 增加相关配置信息：
 
 ```
-:e plugin_name.vba 
-:!mkdir -p ~/.vim/bundle/plugin_name 
-:UseVimball ~/.vim/bundle/plugin_name 
+" vundle 环境设置
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+" vundle 管理的插件列表必须位于 vundle#begin() 和 vundle#end() 之间
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'tomasr/molokai'
+Plugin 'vim-scripts/phd'
+Plugin 'Lokaltog/vim-powerline'
+Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'derekwyatt/vim-fswitch'
+Plugin 'kshenoy/vim-signature'
+Plugin 'vim-scripts/BOOKMARKS—Mark-and-Highlight-Full-Lines'
+Plugin 'majutsushi/tagbar'
+Plugin 'vim-scripts/indexer.tar.gz'
+Plugin 'vim-scripts/DfrankUtil'
+Plugin 'vim-scripts/vimprj'
+Plugin 'dyng/ctrlsf.vim'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'vim-scripts/DrawIt'
+Plugin 'SirVer/ultisnips'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'derekwyatt/vim-protodef'
+Plugin 'scrooloose/nerdtree'
+Plugin 'fholgado/minibufexpl.vim'
+Plugin 'gcmt/wildfire.vim'
+Plugin 'sjl/gundo.vim'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'suan/vim-instant-markdown'
+Plugin 'lilydjwg/fcitx.vim'
+" 插件列表结束
+call vundle#end()
+filetype plugin indent on
 ```
-* 生成帮助文档：
+其中，每项
 
 ```
-:Helptags 
+Plugin 'dyng/ctrlsf.vim'
 ```
-非特殊情况，后文介绍到的插件不再累述如何安装。
+对应一个插件（这与 go 语言管理不同代码库的机制类似），后续若有新增插件，只需追加至该列表中即可。vundle 支持源码托管在 https://github.com/ 的插件，同时 vim 官网 http://www.vim.org/ 上的所有插件均在 https://github.com/vim-scripts/ 有镜像，所以，基本上主流插件都可以纳入 vundle 管理。具体而言，仍以 ctrlsf.vim 为例，它在 .vimrc 中配置信息为 dyng/ctrlsf.vim，vundle 很容易构造出其真实下载地址 https://github.com/dyng/ctrlsf.vim.git，然后借助 git 工具进行下载及安装。
 
-此外，你得注意插件的下载源。相同插件在 vim.org 和 github.com 上都能找到，有些插件在 vim.org 上是最新版，有些又在 github.com 上更新，比如，indexer 插件，在 vim.org上的版本是 4.15（http://www.vim.org/scripts/script.php?script_id=3221 ），而在 github.com 上的却是 1.2（https://github.com/shemerey/vim-indexer ），所以我建议先去作者个人网站上找，没有再在 vim.org 和 github.com 上比较哪个的最新。甚至，同在 github.com 上都有很多重名插件，自己得稍微花时间确认下，本文中出现的插件，我都会附上最新版下载地址。还有，插件更新频率较高，差不多每隔一季你应该看看哪些插件有推出新版本！
+此后，需要安装插件，先找到其在 github.com 的地址，再将配置信息其加入 .vimrc 中的call vundle#begin() 和 call vundle#end() 之间，最后进入 vim 执行
+
+```
+:PluginInstall
+```
+便可通知 vundle 自动安装该插件及其帮助文档。比如，我在 .vimrc 中添加了 4 个插件：
+
+```
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'Lokaltog/vim-powerline'
+Plugin 'octol/vim-cpp-enhanced-highlight'
+```
+当前，.vim/ 为空，当我在 vim 中执行 :PluginInstall 时，整个自动安装过程便开始了：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/vundle%20%E6%89%B9%E9%87%8F%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6.gif" alt=""/><br />
+（vundle 批量安装插件）
+</div>
+要卸载插件，先在 .vimrc 中注释或者删除对应插件配置信息，然后在 vim 中执行
+
+```
+:PluginClean
+```
+即可删除对应插件。插件更新频率较高，差不多每隔一个月你应该看看哪些插件有推出新版本，批量更新，只需执行
+
+```
+:PluginUpdate
+```
+即可。
+
+你得注意插件的下载源。同名插件在 github.com 上可能有多个，比如，indexer 插件，至少就有 https://github.com/vim-scripts/indexer.tar.gz、https://github.com/everzet/vim-indexer、https://github.com/shemerey/vim-indexer 等三个，到底应该选哪个呢？以我的经验来看，对于钟意的插件，我会先找其作者的个人网站，上面通常会罗列出托管在 github.com 的具体地址；若没有，我会找该插件在 vim.org 的页面，上面也会有 github.com 托管地址；若还是没有，再以 github 和插件名作为关键字搜索，点赞数多的，通常是你想找的。为节约你找插件地址的时间，本文中出现的每个插件我都会附上其地址。非特殊情况，后文介绍到的插件不再累述如何安装。
+
+通过 vundle 管理插件后，切勿通过发行套件自带的软件管理工具安装任何插件，不然 .vim/ 又要混乱了。
 
 <h2 name="3">3 界面美化</h2>
 
@@ -285,7 +348,7 @@ git clone https://github.com/dyng/ctrlsf.vim.git
 * 多彩 molokai（https://github.com/tomasr/molokai ）
 * 复古 phd（http://www.vim.org/scripts/script.php?script_id=3139 ）
 
-前面说过，pathogen 无法安装主题插件，请将主题插件（仅 \*.vim 文件而非插件目录，即，solarized.vim、molokai.vim、phd.vim）拷贝至 ~/.vim/colors/，然后在 .vimrc 中设定选用其作为主题：
+在 .vimrc 中选用某个主题：
 
 ```
 " 配色方案
@@ -411,11 +474,16 @@ syntax on
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE.png" alt=""/><br />
 （语法高亮）
 </div>
-上图中 STL 容器模板类 unordered\_multimap 并未高亮，对滴，vim 对 C++ 语法高亮支持不够好（特别是 STL、C++14 新增元素），必须借由插件 stl.vim 进行增强，下载（https://github.com/Mizuchi/STL-Syntax ）后拷贝至 ~/.vim/bundle/STL-Syntax/after/syntax/cpp/，重启即可。效果如下：
+上图中 STL 容器模板类 unordered\_multimap 并未高亮，对滴，vim 对 C++ 语法高亮支持不够好（特别是 C++11/14 新增元素），必须借由插件 vim-cpp-enhanced-highlight（https://github.com/octol/vim-cpp-enhanced-highlight）进行增强。效果如下：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%A2%9E%E5%BC%BA%20C%2B%2B11%20%E5%8F%8A%20STL%20%E7%9A%84%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE.png" alt=""/><br />
 （增强 C++11 及 STL 的语法高亮）
 </div>
+vim-cpp-enhanced-highlight 主要通过 .vim/bundle/vim-cpp-enhanced-highlight/after/syntax/cpp.vim 控制高亮关键字及规则，所以，当你发现某个 STL 容器类型未高亮，那么将该类型追加进 cpp.vim 即可。如，initializer_list 默认并不会高亮，需要添加
+
+```
+syntax keyword cppSTLtype initializer_list
+```
 
 <h3 name="4.2">4.2 代码缩进</h3>
 
@@ -493,24 +561,20 @@ set nofoldenable
 
 <h3 name="4.4">4.4 接口与实现快速切换</h3>
 
-我习惯把类的接口和实现分在不同文件中，常会出现在接口文件（MyClass.h）和实现文件（MyClass.cpp）中来回切换的操作。你当然可以先分别打开接口文件和实现文件，再手动切换，但效率不高。我希望，假如在接口文件中，vim 自动帮我找到对应的实现文件，当键入快捷键，可以在当前窗口中打开对应实现文件，也可以在当前窗口中分裂一个子窗口显示对应实现文件。
+我习惯把类的接口和实现分在不同文件中，常有在接口文件（MyClass.h）和实现文件（MyClass.cpp）中来回切换的操作。你当然可以先分别打开接口文件和实现文件，再手动切换，但效率不高。我希望，假如在接口文件中，vim 自动帮我找到对应的实现文件，当键入快捷键，在新 buffer 中打开对应实现文件。
 
-a.vim（https://github.com/vim-scripts/a.vim ）来了。安装后增加配置信息：
+vim-fswitch（https://github.com/derekwyatt/vim-fswitch）来了。安装后增加配置信息：
 
 ```
 " *.cpp 和 *.h 间切换
-nmap <Leader>ch :A<CR>
-" 子窗口中显示 *.cpp 或 *.h
-nmap <Leader>sch :AS<CR>
+nmap <silent> <Leader>sw :FSHere<cr>
 ```
-这样，键入 ;ch 就能在实现文件和接口文件间切换，键入 ;sch 子窗口中将显示实现文件/接口文件。如下图所示：
+这样，键入 ;sw 就能在实现文件和接口文件间切换。如下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%8E%A5%E5%8F%A3%E6%96%87%E4%BB%B6%E4%B8%8E%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E5%88%87%E6%8D%A2.gif" alt=""/><br />
 （接口文件与实现文件切换）
 </div>
-上图中，初始状态先打开了接口文件 MyClass.h，键入 ;ch 后，vim 在新 buffer 中打开实现文件 MyClass.cpp，并在当前窗口中显示；再次键入 ;ch 后，当前窗口切回接口文件；键入 ;sch 后，当前窗口分裂了一个子窗口显示实现文件。
-
-a.vim 实现原理很简单，基于文件名进行关联，比如，a.vim 能识别 my_class.h 与 my_class.cpp，而无法识别 my_class.h 与 your_class.cpp。所以，你在命名文件时得注意下。
+上图中，初始状态先打开了接口文件 MyClass.h，键入 ;sw 后，vim 在新 buffer 中打开实现文件 MyClass.cpp，并在当前窗口中显示；再次键入 ;sw 后，当前窗口切回接口文件。
 
 <h3 name="4.5">4.5 代码收藏</h3>
 
@@ -522,13 +586,13 @@ vim 书签的使用很简单，在你需要收藏的代码行键入 mm，这样�
 ```
 若显示 1 则具备该特性，反之 0 则不具备该特性，需参考“1 源码安装编辑器 vim ”重新编译 vim。
 
-vim 的书签分为两类，独立书签和分类书签。独立书签，书签名只能由字母（a-zA-Z）组成，长度最多不超过 2 个字母，并且，同个文件中，不同独立书签名中不能含有相同字母，比如，a 和 bD 可以同时出现在同个文件在，而 Fc 和 c 则不行。分类书签，书签名只能由可打印特殊字符（!@#$%^&*()）组成，长度只能有 1 个字符，同个文件中，你可以把不同行设置成同名书签，这样，这些行在逻辑上就归类成相同类型的书签了。下图定义了名为 a 和 dF 两个独立书签（分别 259 行和 261 行）、名为 # 的一类分类书签（含 256 行和 264 行）、名为 @ 的一类分类书签（257 行），如下所示：
+vim 的书签分为两类，独立书签和分类书签。独立书签，书签名只能由字母（a-zA-Z）组成，长度最多不超过 2 个字母，并且，同个文件中，不同独立书签名中不能含有相同字母，比如，a 和 bD 可以同时出现在同个文件在，而 Fc 和 c 则不行。分类书签，书签名只能由可打印特殊字符（!@#$%^&\*()）组成，长度只能有 1 个字符，同个文件中，你可以把不同行设置成同名书签，这样，这些行在逻辑上就归类成相同类型的书签了。下图定义了名为 a 和 dF 两个独立书签（分别 259 行和 261 行）、名为 # 的一类分类书签（含 256 行和 264 行）、名为 @ 的一类分类书签（257 行），如下所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E7%8B%AC%E7%AB%8B%E4%B9%A6%E7%AD%BE%E5%92%8C%E5%88%86%E7%B1%BB%E4%B9%A6%E7%AD%BE.png" alt=""/><br />
 （独立书签和分类书签）
 </div>
 
-两种形式的书签完全分布在各自不同的空间中，所以，它两的任何操作都是互不相同的，比如，你无法遍历所有书签，要么只能在各个独立书签间遍历，要么只能在分类书签间遍历。显然，两种形式的书签都有各自的使用场景，就我而言，只使用独立书签，原因有二：一是独立书签可保存，当我设置好独立书签后关闭文档，下次重新打开该文档时，先前的独立书签仍然有效，而分类书签没有该特性（其他文档环境恢复参见“6.3 环境恢复”）；一是减少记忆快捷键，光是独立书签就有 8 种遍历方式，每种遍历对应一种快捷键，太难记了。
+两种形式的书签完全分布在各自不同的空间中，所以，它俩的任何操作都是互不相同的，比如，你无法遍历所有书签，要么只能在各个独立书签间遍历，要么只能在分类书签间遍历。显然，两种形式的书签都有各自的使用场景，就我而言，只使用独立书签，原因有二：一是独立书签可保存，当我设置好独立书签后关闭文档，下次重新打开该文档时，先前的独立书签仍然有效，而分类书签没有该特性（其他文档环境恢复参见“6.3 环境恢复”）；一是减少记忆快捷键，光是独立书签就有 8 种遍历方式，每种遍历对应一种快捷键，太难记了。
 
 vim-signature 快捷键如下：
 
@@ -561,7 +625,7 @@ let g:SignatureMap = {
 
 常用的操作也就如下几类：
 * 书签设定。mx，设定/取消当前行名为 x 的标签；m,，自动设定下一个可用书签名，前面提说，独立书签名是不能重复的，在你已经有了多个独立书签，当想再设置书签时，需要记住已经设定的所有书签名，否则很可能会将已有的书签冲掉，这可不好，所以，vim-signature 为你提供了 m, 快捷键，自动帮你选定下一个可用独立书签名；mda，删除当前文件中所有独立书签。
-* 书签罗列。ms，罗列出当前文件中所有书签，选中后回车可直接跳转；
+* 书签罗列。m?，罗列出当前文件中所有书签，选中后回车可直接跳转；
 * 书签跳转。mn，按行号前后顺序，跳转至下个独立书签；mp，按行号前后顺序，跳转至前个独立书签。书签跳转方式很多，除了这里说的行号前后顺序，还可以基于书签名字母顺序跳转、分类书签同类跳转、分类书签不同类间跳转等等。
 
 效果如下：
@@ -570,26 +634,26 @@ let g:SignatureMap = {
 （可视化书签）
 </div>
 
-另外，我虽然选用了 vim-signature，但不代表它完美了，对我而言，无法在不同文件的书签间跳转绝对算是硬伤。当然，或许这是 vim 自身限制。
+我虽然选用了 vim-signature，但不代表它完美了，对我而言，无法在不同文件的书签间跳转绝对算是硬伤。另外，如果觉得收藏的代码行只有行首符号来表示不够醒目，你可以考虑 BOOKMARKS--Mark-and-Highlight-Full-Lines 这个插件（https://github.com/vim-scripts/BOOKMARKS--Mark-and-Highlight-Full-Lines ），它可以让书签行高亮，如下是它的快捷键：<F1>，高亮所有书签行；<F2>，关闭所有书签行高亮；<SHIFT-F2>，清除 [a-z] 的所有书签；<F5>，收藏当前行；<SHIFT-F5>，取消收藏当前行。
 
 
-<h3 name="4.6">4.6 代码导航</h3>
+<h3 name="4.6">标识符列表</h3>
 
-假设你正在分析某个开源项目源码，在 main.cpp 中遇到调用函数 func()，想要查看它如何实现，一种方式：在 main.cpp 中查找 -> 若没有在工程内查找 -> 找到后打开对应文件 -> 文件内查找其所在行 -> 移动光标到该行 -> 分析完后切换会先前文件，不仅效率太低更要命的是影响我的思维连续性。我需要另外高效的方式，就像真正函数调用一样：光标选中调用处的 func() -> 键入某个快捷键自动转换到 func() 实现处 -> 键入某个键又回到 func() 调用处，这就是所谓的代码导航。
+本节之前的内容，虽说与代码开发有些关系，但最多也只能算作用户体验层面的，真正提升生产效率的内容将从此开始。
 
-基本上，vim 世界存在两类导航：基于标签的导航和基于语义的导航。
+本文主题是探讨如何将 vim 打造成高效的 C/C++ 开发环境，希望实现标识符列表、定义跳转、声明提示、实时诊断、代码补全等等系列功能，这些都需要 vim 能够很好地理解我们的代码（不论是 vim 自身还是借助插件甚至第三方工具），如何帮助 vim 理解代码？基本上，有两种主流方式：标签系统和语义系统。至于优劣，简单来说，标签系统配置简单，而语义系统效果精准，后者是趋势。目前对于高阶 IDE 功能，部分已经有对应基于语义的插件支撑，而部分仍只能通过基于标签的方式实现，若同个功能既有语义插件又有标签插件，优选语义。
 
-<h4 name="4.6.1">基于标签的导航</h4>
+<h4 name="4.6.1">标签系统</h4>
 
-先了解下什么是标签（tag）。这可厉害了，标签可谓是现代 IDE 的基石之一，没有它，类/函数/对象列表、代码补全、代码导航、函数原型提示等等功能是不可能实现的。代码中的类、结构、类成员、函数、对象、宏这些元素就是标签，每个标签有它自己的名字、定义、类型、所在文件中的行位置、所在文件的路径等等属性。
+代码中的类、结构、类成员、函数、对象、宏等等这些统称为标识符，每个标识符的定义、所在文件中的行位置、所在文件的路径等等信息就是标签（tag）。
 
-编译环节之一就是提取标签，但由于编译器并未把生成的标签输出至文本，后来出现了专门用于生成标签的工具 Exuberant Ctags （http://ctags.sourceforge.net/ ，有墙，后简称 ctags）。ctags，最初只支持生成 C/C++ 语言的标签，目前已支持 41 种语言，具体列表运行如下命令获取：
- 
+Exuberant Ctags（http://ctags.sourceforge.net/，后简称 ctags）就是一款经典的用于生成代码标签信息的工具 。ctags 最初只支持生成 C/C++ 语言，目前已支持 41 种语言，具体列表运行如下命令获取：
+
 ```
 ctags --list-languages
 ```
 
-学习知识最好方式就是动手实践。我们以 main.cpp、my_class.h、my_class.cpp 三个文件为例。
+学习知识最好方式就是动手实践。我们以 main.cpp、my_class.h、my_class.cpp 三个文件为例：
 
 第一步，准备代码文件。创建演示目录 /data/workplace/example/、库子目录 /data/workplace/example/lib/，创建如下内容的 main.cpp：
 
@@ -603,33 +667,32 @@ int g_num = 128;
 static void 
 printMsg (char ch) 
 { 
-    std::cout << ch << std::endl; 
+	std::cout << ch << std::endl; 
 } 
 int 
 main (void) 
 { 
-    // 局部对象
-    const string	name = "yangyang.gnu"; 
-    // 类 
-    MyClass	one; 
-    // 成员函数 
-    one.printMsg(); 
-    // 使用局部对象 
-    cout << g_num << name << endl; 
-    return	(EXIT_SUCCESS); 
+	// 局部对象
+	const string	name = "yangyang.gnu"; 
+	// 类 
+	MyClass	one; 
+	// 成员函数 
+	one.printMsg(); 
+	// 使用局部对象 
+	cout << g_num << name << endl; 
+	return	(EXIT_SUCCESS); 
 } 
 ```
-
 创建如下内容的 my_class.h：
 
 ```
 #pragma once 
 class MyClass 
 { 
-    public: 
-        void printMsg(void); 	 
-    private: 
-        ; 
+	public: 
+		void printMsg(void); 	 
+	private: 
+		; 
 };
 ```
 创建如下内容的 my_class.cpp：
@@ -640,12 +703,12 @@ class MyClass
 static void 
 printMsg (int i) 
 { 
-    std::cout << i << std::endl; 
+	std::cout << i << std::endl; 
 } 
 void 
 MyClass::printMsg (void) 
 { 
-    std::cout << "I'M MyClass!" << std::endl; 
+	std::cout << "I'M MyClass!" << std::endl; 
 }
 ```
 
@@ -662,149 +725,89 @@ ctags --list-kinds=c++
 ```
 可看到 ctags 支持生成标签类型的全量列表：
 
->c  classes  
->d  macro definitions  
->e  enumerators (values inside an enumeration)  
->f  function definitions  
->g  enumeration names  
->l  local variables [off]  
->m  class, struct, and union members  
->n  namespaces  
->p  function prototypes [off]  
->s  structure names  
->t  typedefs  
->u  union names  
->v  variable definitions  
->x  external and forward variable declarations [off]  
-
+```
+c  classes 
+d  macro definitions 
+e  enumerators (values inside an enumeration) 
+f  function definitions 
+g  enumeration names 
+l  local variables [off] 
+m  class, struct, and union members 
+n  namespaces 
+p  function prototypes [off] 
+s  structure names 
+t  typedefs 
+u  union names 
+v  variable definitions 
+x  external and forward variable declarations [off] 
+```
 其中，标为 off 的局部对象、函数声明、外部对象等类型默认不会生成标签，所以我显式加上所有类型。运行完后，example/ 下多了个文件 tags，内容大致如下：
 
->!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/  
->!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/  
->!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/  
->!_TAG_PROGRAM_NAME	Exuberant Ctags	//  
->!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/  
->!_TAG_PROGRAM_VERSION	5.8	//  
->MyClass	lib/my_class.h	/^class MyClass $/;"	c  
->MyClass::printMsg	lib/my_class.cpp	/^MyClass::printMsg (void) $/;"	f	class:MyClass	signature:(void)  
->MyClass::printMsg	lib/my_class.h	/^		void printMsg(void);$/;"	p	class:MyClass	access:public	signature:(void)  
->endl	lib/my_class.cpp	/^	std::cout << "I'M MyClass!" << std::endl;$/;"	m	class:std	file:  
->endl	lib/my_class.cpp	/^	std::cout << i << std::endl;$/;"	m	class:std	file:  
->endl	main.cpp	/^	cout << g_num << name << endl;$/;"	l  
->endl	main.cpp	/^	std::cout << ch << std::endl;$/;"	m	class:std	file:  
->g_num	main.cpp	/^int g_num = 128;$/;"	v  
->main	main.cpp	/^main (void) $/;"	f	signature:(void)  
->name	main.cpp	/^	const string	name = "yangyang.gnu";$/;"	l  
->one	main.cpp	/^	MyClass	one;$/;"	l  
->printMsg	lib/my_class.cpp	/^MyClass::printMsg (void) $/;"	f	class:MyClass	signature:(void)  
->printMsg	lib/my_class.cpp	/^printMsg (int i) $/;"	f	file:	signature:(int i)  
->printMsg	lib/my_class.h	/^		void printMsg(void);$/;"	p	class:MyClass	access:public	signature:(void)  
->printMsg	main.cpp	/^	one.printMsg();$/;"	p	file:	signature:()  
->printMsg	main.cpp	/^printMsg (char ch) $/;"	f	file:	signature:(char ch)  
->std::endl	lib/my_class.cpp	/^	std::cout << "I'M MyClass!" << std::endl;$/;"	m	class:std	file:  
->std::endl	lib/my_class.cpp	/^	std::cout << i << std::endl;$/;"	m	class:std	file:  
->std::endl	main.cpp	/^	std::cout << ch << std::endl;$/;"	m	class:std	file:  
-
-其中，! 开头的几行是 ctags 生成的软件信息忽略之，下面的就是我们需要的标签，每个标签项至少有如下字段（命令行参数不同标签项的字段数不同）：标签名、标签所在的文件名（也是文件路径）、标签项所在行的内容、标签类型（如，l 表示局部对象），另外，如果是函数，则有函数签名字段，如果是成员函数，则有访问性字段等等。
-
-第三步，引入标签文件。就是让 vim 知晓标签文件的路径。在 /data/workplace/example/ 目录下用 vim 打开 main.cpp，在 vim 中执行如下目录引入标签文件 tags：
-
 ```
-:set tags+=/data/workplace/example/tags
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/ 
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/ 
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/ 
+!_TAG_PROGRAM_NAME	Exuberant Ctags	// 
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/ 
+!_TAG_PROGRAM_VERSION	5.8	// 
+MyClass	lib/my_class.h	/^class MyClass $/;"	c 
+MyClass::printMsg	lib/my_class.cpp	/^MyClass::printMsg (void) $/;"	f	class:MyClass	signature:(void) 
+MyClass::printMsg	lib/my_class.h	/^		void printMsg(void);$/;"	p	class:MyClass	access:public	signature:(void) 
+endl	lib/my_class.cpp	/^	std::cout << "I'M MyClass!" << std::endl;$/;"	m	class:std	file: 
+endl	lib/my_class.cpp	/^	std::cout << i << std::endl;$/;"	m	class:std	file: 
+endl	main.cpp	/^	cout << g_num << name << endl;$/;"	l 
+endl	main.cpp	/^	std::cout << ch << std::endl;$/;"	m	class:std	file: 
+g_num	main.cpp	/^int g_num = 128;$/;"	v 
+main	main.cpp	/^main (void) $/;"	f	signature:(void) 
+name	main.cpp	/^	const string	name = "yangyang.gnu";$/;"	l 
+one	main.cpp	/^	MyClass	one;$/;"	l 
+printMsg	lib/my_class.cpp	/^MyClass::printMsg (void) $/;"	f	class:MyClass	signature:(void) 
+printMsg	lib/my_class.cpp	/^printMsg (int i) $/;"	f	file:	signature:(int i) 
+printMsg	lib/my_class.h	/^		void printMsg(void);$/;"	p	class:MyClass	access:public	signature:(void) 
+printMsg	main.cpp	/^	one.printMsg();$/;"	p	file:	signature:() 
+printMsg	main.cpp	/^printMsg (char ch) $/;"	f	file:	signature:(char ch) 
+std::endl	lib/my_class.cpp	/^	std::cout << "I'M MyClass!" << std::endl;$/;"	m	class:std	file: 
+std::endl	lib/my_class.cpp	/^	std::cout << i << std::endl;$/;"	m	class:std	file: 
+std::endl	main.cpp	/^	std::cout << ch << std::endl;$/;"	m	class:std	file:
 ```
-既然 vim 有个专门的命令来引入标签，说明 vim 能识别标签。虽然标签文件中并无行号，但已经有标签所在文件，以及标签所在行的完整内容，vim 只需切换至对应文件，再在文件内作内容查找即可找到对应行。换言之，只要有对应的标签文件，vim 就能根据标签跳转至标签定义处。
+其中，! 开头的几行是 ctags 生成的软件信息忽略之，下面的就是我们需要的标签，每个标签项至少有如下字段（命令行参数不同标签项的字段数不同）：标识符名、标识符所在的文件名（也是该文件的相对路径）、标识符所在行的内容、标识符类型（如，l 表示局部对象），另外，若是函数，则有函数签名字段，若是成员函数，则有访问属型字段等等。
 
-这时，你可以体验下初级的代码导航功能。把光标移到 main.cpp 的 one.printMsg() 那行的 printMsg 上，键入快捷键 g]，vim 将罗列出名为 printMsg 的所有标签候选列表，按需选择键入编号即可导航进入。如下图：
-<div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BE%85%E9%80%89%E6%A0%87%E7%AD%BE.png" alt=""/><br />
-（待选标签）
-</div>
+<h4 name="4.6.2">语义系统</h4>
 
-目前为止，离我预期还有差距。
+通过 ctags 这类标签系统在一定程度上助力 vim 理解我们的代码，对于 C 语言这类简单语言来说，差不多也够了。近几年，随着 C++11/14 的推出，诸如类型推导、lamda 表达式、模版等等新特性，标签系统显得有心无力，这个星球最了解代码的工具非编译器莫属，如果编译器能在语义这个高度帮助 vim 理解代码，那么我们需要的各项 IDE 功能肯定能达到另一个高度。
 
-第一，选择候选列表影响思维连续性。首先得明白为何会出现待选列表。前面说过，vim 做的事情很简单，就是把光标所在单词放到标签文件中查找，如果只有一个，当然你可以直接导航过去，大部分时候会找到多项匹配标签，比如，函数声明、函数定义、函数调用、函数重载等等都会导致同个函数名出现在多个标签中，vim 无法知道你要查看哪项，只能让你自己选择。其实，因为标签文件中已经包含了函数签名属性，vim 的查找机制如果不是基于关键字，而是基于语义的话，那也可以直接命中，期待后续 vim 有此功能吧。既然无法直接解决，换个思路，我不想选择列表，但可以接受遍历匹配标签。就是说，我不想输入数字选择第几项，但可以接受键入正向快捷键后遍历第一个匹配标签，再次键入快捷键遍历第二个，直到最后一个，键入反向快捷键逆序遍历。这下事情简单了，命令 :tnext 和 :tprevious 分别先后和向前遍历匹配标签，定义两个快捷键搞定：
+语义系统，编译器必不可少。GCC 和 clang 两大主流 C/C++ 编译器，作为语义系统的支撑工具，我选择后者，除了 clang 对新标准支持及时、错误诊断信息清晰这些优点之外，更重要的是，它在高内聚、低耦合方面做得非常好，各类插件可以调用 libclang 获取非常完整的代码分析结果，从而轻松且优雅地实现高阶 IDE 功能。你对语义系统肯定还是比较懵懂，紧接着的“基于语义的声明/定义跳转”会让你有更为直观的了解，现在，请跳转至“7.1 编译器/构建工具集成”，一是了解 clang 相较 GCC 的优势，二是安装好最新版 clang 及其标准库，之后再回来。
 
-```
-" 正向遍历同名标签
-nmap <Leader>tn :tnext<CR>
-" 反向遍历同名标签
-nmap <Leader>tp :tprevious<CR>
-```
-等等，这还不行，vim 中有个叫标签栈（tags stack）的机制，:tnext、:tprevious 只能遍历已经压入标签栈内的标签，所以，你在遍历前需要通过快捷键 ctrl-] 将光标所在单词匹配的所有标签压入标签栈中，然后才能遍历。不说复杂了，以后你只需先键入 ctrl-]，若没导航至需要的标签，再键入 \<leader>tn 往后或者 \<leader>tp 往前遍历即可。如下图所示：
-<div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%BB%A3%E7%A0%81%E5%AF%BC%E8%88%AA.gif" alt=""/><br />
-（代码导航）
-</div>
+<h4 name="4.6.3">基于标签的标识符列表</h4>
 
-第二，如何返回先前位置。当分析完函数实现后，我需要返回先前调用处，可以键入 vim 快捷键 ctrl-t 返回，如果想再次进入，可以用前面介绍的方式，或者键入 ctrl-i。另外，注意，ctrl-o 以是一种返回快捷键，但与 ctrl-t 的返回不同，前者是返回上次光标停留行、后者返回上个标签。
-
-第三，如何自动生成标签并引入。开发时代码不停在变更，每次还要手动执行 ctags 命令生成新的标签文件，太麻烦了，得想个法周期性针对这个工程自动生成标签文件，并通知 vim 引人该标签文件，嘿，还真有这样的插件 —— indexer（http://www.vim.org/scripts/script.php?script_id=3221 ）。indexer 依赖 DfrankUtil（http://www.vim.org/scripts/script.php?script_id=3884 ）、vimprj（http://www.vim.org/scripts/script.php?script_id=3872 ）两个插件，请一并安装。请在 .vimrc 中增加：
-
-```
-" 设置插件 indexer 调用 ctags 的参数
-" 默认 --c++-kinds=+p+l，重新设置为 --c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v
-" 默认 --fields=+iaS 不满足 YCM 要求，需改为 --fields=+iaSl
-let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
-```
-另外，indexer 还有个自己的配置文件，用于设定各个工程的根目录路径，配置文件位于 ~/.indexer_files，内容可以设定为：
-
->--------------- ~/.indexer_files ---------------  
->[foo]  
->/data/workplace/foo/src/  
->[bar]  
->/data/workplace/bar/src/  
-
-上例设定了两个工程的根目录，方括号内是对应工程名，路径末端节点最好细到代码目录以减少冗余信息（如，构建系统生成的很多中间文件）。这样，从以上目录打开任何代码文件时，indexer 便对整个目录创建标签文件，若代码文件有更新，那么在文件保存时，indexer 将自动调用 ctags 更新标签文件，并自动引入进 vim 中（indexer 生成的标签文件以工程名命名，位于 ~/.indexer_files_tags/）。好了，解决了这三个问题后，vim 的代码导航已经达到我的预期。
-
-<h4 name="4.6.2">基于语义的导航</h4>
-    
-优秀和卓越你选哪个？我，不论代价多大，肯定后者。有个 vim 插件叫 YCM，有个 C++ 编译器叫 clang，只要正确使用它两，你将获得无与伦比的代码导航用户体验，以及，代码补全。当然，代价是相对复杂的配置，涉及几个后续章节知识点（“基于语义的智能补全”和“源码安装编译器 clang”），正因如此，此时我只给出快捷键设置，在看完“基于语义的智能补全”后请返回此处，重新查阅。
-
-请增加如下快捷键到 .vimrc 中：
-
-```
-nnoremap <leader>jd :YcmCompleter GoToDeclaration<CR>
-" 只能是 #include 或已打开的文件
-nnoremap <leader>je :YcmCompleter GoToDefinition<CR>
-```
-效果如下：
-<div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E8%AF%AD%E4%B9%89%E7%9A%84%E5%AF%BC%E8%88%AA.gif" alt=""/><br />
-（基于语义的导航）
-</div>
-
-另外，基于标签的导航建议你也要了解，有助于你熟悉标签系统，毕竟，使用标签的插件很有几个。
-
-
-<h3 name="4.7">4.7 标签列表</h3>
-
-借助代码导航我能跟着执行流分析代码，但我要分析指定函数实现细节怎么办？先找到该函数，再导航过去？我希望有个插件能把从当前代码文件中提取出的所有标签单独放在一个子窗口中，最好还能按标签类型给我分门别类，唔...唔，只有 tagbar （https://github.com/majutsushi/tagbar ） 能满足，它自动周期性调用 ctags 获取结果。先自行安装 tagbar，然后在 .vimrc 中增加如下信息：
+在阅读代码时，经常分析指定函数实现细节，我希望有个插件能把从当前代码文件中提取出的所有标识符放在一个侧边子窗口中，并且能能按语法规则将标识符进行归类，tagbar （https://github.com/majutsushi/tagbar）是一款基于标签的标识符列表插件，它自动周期性调用 ctags 获取标签信息（仅保留在内存，不落地成文件）。安装完 tagbar 后，在 .vimrc 中增加如下信息：
 
 ```
 " 设置 tagbar 子窗口的位置出现在主编辑区的左边 
 let tagbar_left=1 
-" 设置显示／隐藏标签列表子窗口的快捷键。速记：tag list 
-nnoremap <Leader>tl :TagbarToggle<CR> 
+" 设置显示／隐藏标签列表子窗口的快捷键。速记：identifier list by tag
+nnoremap <Leader>ilt :TagbarToggle<CR> 
 " 设置标签子窗口的宽度 
 let tagbar_width=32 
 " tagbar 子窗口中不显示冗余帮助信息 
 let g:tagbar_compact=1
-" 设置 ctags 对哪些代码元素生成标签
+" 设置 ctags 对哪些代码标识符生成标签
 let g:tagbar_type_cpp = {
     \ 'kinds' : [
-        \ 'd:macros:1',
-        \ 'g:enums',
-        \ 't:typedefs:0:0',
-        \ 'e:enumerators:0:0',
-        \ 'n:namespaces',
-        \ 'c:classes',
-        \ 's:structs',
-        \ 'u:unions',
-        \ 'f:functions',
-        \ 'm:members:0:0',
-        \ 'v:global:0:0',
-        \ 'x:external:0:0',
-        \ 'l:local:0:0'
+         \ 'c:classes:0:1',
+         \ 'd:macros:0:1',
+         \ 'e:enumerators:0:0', 
+         \ 'f:functions:0:1',
+         \ 'g:enumeration:0:1',
+         \ 'l:local:0:1',
+         \ 'm:members:0:1',
+         \ 'n:namespaces:0:1',
+         \ 'p:functions_prototypes:0:1',
+         \ 's:structs:0:1',
+         \ 't:typedefs:0:1',
+         \ 'u:unions:0:1',
+         \ 'v:global:0:1',
+         \ 'x:external:0:1'
      \ ],
      \ 'sro'        : '::',
      \ 'kind2scope' : {
@@ -823,29 +826,118 @@ let g:tagbar_type_cpp = {
      \ }
 \ }
 ```
-说下 external 和 local，前面提过，ctags 默认并不会提取局部对象、函数声明、外部对象等类型的标签，我必须让 tagbar 告诉 ctags 改变默认参数 —— 这就是 tagbar_type_cpp 变量存在的意义，所以才在前面的配置信息中将外部对象和局部对象显式将其加进 tagbar_type_cpp 中。
+前面提过，ctags 默认并不会提取局部对象、函数声明、外部对象等类型的标签，我必须让 tagbar 告诉 ctags 改变默认参数，这是 tagbar_type_cpp 变量存在的主要目的，所以前面的配置信息中将局部对象、函数声明、外部对象等显式将其加进该变量的 kinds 域中。具体格式为
 
-重启 vim 后，打开一个 C/C++ 源码文件，键入 \<leader>tl，将在左侧的 tagbar 窗口中将可看到标签列表：
+```
+{short}:{long}[:{fold}[:{stl}]]
+```
+用于描述函数、变量、结构体等等不同类型的标识符，每种类型对应一行。其中，short 将作为 ctags 的 --c++-kinds 命令行选项的参数，类似：
+
+```
+--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v
+```
+long 将作为 short 的简要描述展示在 vim 的 tagbar 子窗口中；fold 表示这种类型的标识符是否折叠显示；stl 指定是否在 vim 状态栏中显示附加信息。
+
+重启 vim 后，打开一个 C/C++ 源码文件，键入 <leader>ilt，将在左侧的 tagbar 窗口中将可看到标签列表：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%A0%87%E7%AD%BE%E5%88%97%E8%A1%A8.png" alt=""/><br />
-（标签列表）
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E6%A0%87%E8%AF%86%E7%AC%A6%E5%88%97%E8%A1%A8.gif" alt=""/><br />
+（基于标签的标识符列表）
 </div>
-其中，注意几个特点：
-
+从上图可知 tagbar 的几个特点：
 * 按作用域归类不同标签。按名字空间 n_foo、类 Foo 进行归类，在内部有声明、有定义；
 * 显示标签类型。名字空间、类、函数等等；
 * 显示完整函数原型；
 * 图形化显示共有成员（+）、私有成员（-）、保护成员（#）；
 
-操作：如果从标签找源码，选择对应标签后回车即可跳至源码中对应标签位置；如果从源码找标签，在源码中暂停几秒鼠标和键盘操作，tagbar 子窗口中对应标签将高亮；每次保存文件时或者切换到不同代码文件时 tagbar 自动调用 ctags 更是标签数据库；tagbar 有两种排序方式，一是按标签名字母先后顺序、一是按标签在源码中出现的先后顺序，在 .vimrc 中我配置选用后者，键入 s 切换不同不同排序方式。
+在标识符列表中选中对应标识符后回车即可跳至源码中对应位置；在源码中停顿几秒，tagbar 将高亮对应标识符；每次保存文件时或者切换到不同代码文件时 tagbar 自动调用 ctags 更是标签数据库；tagbar 有两种排序方式，一是按标签名字母先后顺序、一是按标签在源码中出现的先后顺序，在 .vimrc 中我配置选用后者，键入 s 切换不同不同排序方式。
 
-另外，我在想个问题：indexer 调用 ctags 生成用标签，tagbar 也要调用 ctags 生成用标签，为何不能由其中之一生成标签，另外一个复用呢？我到没细看两个插件的实现代码，估计是前者与 ctags 间是文件接口模式，后者与 ctags 是管道接口模式。插件多了还是麻烦 -。-
+<h3 name="4.7">4.7 声明/定义跳转</h3>
+
+假设你正在分析某个开源项目源码，在 main.cpp 中遇到调用函数 func()，想要查看它如何实现，一种方式：在 main.cpp 中查找 -> 若没有在工程内查找 -> 找到后打开对应文件 -> 文件内查找其所在行 -> 移动光标到该行 -> 分析完后切换会先前文件，不仅效率太低更要命的是影响我的思维连续性。我需要另外高效的方式，就像真正函数调用一样：光标选中调用处的 func() -> 键入某个快捷键自动转换到 func() 实现处 -> 键入某个键又回到 func() 调用处，这就是所谓的定义跳转。
+
+基本上，vim 世界存在两类导航：基于标签的跳转和基于语义的跳转。
+
+<h4 name="4.7.1">基于标签的声明/定义跳转</h4>
+
+继续延用前面接收标签系统的例子文件 main.cpp、my_class.h、my_class.cpp，第二步已经生成好了标签文件，那么要实现声明/定义跳转，需要第三步，引入标签文件。这让 vim 知晓标签文件的路径。在 /data/workplace/example/ 目录下用 vim 打开 main.cpp，在 vim 中执行如下目录引入标签文件 tags：
+
+```
+:set tags+=/data/workplace/example/tags
+```
+既然 vim 有个专门的命令来引入标签，说明 vim 能识别标签。虽然标签文件中并无行号，但已经有标签所在文件，以及标签所在行的完整内容，vim 只需切换至对应文件，再在文件内作内容查找即可找到对应行。换言之，只要有对应的标签文件，vim 就能根据标签跳转至标签定义处。
+
+这时，你可以体验下初级的声明/定义跳转功能。把光标移到 main.cpp 的 one.printMsg() 那行的 printMsg 上，键入快捷键 g]，vim 将罗列出名为 printMsg 的所有标签候选列表，按需选择键入编号即可跳转进入。如下图：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BE%85%E9%80%89%E6%A0%87%E7%AD%BE.png" alt=""/><br />
+（待选标签）
+</div>
+
+目前为止，离我预期还有差距。
+
+第一，选择候选列表影响思维连续性。首先得明白为何会出现待选列表。前面说过，vim 做的事情很简单，就是把光标所在单词放到标签文件中查找，如果只有一个，当然你可以直接跳转过去，大部分时候会找到多项匹配标签，比如，函数声明、函数定义、函数调用、函数重载等等都会导致同个函数名出现在多个标签中，vim 无法知道你要查看哪项，只能让你自己选择。其实，因为标签文件中已经包含了函数签名属性，vim 的查找机制如果不是基于关键字，而是基于语义的话，那也可以直接命中，期待后续 vim 有此功能吧。既然无法直接解决，换个思路，我不想选择列表，但可以接受遍历匹配标签。就是说，我不想输入数字选择第几项，但可以接受键入正向快捷键后遍历第一个匹配标签，再次键入快捷键遍历第二个，直到最后一个，键入反向快捷键逆序遍历。这下事情简单了，命令 :tnext 和 :tprevious 分别先后和向前遍历匹配标签，定义两个快捷键搞定：
+
+```
+" 正向遍历同名标签
+nmap <Leader>tn :tnext<CR>
+" 反向遍历同名标签
+nmap <Leader>tp :tprevious<CR>
+```
+等等，这还不行，vim 中有个叫标签栈（tags stack）的机制，:tnext、:tprevious 只能遍历已经压入标签栈内的标签，所以，你在遍历前需要通过快捷键 ctrl-] 将光标所在单词匹配的所有标签压入标签栈中，然后才能遍历。不说复杂了，以后你只需先键入 ctrl-]，若没跳转至需要的标签，再键入 <leader>tn 往后或者 <leader>tp 往前遍历即可。如下图所示：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E8%B7%B3%E8%BD%AC.gif" alt=""/><br />
+（基于标签的跳转）
+</div>
+
+第二，如何返回先前位置。当分析完函数实现后，我需要返回先前调用处，可以键入 vim 快捷键 ctrl-t 返回，如果想再次进入，可以用前面介绍的方式，或者键入 ctrl-i。另外，注意，ctrl-o 以是一种返回快捷键，但与 ctrl-t 的返回不同，前者是返回上次光标停留行、后者返回上个标签。
+
+第三，如何自动生成标签并引入。开发时代码不停在变更，每次还要手动执行 ctags 命令生成新的标签文件，太麻烦了，得想个法周期性针对这个工程自动生成标签文件，并通知 vim 引人该标签文件，嘿，还真有这样的插件 —— indexer（https://github.com/vim-scripts/indexer.tar.gz）。indexer 依赖 DfrankUtil（https://github.com/vim-scripts/DfrankUtil）、vimprj（https://github.com/vim-scripts/vimprj）两个插件，请一并安装。请在 .vimrc 中增加：
+
+```
+" 设置插件 indexer 调用 ctags 的参数
+" 默认 --c++-kinds=+p+l，重新设置为 --c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v
+" 默认 --fields=+iaS 不满足 YCM 要求，需改为 --fields=+iaSl
+let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
+```
+另外，indexer 还有个自己的配置文件，用于设定各个工程的根目录路径，配置文件位于 ~/.indexer_files，内容可以设定为：
+
+```
+--------------- ~/.indexer_files ---------------  
+[foo] 
+/data/workplace/foo/src/
+[bar] 
+/data/workplace/bar/src/
+```
+上例设定了两个工程的根目录，方括号内是对应工程名，路径为工程的代码目录，不要包含构建目录、文档目录，以避免将产生非代码文件的标签信息。这样，从以上目录打开任何代码文件时，indexer 便对整个目录创建标签文件，若代码文件有更新，那么在文件保存时，indexer 将自动调用 ctags 更新标签文件，indexer 生成的标签文件以工程名命名，位于 ~/.indexer_files_tags/，并自动引入进 vim 中，那么
+
+```
+:set tags+=/data/workplace/example/tags
+```
+一步也省了。好了，解决了这三个问题后，vim 的代码导航基本已经达到我的预期。
+
+<h4 name="4.7.2">基于语义的声明/定义跳转</h4>
+
+有个 vim 插件叫 YCM，有个 C++ 编译器叫 clang，只要正确使用它俩，你将获得无与伦比的代码导航用户体验，以及，代码补全。当然，代价是相对复杂的配置，涉及几个后续章节知识点（“基于语义的智能补全”和“编译器/构建工具集成”），正因如此，此时我只给出快捷键设置，在看完“基于语义的智能补全”后请返回此处，重新查阅。
+
+请增加如下快捷键到 .vimrc 中：
+
+```
+nnoremap <leader>jc :YcmCompleter GoToDeclaration<CR>
+" 只能是 #include 或已打开的文件
+nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
+```
+效果如下：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E8%AF%AD%E4%B9%89%E7%9A%84%E8%B7%B3%E8%BD%AC.gif" alt=""/><br />
+（基于语义的跳转）
+</div>
+
+另外，基于标签的调整建议你也要了解，有助于你熟悉标签系统，毕竟，使用标签的插件很有几个。
 
 <h3 name="4.8">4.8 内容查找</h3>
 
 vim 支持正则表达式，那么已经具有强劲的查供能力，在当前文件内查找，vim 的 / 和 ? 查找命令非常好用，但工程内查找，自带的查找用户体验还无法达到我的预期。
 
-内容查找，你第一反应会想到 grep 和 ack 两个工具，没错，它俩强大的正则处理能力无需质疑，如果有插件能在 vim 中集成两个工具之一，那么任何查找任务均可轻松搞定，为此，出现了 grep.vim（https://github.com/yegappan/grep ）和 ack.vim（https://github.com/mileszs/ack.vim ）两个插件，通过它们，你可以在 vim 中自在地使用高度整合的 grep 或 ack 两个外部命令，就像 vim 的内部命令一样：查找时，把光标定位到待查找关键字上后，通过快捷键立即查找该关键字，查询结果通过列表形式将关键字所在行罗列出来，选择后就能跳转到对应位置。很好，这是我想要的，但，还不是我想要的全部。
+内容查找，你第一反应会想到 grep 和 ack 两个工具，没错，它俩强大的正则处理能力无需质疑，如果有插件能在 vim 中集成两个工具之一，那么任何查找任务均可轻松搞定，为此，出现了 grep.vim（https://github.com/yegappan/grep）和 ack.vim（https://github.com/mileszs/ack.vim）两个插件，通过它们，你可以在 vim 中自在地使用高度整合的 grep 或 ack 两个外部命令，就像 vim 的内部命令一样：查找时，把光标定位到待查找关键字上后，通过快捷键立即查找该关键字，查询结果通过列表形式将关键字所在行罗列出来，选择后就能跳转到对应位置。很好，这全部都是我想要的，但是，不是我想要的全部。
 
 你知道，在分析源码时，同个关键字会在不同文件的不同位置多次出现，grep.vim 和 ack.vim 只能“将关键字所在行罗列出来”，如果关键字出现的那几行完全相同，那么，我单凭这个列表是无法确定哪行是我需要的，比如，我查找关键字 cnt，代码中，cnt 在 4 行出现过、64 行、128 行、1024 行都出现过，且每行内容均为
 
@@ -885,7 +977,29 @@ nnoremap <Leader>sp :CtrlSF<CR>
 
 <h3 name="4.9">4.9 内容替换</h3>
 
-有个名为 iFoo 的全局变量，被工程中 16 个文件引用过，由于你岳母觉得匈牙利命名法严重、异常、绝对以及十分万恶，为讨岳母欢心，不得不将该变量更名为 foo，怎么办？依次打开每个文件，逐一查找后替换？vim 有强大的内容替换命令：
+有个名为 iFoo 的全局变量，被工程中 16 个文件引用过，由于你岳母觉得匈牙利命名法严重、异常、绝对以及十分万恶，为讨岳母欢心，不得不将该变量更名为 foo，怎么办？依次打开每个文件，逐一查找后替换？对我而言，内容替换存在两种场景：快捷替换和精准替换。
+
+<h4 name="4.9.1">快捷替换</h4>
+
+前面介绍的 ctrlsf 已经把匹配的字符串汇总在侧边子窗口中显示了，同时，它还允许我们直接在该子窗口中进行编辑操作，在这种环境下，如果我们能快捷选中所有匹配字符串，那么就可以先批量删除再在原位插入新的字符串，这岂不是我们需要的替换功能么？
+
+快捷选中 ctrlsf 子窗口中的多个匹配项，关键还是这些匹配项分散在不同行的不同位置，这就需要多光标编辑功能，vim-multiple-cursors 插件（https://github.com/terryma/vim-multiple-cursors）为次而生。装好 vim-multiple-cursors 后，你随便编辑个文档，随便输入多个相同的字符串，先在可视化模式下选中其中一个，接着键入 ctrl-n，你会发现第二个该字符串也被选中了，持续键入 ctrl-n，你可以选中所有相同的字符串，把这个功能与 ctrlsf 结合，你来感受下：
+<div align="center">
+<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E6%8D%B7%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
+（快捷替换）
+</div>
+上图中，我想将 prtHelpInfo() 更名为 showHelpInfo()，先通过 ctrlsf 找到工程中所有 prtHelpInfo，然后直接在 ctrlsf 子窗口中选中第一个 ptr，再通过 vim-multiple-cursors 选中第二个 ptr，接着统一删除 ptr 并统一键入 show，最后保存并重新加载替换后的文件。
+
+vim-multiple-cursors 默认快捷键与我系统中其他软件的快捷键冲突，按各自习惯重新设置：
+
+```
+let g:multi_cursor_next_key='<S-n>'
+let g:multi_cursor_skip_key='<S-k>'
+```
+
+<h4 name="4.9.2">精准替换</h4>
+
+vim 有强大的内容替换命令：
 
 ```
 :[range]s/{pattern}/{string}/[flags]
@@ -999,6 +1113,7 @@ nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' wi
 （确认且无须整词匹配模式的替换）
 </div>
 
+
 <h2 name="5">5 代码开发</h2>
 
 在具体编码过程中，我需要一系列提高生产力的功能：批量开/关注释、快速输入代码模板、代码智能补全、路径智能补全、从接口生成实现、查看参考库信息等等，我们逐一来实现。
@@ -1018,12 +1133,9 @@ nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' wi
 （快速开/关注释）
 </div>
 
-另外，有时需要 ASCII art 风格的注释，可用 DrawIt!（http://www.vim.org/scripts/script.php?script_id=40 ）。
+另外，有时需要 ASCII art 风格的注释，可用 DrawIt!（https://github.com/vim-scripts/DrawIt），它可以让你用方向键快速绘制出。
 
-常用操作：
-
-* :Distart，开始绘制结构化字符图形，这时可用方向键绘制线条，空格键绘制或擦除字符；
-* :Distop，停止绘制结构化字符图形。
+常用操作就两个，:Distart，开始绘制，可用方向键绘制线条，空格键绘制或擦除字符；:Distop，停止绘制。
 
 如下图所示：
 <div align="center">
@@ -1256,17 +1368,14 @@ let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 （模板补全）
 </div>
 
-<h3 name="5.3">coming soon (｡◕‿◕｡)</h3>
 
-coming soon (｡◕‿◕｡)
-
-<h3 name="5.4">5.4 智能补全</h3>
+<h3 name="5.3">5.3 智能补全</h3>
 
 真的，这绝对是 G 点。智能补全是提升编码效率的杀手锏。试想下，有个函数叫 getCountAndSizeFromRemotefile()，当你输入 get 后 IDE 自动帮你输入完整的函数名，又如，有个文件 ~/this/is/a/deep/dir/file.txt，就像在 shell 中一样，键入 tab 键自动补全文件路径那是何等惬意！
 
 智能补全有两类实现方式：基于标签的、基于语义的。
 
-<h4 name="5.4.1">基于标签的智能补全</h4>
+<h4 name="5.3.1">基于标签的智能补全</h4>
 
 前面代码导航时介绍过标签，每个标签项含有标签名、作用域等等信息，当键入某几个字符时，基于标签的补全插件就在标签文件中搜索匹配的标签项，并罗列出来，你选择中意的，这与前面代码导航类似，一个是用于跳转、一个用于输入。基于标签的补全，后端 ctags 先生成标签文件，前端采用插件 new-omni-completion（内置）进行识别。这种方式操作简单、效果不错，一般来说两步搞定。
 
@@ -1337,7 +1446,7 @@ set tags+=/usr/include/sys.tags
 
 从以上两个例子来看，不论是 C++ 标准库、boost、ACE这些重量级开发库，还是 linux 系统 API 均可遵循“下载源码（至少包括头文件）-执行 ctags 生产标签文件-引入标签文件”的流程实现基于标签的智能补全，若有异常，唯有如下两种可能：一是源码中使用了名字空间，借助 OmniCppComplete 插件的 OmniCpp_DefaultNamespaces 配置项解决；一是源码中使用了编译器扩展语法，借助 ctags 的 -I 参数解决（上例仅列举了少量 GCC 扩展语法，此外还有 \__attribute_malloc__、__wur 等等大量扩展语法，具体请参见 GCC 手册。以后，如果发现某个系统函数无法自动补全，十有八九是头文件中使用使用了扩展语法，先找到该函数完整声明，再将其使用的扩展语法加入 -I 列表中，最后运行 ctags 重新生产新标签文件即可）。
 
-<h4 name="5.4.2">基于语义的智能补全</h4>
+<h4 name="5.3.2">基于语义的智能补全</h4>
 
 对于智能补全只有轻度需求的用户来说，基于标签的补全能够很好地满足需求，但对于我这类重度需求用户来说，但凡涉及标签，就存在以下几个问题：
 
@@ -1357,7 +1466,7 @@ set tags+=/usr/include/sys.tags
 
 * 使用难度低。clang 采用低耦合设计，语义分析结果（也就是 AST）能以接口形式供外围程序使用，无须任何调整，clang_complete 便能能轻松拿到 clang 输出的语义分析结果；而 GCC 采用高耦合设计，你必须结合补丁重新源码编译 GCC，才能让 GCCSense 接收到它的语义分析结果；
 * 维护时间长。clang_complete 最新更新为 13 年上，而 GCCSense 则是 09 年下；
-* 支持跨平台。clang_complete 支持所有平台，而 GCCSense 支持 UNIX-like，不支持 windows。（好啦，这点是我凑数的，我又不用 windows <_<）
+* 支持跨平台。clang_complete 支持所有平台，而 GCCSense 支持 UNIX-like，不支持 windows。（好啦，这点是我凑数的，我又不用 windows <\_<）
 
 clang_complete 使用简单，在 vim 输入模式下，依次键入要补全的字符，需要弹出补全列表时，手工输入 \<leader>tab。比如有如下代码片断：
 
@@ -1414,8 +1523,10 @@ import os
 import ycm_core 
 flags = [ 
     '-std=c++11', 
+    '-O0', 
     '-Werror', 
     '-Weverything', 
+    '-Wno-documentation', 
     '-Wno-deprecated-declarations', 
     '-Wno-disabled-macro-expansion', 
     '-Wno-float-equal', 
@@ -1426,6 +1537,7 @@ flags = [
     '-Wno-missing-prototypes', 
     '-Wno-padded', 
     '-Wno-old-style-cast',
+    '-Wno-weak-vtables',
     '-x', 
     'c++', 
     '-I', 
@@ -1585,9 +1697,16 @@ YCM 的其他补全。YCM 还集成了其他辅助补全引擎，可以补全路
 上图中，当我键入 tia 时这两个对象均匹配，接着输入大写 L 时就只剩  This_Is_A_Long_Name 匹配。
 
 
-<h3 name="5.5">5.5 由接口快速生成实现框架</h3>
+<h3 name="5.4">5.4 由接口快速生成实现框架</h3>
 
-在 \*.h 中写成员函数的声明，在 \*.cpp 中写成员函数的定义，很麻烦，我希望能根据函数声明自动生成函数定义的框架 —— protodef（http://www.vim.org/scripts/script.php?script_id=2624 ）。protodef 依赖 FSwitch（http://www.vim.org/scripts/script.php?script_id=2590 ），请一并安装。请增加如下设置信息：
+在 \*.h 中写成员函数的声明，在 \*.cpp 中写成员函数的定义，很麻烦，我希望能根据类声明自动生成类实现的代码框架 —— vim-protodef（https://github.com/derekwyatt/vim-protodef）。vim-protodef 依赖 FSwitch（https://github.com/derekwyatt/vim-fswitch），请一并安装。请增加如下设置信息：
+
+```
+" 成员函数的实现顺序与声明顺序一致
+let g:disable_protodef_sorting=1
+```
+
+protodef 根据文件名进行关联，比如，MyClass.h 与 MyClass.cpp 是一对接口和实现文件，MyClass.h 中接口为：
 
 ```
 " 设置 pullproto.pl 脚本路径
@@ -1644,7 +1763,7 @@ void MyClass::getSize (void);
 let proto = substitute(proto, '(\_.*$', ' (' . params . Tail, '') 
 ```
 
-<h3 name="5.6">5.6 库信息参考</h3>
+<h3 name="5.5">5.5 库信息参考</h3>
 
 有过 win32 SDK 开发经验的朋友对 MSDN 或多或少有些迷恋吧，对于多达 7、8 个参数的 API，如果没有一套函数功能描述、参数讲解、返回值说明的文档，那么软件开发将是人间炼狱。别急，vim 也能做到。
 
@@ -1743,7 +1862,7 @@ map <C-S-Tab> :MBEbp<cr>
 
 <h3 name="6.3">6.3 环境恢复*</h3>
 
-vim 的编辑环境保存与恢复是我一直想要的功能，我希望每当重新打开 vim 时恢复：已打开文件、光标位置、undo/redo、书签、子窗口、窗口大小、窗口位置、命令历史、buffer 列表、代码折叠。vim 文档说借助 viminfo（恢复书签） 和 session（恢复除书签外的其他项）特性可以实现这个功能。请确保你的 vim 支持 +mksession 和 +viminfo 特性：
+vim 的编辑环境保存与恢复是我一直想要的功能，我希望每当重新打开 vim 时恢复：已打开文件、光标位置、undo/redo、书签、子窗口、窗口大小、窗口位置、命令历史、buffer 列表、代码折叠。vim 文档说 viminfo 特性可以恢复书签、session 特性可以恢复书签外的其他项，所以，请确保你的 vim 支持这两个特性：
 
 ```
 vim --version | grep mksession
@@ -1781,10 +1900,6 @@ vim --version | grep viminfo
 ```
 " 设置环境保存项
 set sessionoptions="blank,buffers,globals,localoptions,tabpages,sesdir,folds,help,options,resize,winpos,winsize"
-" 保存折叠状态
-au BufWinLeave * silent mkview
-" 恢复折叠状态
-au BufRead * silent loadview
 " 保存 undo 历史
 set undodir=~/.undo_history/
 set undofile
@@ -1793,7 +1908,7 @@ map <leader>ss :mksession! my.vim<cr> :wviminfo! my.viminfo<cr>
 " 恢复快捷键
 map <leader>rs :source my.vim<cr> :rviminfo my.viminfo<cr>
 ```
-这样，简化第二步、第四步操作。另外，sessionoptions 无法包含 undo 历史，所以，先得手工创建存放 undo 历史的目录（如，.undo_history/）再通过开启 undofile 进行单独设置，一旦开启，每次写文件时自动强制保存 undo 历史，下次加载在文件时自动强制恢复所有 undo 历史，不在由 :mksession/:wviminfo 和 :source/:rviminfo 控制。
+这样，简化第二步、第四步操作。另外，sessionoptions 无法包含 undo 历史，你得先得手工创建存放 undo 历史的目录（如，.undo_history/）再通过开启 undofile 进行单独设置，一旦开启，每次写文件时自动保存 undo 历史，下次加载在文件时自动恢复所有 undo 历史，不再由 :mksession/:wviminfo 和 :source/:rviminfo 控制。
 
 按此操作，并不能像 vim 文档中描述的那样能保存所有环境，比如，书签、代码折叠、命令历史都无法恢复。这和我预期存在较大差距，暂且用用吧，找个时间再深入研究！
 
@@ -1843,18 +1958,22 @@ LLVM 出自伊利诺伊大学研究项目，由 google 和苹果公司赞助。L
 
 ```
 cd ~/downloads 
+# Checkout LLVM
 svn co http://llvm.org/svn/llvm-project/llvm/trunk llvm 
+# Checkout Clang
 cd llvm/tools 
 svn co http://llvm.org/svn/llvm-project/cfe/trunk clang 
 cd ../.. 
+# Checkout extra Clang Tools
 cd llvm/tools/clang/tools 
 svn co http://llvm.org/svn/llvm-project/clang-tools-extra/trunk extra 
 cd ../../../.. 
+# Checkout Compiler-RT
 cd llvm/projects 
 svn co http://llvm.org/svn/llvm-project/compiler-rt/trunk compiler-rt 
 cd ..
 ```
-先关掉其他应用，尽量多的系统资源留给 GCC 进行编译 clang 源码：
+关掉其他应用，尽量多的系统资源留给 GCC 编译 clang 源码：
 
 ```
 mkdir build
@@ -2041,18 +2160,13 @@ nmap <Leader>g :!rm -rf main<CR>:wa<CR>:make<CR>:cw<CR><CR>:!./main<CR>
 
 <h3 name="7.2">7.2 静态分析器集成</h3>
 
-one take，中意“一次成型”，最早指歌手录歌时一次性通过录制，不存在发现错误-修正错误-重新录制这样的往返动作。one take 在编程环境中，就是一次性通过编译，我个人很享受 one take 带来的快感。当然，要达到 one take，不仅需要扎实的编程功底，还需要工具的辅佐 —— 代码静态分析器。syntastic（https://github.com/scrooloose/syntastic ），一款支持多语言的实时语法检查插件。在 syntastic 的作用下，编码中、编译前，所有语法错误都将被抓出来并呈现给你。
+one take，中意“一次成型”，最早指歌手录歌时一次性通过录制，不存在发现错误-修正错误-重新录制这样的往返动作。one take 在编程环境中，就是一次性通过编译，我个人很享受 one take 带来的快感。当然，要达到 one take，不仅需要扎实的编程功底，还需要工具的辅佐 —— 代码静态分析器。前面介绍的神器 YCM 具备实时语法检查的能力。在它的作用下，编码中、编译前，所有语法错误都将被抓出来并呈现给你。
 
-由于 YCM 已经深度集成 syntastic，所以基本上你无须配置。在 ~/.vim/bundle/syntastic/syntax_checkers/cpp/ 下你可以看到可选的 C++ 语法检查脚本，你可以通过命令 :SyntasticInfo 查看当前选用的检查脚本，应该是 ycm.vim。整个过程分为如下几步。
+YCM 的整个静态分析过程分为如下几步：
 
-第一步，发现错误。YCM 内部调用 libclang 分析语法错误，通过管道传递给 syntastic 呈现。当你保存代码或者安静 2 秒，错误检查后台任务将自动启动，若有错误，syntastic 将接收到。
+第一步，发现错误。YCM 内部调用 libclang 分析语法错误，通过管道传递给 YCM 呈现。当你保存代码、vim 普通模式下移动光标或者安静 2 秒，错误检查后台任务将自动启动，若有错误，YCM 将接收到；
 
-第二步，呈现错误。syntastic 并不非立马显示 YCM 发过来的错误信息，除非你触发下次击键事件，否则你看不到错误信息，换言之，干等是没结果的，你必须有次击键动作（没办法，vim 内部机制所限，后台任务无法直接更新 GUI，所以才采用变通的击键方式）。对于存在语法错误的代码，在行首有个红色的 >> 高亮显示，如果你觉得 >> 不够醒目，你可以参照如下方式重新设置：
-
-```
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_warning_symbol = '⚠'
-```
+第二步，呈现错误。YCM 并不非立马显示错误信息，除非你触发下次击键事件，否则你看不到错误信息，换言之，干等是没结果的，你必须有次击键动作（没办法，vim 内部机制所限，后台任务无法直接更新 GUI，所以才采用变通的击键方式）。对于存在语法错误的代码，在行首有个红色的 >> 高亮显示；
 
 第三步，查看错误。好了，现在已经知道哪行代码有问题，具体问题描述如何查看？两种方式：一种是将光标移至问题行，vim 将在其底部显示简要错误描述；一种是将光标移至问题行，键入 \<leader>d 后，vim 将在其底部显示详细错误描述。 
 
@@ -2157,7 +2271,7 @@ vim 有两类快速移动光标的方式：一类是以单词为单位的移动�
 
 假定光标在行首，需要移动到 facebook 的字符 a 处，先来数下前面有 1、2 ... 5 个 a，然后用前面所说的 5fa，唔，怎么在 jack 上呢？等等，好像数错了，再数次 1、2 ... 6，对滴，应该是 6fa，这下对了。我的个天，不能让哥太累，得找个插件帮忙 —— easymotion（https://github.com/Lokaltog/vim-easymotion ）。
 
-easymotion 只做一件事：把满足条件的位置用 [A~Za~z] 间的标签字符标出来，找到你想去的位置再键入对应标签字符即可快速到达。比如，上面的例子，假设光标在行首，我只需键入 \<leader>\<leader>fa （为避免与其他快捷键冲突，easymotion 采用两次 \<leader> 作为前缀键），所有的字符 a 都被重新标记成 a、b、c、d、e、f 等等标签（原始内容不会改变），f 标签为希望移动去的位置，随即键入 f 即可到达。如下图所示：
+easymotion 只做一件事：把满足条件的位置用 [;A~Za~z] 间的标签字符标出来，找到你想去的位置再键入对应标签字符即可快速到达。比如，上面的例子，假设光标在行首，我只需键入 \<leader>\<leader>fa （为避免与其他快捷键冲突，easymotion 采用两次 \<leader> 作为前缀键），所有的字符 a 都被重新标记成 a、b、c、d、e、f 等等标签（原始内容不会改变），f 标签为希望移动去的位置，随即键入 f 即可到达。如下图所示：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8.gif" alt=""/><br />
 （快速移动）
@@ -2189,8 +2303,7 @@ gem install redcarpet
 # 若系统提示无 npm 命令，你需要先执行 zypper --no-refresh install nodejs
 npm -g install instant-markdown-d
 ```
-
-注意，以上三条命令均要访问墙外服务器，所以，你得先有 VPN 全局翻墙工具或者透明代理工具，可参考《美丽新世界：linux 下的惬意生活》中“3.2.5 VPN 代理”（https://github.com/yangyangwithgnu/the_new_world_linux#3.2.5 ）。
+注意，以上三条命令均要翻墙。
 
 对于重内容、轻设计的我这类人来说，markdown 简洁的文书语法太贴心了。推荐三个网站：
 
