@@ -1,0 +1,2 @@
+https://raw.githubusercontent.com/altercation/vim-colors-solarized/master/colors/solarized.vim
+https://raw.githubusercontent.com/tomasr/molokai/master/colors/molokai.vim
