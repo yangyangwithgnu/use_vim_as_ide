@@ -637,7 +637,7 @@ let g:SignatureMap = {
 我虽然选用了 vim-signature，但不代表它完美了，对我而言，无法在不同文件的书签间跳转绝对算是硬伤。另外，如果觉得收藏的代码行只有行首符号来表示不够醒目，你可以考虑 BOOKMARKS--Mark-and-Highlight-Full-Lines 这个插件（https://github.com/vim-scripts/BOOKMARKS--Mark-and-Highlight-Full-Lines ），它可以让书签行高亮，如下是它的快捷键：<F1>，高亮所有书签行；<F2>，关闭所有书签行高亮；<SHIFT-F2>，清除 [a-z] 的所有书签；<F5>，收藏当前行；<SHIFT-F5>，取消收藏当前行。
 
 
-<h3 name="4.6">标识符列表</h3>
+<h3 name="4.6">4.6 标识符列表</h3>
 
 本节之前的内容，虽说与代码开发有些关系，但最多也只能算作用户体验层面的，真正提升生产效率的内容将从此开始。
 
