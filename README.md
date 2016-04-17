@@ -1969,14 +1969,15 @@ cd ../../../..
 # Checkout Compiler-RT
 cd llvm/projects 
 svn co http://llvm.org/svn/llvm-project/compiler-rt/trunk compiler-rt 
-cd ..
+cd ../..
 ```
 关掉其他应用，尽量多的系统资源留给 GCC 编译 clang 源码：
 
 ```
 mkdir build
 cd build
-../configure --enable-optimized CC=/usr/bin/GCC CXX=/usr/bin/g++ 
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release ../llvm
+make && make install
 ```
 接下来，你先洗个澡，再约个会，回来应该编译好了（thinkpad T410I，CPU 奔腾双核 P6000，MEM 4G DDRIII，耗时 2 小时）。确认下：
 
