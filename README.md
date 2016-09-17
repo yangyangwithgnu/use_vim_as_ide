@@ -555,7 +555,7 @@ set foldmethod=syntax
 set nofoldenable
 ```
 
-操作：za，打开或关闭当前折叠；zM，关闭所有折叠；zR，打开所有折叠。效果如下：
+操作```:za```，打开或关闭当前折叠```;zM```，关闭所有折叠```;zR```，打开所有折叠。效果如下：
 <div align="center">
 <img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%BB%A3%E7%A0%81%E6%8A%98%E5%8F%A0.gif" alt=""/><br />
 （代码折叠）
