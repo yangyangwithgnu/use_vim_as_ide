@@ -223,19 +223,61 @@ vim someplugin.vba
 <h2 name="1">1 源码安装编辑器 vim</h2>
 
 发行套件的软件源中预编译的 vim 要么不是最新版本，要么功能有阉割，有必要升级成全功能的最新版，当然，源码安装必须滴：
+
+- 1. 先clone到本地, 然后切换到vim的目录中
 ```
 git clone git@github.com:vim/vim.git
 cd vim/
-./configure --with-features=huge --enable-pythoninterp --enable-rubyinterp --enable-luainterp --enable-perlinterp --with-python-config-dir=/usr/lib/python2.7/config/ --enable-gui=gtk2 --enable-cscope --prefix=/usr
-make
-make install
 ```
-其中，--enable-pythoninterp、--enable-rubyinterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk2 表示生成采用 GNOME2 风格的 gvim，--enable-cscope 支持 cscope，--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。注意，你得预先安装相关依赖库的头文件，python-devel、python3-devel、ruby-devel、lua-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel、ncurses-devel，如果缺失，源码构建过程虽不会报错，但最终生成的 vim 很可能缺失某些功能。构建完成后在 vim 中执行
+
+__注__:以下在ubuntu上亲测可行,如果ruby,lua,perl,python2或python3中的哪个不成功，就去看configure的输出信息，看看缺什么。
+
+- 2.在编译Vim之前，你得预先安装相关依赖库的头文件(有些可能是不必要的)，
 
 ```
-:echo has('python')
+python-dev python3-dev liblua5.1-dev ruby-dev libperl-dev
+libncurses5-dev libgnome2-dev libgnomeui-dev libgtk2.0-dev libgtk-3-dev
+libatk1.0-dev libbonoboui2-dev libcairo2-dev libx11-dev
+libxpm-dev libxt-dev liblua5.2-dev(和 lua5.2, 如果没安装的话)
 ```
-若输出 1 则表示构建出的 vim 已支持 python，反之，0 则不支持。
+如果缺失，源码构建过程虽不会报错， 但最终生成的 vim 很可能缺失某些功能。
+
+- 3.构建完成后在 vim 目录中执行下面的命令(`Python2`/`Python3`的路径得改成你系统里的)
+
+__注意__: `Python2` 与 `Python3` 你只能选一个，如何你两个都选，结果是只有`Python2`起作用。
+如果你选的是`Python3`的话，就把下面的 --enable-pythoninterp 和 --with-python-config-dir=/usr/lib/python2.7/config 去掉。
+
+```
+./configure --with-features=huge \
+            --enable-multibyte \
+            --enable-rubyinterp \
+            --enable-pythoninterp \
+            --with-python-config-dir=/usr/lib/python2.7/config \
+            --enable-python3interp \
+            --with-python3-config-dir=/usr/lib/python3.5/config \
+            --enable-perlinterp \
+            --enable-luainterp \
+            --enable-gui=gtk3 --enable-cscope --prefix=/usr
+```
+其中，--enable-pythoninterp、--enable-rubyinterp、--enable-perlinterp、--enable-luainterp 
+等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk3 表示生成采用 GNOME3 风格的 gvim，
+--enable-cscope 支持 cscope，--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径
+（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。 
+
+- 4.最后
+```
+make
+make install(如果是ubuntu, `sudo make install`)
+```
+
+- 5.检查：打开vim，输入
+```
+如果是Python2
+:echo has('python')
+如果是Python3
+:echo has('python3')
+```
+若输出 1 则表示构建出的 vim 已支持 `python`/`python3`，反之，0 则不支持。
 
 <h2 name="2">2 插件管理</h2>
 
